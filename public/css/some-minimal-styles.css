@@ -1,0 +1,19 @@
+.list-view {
+    list-style: none;
+    overflow: hidden;
+}
+
+.list-view li {
+    float: left;
+    margin: 0 10px 10px 0;
+    padding: 4px;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    background-color: #aaa;
+}
+
+.list-view li img, .list-view li canvas {
+    display: inline-block;
+    vertical-align: top;
+}
