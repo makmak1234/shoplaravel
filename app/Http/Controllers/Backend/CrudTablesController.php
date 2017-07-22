@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\UploadedFile;
+use Intervention\Image\Facades\Image;
+//use Intervention\Image\ImageManager;
 //use Illuminate\Support\Facades\DB;
 
 class CrudTablesController extends Controller
@@ -57,9 +59,11 @@ class CrudTablesController extends Controller
 
         $colors = Color::all();
 
-        //$pictures = Picture::all();
+        $pictures = Picture::all();
 
-        return view('backend.insert_tables', ["descrs" => $descrs, "sizes" => $sizes, "colors" => $colors]);//, "pictures" => $pictures
+        //$manager = new ImageManager(array('driver' => 'imagick'));
+
+        return view('backend.insert_tables', ["descrs" => $descrs, "sizes" => $sizes, "colors" => $colors, "pictures" => $pictures]);//
     }
 
     /**
@@ -71,6 +75,11 @@ class CrudTablesController extends Controller
     public function storeTables(Request $request)
     {
         // Validate the request...
+
+        // $myecho = json_encode($request->pict_radio[1]);
+        // `echo " request->pict_radio:    " >>/tmp/qaz`;
+        // `echo "$myecho" >>/tmp/qaz`;
+        // exit;
 
         $goods = new Goods;
         $goods->title = $request->title;
@@ -85,20 +94,19 @@ class CrudTablesController extends Controller
         foreach ($goodsSizes as $goodSize) {
             $goodSize->color()->attach($colors[$goodSize->sizes_id]);
 
-            // $colorGoodsSizes = ColorGoodsSizes::where('goods_sizes_id', $goodSize->id)->get();
+            $allColors[] = $colors[$goodSize->sizes_id];
 
-            // $myecho = json_encode($colors[$goodSize->sizes_id]);
-            // `echo " colors:    " >>/tmp/qaz`;
-            // `echo "$myecho" >>/tmp/qaz`;
-            // exit;
+            $colorGoodsSizes = ColorGoodsSizes::where('goods_sizes_id', $goodSize->id)->get();
 
-            // $path = $request->file('pict' . $colors[$goodSize->sizes_id])->store('pictures');
-            // $pict->path = $path;
-            // $pict->save();
-
-            // foreach ($colorGoodsSizes as $colorGoodsSize) {
-            //     $colorGoodsSize->picture()->associate($pict->id);
-            // }
+            $pict_radio = $request->pict_radio;
+            foreach ($colorGoodsSizes as $colorGoodsSize) {
+                // $myecho = json_encode($pict_radio[$colorGoodsSize->colors_id]);
+                // `echo " pict_radio[colorGoodsSize->colors_id]:    " >>/tmp/qaz`;
+                // `echo "$myecho" >>/tmp/qaz`;
+                // //exit;
+                $colorGoodsSize->picture()->associate($pict_radio[$colorGoodsSize->colors_id]);
+                $colorGoodsSize->save();
+            }
         }
 
         return redirect()->route('showTables');
@@ -113,16 +121,18 @@ class CrudTablesController extends Controller
     {
         $goods = Goods::all();
 
-        $goodsSizes = GoodsSizes::where('goods_id', '13')->get();
+        $pictures = Picture::all();
 
-        $colors = Color::where('id', '3')->get();
+        //$goodsSizes = GoodsSizes::where('goods_id', '13')->get();
+
+        //$colors = Color::where('id', '3')->get();
 
         // $myecho = json_encode($colors);
         // `echo " colors:    " >>/tmp/qaz`;
         // `echo "$myecho" >>/tmp/qaz`;
         // //exit;
 
-        return view('welcome', ["goods" => $goods, "goodsSizes" => $goodsSizes]);
+        return view('welcome', ["goods" => $goods, "pictures" => $pictures]);//, "goodsSizes" => $goodsSizes
     }
 
     /**

@@ -8,13 +8,14 @@
         <title>Laravel</title>
 
         <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/welcome.css">
         <script src="/js/jquery.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
         
     </head>
     <body>
-    {{-- {{$goods}}<br><br>
-    {{$goodsSizes}} --}}
+    {{-- {{$pictures}}<br><br> --}}
+    {{-- {{$goodsSizes}} --}}
             <div class="content">
                 <div class="container">
                     <div class="slogan">
@@ -24,62 +25,79 @@
                     <div class="row">
                         @foreach ($goods as $good)
                             <div class="col-md-4 col-sm-6 col-xs-12">
-                                <div class="thumbnail">
-                                    <img src="..." alt="...">
-                                    <div class="caption">
-                                        <h4>{{ $good->title }}</h4>
-                                        <p>{{ $good->descriptions->title }}</p>
-                                        <p>
-                                          @foreach ($good->size as $s)
-                                            <ii style="color: red">{{ $s->title }}</ii>
-                                            <?php $g = $good->size; ?>
-                                            {{-- {{$g}} --}}
-                                            {{-- {{$g[1]->id}}
-                                            {{$g[2]->id}} --}}
-                                            {{-- {{ $s->pivot->id}} --}}
-                                            <?php $goodsSizes = App\GoodsSizes::where('id', $s->pivot->id)->get(); ?>
-                                            @foreach ($goodsSizes as $goodSize)
-                                              @foreach ($goodSize->color as $col)
-                                                <i style="color: green">{{ $col->title }}</i>
-                                              @endforeach                                           
-                                            @endforeach
-                                            <br>
-                                          @endforeach
-                                        </p>
-                                            <a href="edit_tables/{{ $good->id }}" class="btn btn-primary" role="button">Редактировать</a> 
-                                            <a class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal{{ $good->id }}">Удалить</a>
-                                           
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="myModal{{ $good->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                              <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                  <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Удаление записи "{{ $good->title }}"</h4>
-                                                  </div>
-                                                  <div class="modal-body">
-                                                    <div class="row">
-                                                      <div class="col-lg-12">
-                                                        <div class="input-group">
-                                                          <span class="input-group-addon">
-                                                            <input type="checkbox" id="del_desc{{ $good->id }}" value="">
-                                                          </span>
-                                                          <label type="text" class="form-control" aria-label="drop_descr">Удалить описание</label>
-                                                        </div><!-- /input-group -->
-                                                      </div><!-- /.col-lg-6 -->
-                                                    </div><!-- /.row -->
-                                                  </div>
-                                                  <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
-                                                    <button id="{{ $good->id }}deleteRecord" curid="{{ $good->id }}" class="btn btn-danger">Удалить</button>
-                                                    <div class="alert alert-success" id="erralert{{ $good->id }}" role="alert" hidden=""></div>
-                                                  </div>
+                              <div class="thumbnail">
+                                <div class="row">                                    
+                                  <?php $allcolor = array(); ?>
+                                  @foreach ($good->size as $s)
+                                    <?php $goodsSizes = App\GoodsSizes::where('id', $s->pivot->id)->get(); ?>
+                                    @foreach ($goodsSizes as $goodSize)
+                                      @foreach ($goodSize->color as $col)
+                                        @if (!(in_array($col->id, $allcolor)))
+                                          <div class="col-sm-6 col-md-4">
+                                            <div class="thumbnail">     
+                                                <?php $pict = App\Picture::where('id', $col->pivot->pictures_id)->get(); ?>
+                                                <img src='{{ asset('storage/' . $pict[0]->path . '50_50.jpg') }}' alt="...">
+                                                <div class="caption">
+                                                  {{-- <h3>Thumbnail label</h3> --}}
+                                                  <p class="img_caption_color">{{ $col->title }}</p>
                                                 </div>
+                                            </div>
+                                          </div>    
+                                        @endif
+                                        <?php $allcolor[] = $col->id; ?>
+                                      @endforeach 
+                                    @endforeach
+                                  @endforeach
+                                </div>
+                                  <div class="caption">
+                                      <h4>{{ $good->title }}</h4>
+                                      <p>{{ $good->descriptions->title }}</p>
+                                      <p>
+                                        @foreach ($good->size as $s)
+                                          <ii style="color: red">{{ $s->title }}</ii>
+                                          <?php $goodsSizes = App\GoodsSizes::where('id', $s->pivot->id)->get(); ?>
+                                          @foreach ($goodsSizes as $goodSize)
+                                            @foreach ($goodSize->color as $col)
+                                              <i style="color: green">{{ $col->title }}</i>
+                                            @endforeach                                           
+                                          @endforeach
+                                          <br>
+                                        @endforeach
+                                        
+                                      </p>
+                                        <a href="edit_tables/{{ $good->id }}" class="btn btn-primary" role="button">Редактировать</a> 
+                                        <a class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal{{ $good->id }}">Удалить</a>
+                                       
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="myModal{{ $good->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Удаление записи "{{ $good->title }}"</h4>
+                                              </div>
+                                              <div class="modal-body">
+                                                <div class="row">
+                                                  <div class="col-lg-12">
+                                                    <div class="input-group">
+                                                      <span class="input-group-addon">
+                                                        <input type="checkbox" id="del_desc{{ $good->id }}" value="">
+                                                      </span>
+                                                      <label type="text" class="form-control" aria-label="drop_descr">Удалить описание</label>
+                                                    </div><!-- /input-group -->
+                                                  </div><!-- /.col-lg-6 -->
+                                                </div><!-- /.row -->
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+                                                <button id="{{ $good->id }}deleteRecord" curid="{{ $good->id }}" class="btn btn-danger">Удалить</button>
+                                                <div class="alert alert-success" id="erralert{{ $good->id }}" role="alert" hidden=""></div>
                                               </div>
                                             </div>
-
-                                        </p>
-                                    </div>
+                                          </div>
+                                        </div>
+                                      </p>
+                                  </div>
                                 </div>
                             </div>
                         @endforeach

@@ -13,6 +13,6 @@ class Color extends Model
      */
     public function goodsSize()
     {
-        return $this->belongsToMany('App\GoodsSize', 'color_goods_sizes', 'colors_id', 'goods_sizes_id');
+        return $this->belongsToMany('App\GoodsSize', 'color_goods_sizes', 'colors_id', 'goods_sizes_id')->withPivot('pictures_id');
     }
 }

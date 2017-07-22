@@ -21,6 +21,6 @@ class Goods extends Model
      */
     public function size()
     {
-        return $this->belongsToMany('App\Size', 'goods_sizes', 'goods_id', 'sizes_id')->withPivot('id');;
+        return $this->belongsToMany('App\Size', 'goods_sizes', 'goods_id', 'sizes_id')->withPivot('id');
     }
 }

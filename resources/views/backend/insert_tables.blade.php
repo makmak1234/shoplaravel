@@ -43,6 +43,13 @@
                       <input type="hidden" name="colorid[]" value="{{ $color->id }}">
                     
                   </label>
+                  @foreach ($pictures as $picture)
+                    <label>
+                      <input type="radio" name="pict_radio[{{ $color->id }}]" id="radioAll" value="{{ $picture->id }}">
+                      <img src='{{ asset('storage/' . $picture->path . '50_50.jpg') }}' class=img-thumbnail" alt="Responsive image">
+                    </label>
+                  @endforeach
+                  </select>
                   <hr/>
                   <ul id="list-view{{ $color->id }}" class="list-view"></ul>
                   <br><br>
@@ -61,6 +68,16 @@
       listen(document, 'DOMContentLoaded', function() {
 
           var fileInput = document.querySelectorAll('#file-input'); //querySelectorAll
+
+alert(document.querySelector('#radioAll').Attr(cur_pict));
+
+var radioPict = document.querySelectorAll('#radioAll');
+radioPict.forEach(function(curRadioPict){
+  listen(radioPict, 'change', function(event){
+    var curIdPict = curRadioPict.element(cur_pict);
+    alert(curIdPict.name);
+  });
+});
 
           fileInput.forEach(function(curfileInput){
             listen(curfileInput, 'change', function(event) {

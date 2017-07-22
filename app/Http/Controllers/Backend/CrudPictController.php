@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+
 
 //use Illuminate\Support\Facades\DB;
 
@@ -45,6 +47,9 @@ class CrudPictController extends Controller
 
         $path = $request->file('pict')->store('pictures');
         //$path = Storage::putFile('pictures', $request->file('pict'));
+
+        $img = Image::make(asset('storage/' . $path))->resize(50, 50);
+        $img->save(public_path('storage/' .  $path . '50_50.jpg' ));
 
         $pict->path = $path;
 
