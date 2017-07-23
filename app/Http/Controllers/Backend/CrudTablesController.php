@@ -146,6 +146,7 @@ class CrudTablesController extends Controller
         $descrs = Description::all();
         $sizes = Size::all();
         $colors = Color::all();
+        $pictures = Picture::all();
 
         $cursizes = $good->size;
         foreach ($cursizes as $cursize) {
@@ -166,7 +167,7 @@ class CrudTablesController extends Controller
         //     `echo "$myecho2" >>/tmp/qaz`;
         // exit;
 
-        return view('backend.edit_tables', ["good" => $good, "descrs" => $descrs, "sizes" => $sizes, "colors" => $colors, "curszs" => $curszs, "curclrs" => $curclrs]);
+        return view('backend.edit_tables', ["good" => $good, "descrs" => $descrs, "sizes" => $sizes, "colors" => $colors, "curszs" => $curszs, "curclrs" => $curclrs, "pictures" => $pictures]);
     }
 
     /**
