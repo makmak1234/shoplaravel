@@ -48,6 +48,11 @@ class CrudPictController extends Controller
         $path = $request->file('pict')->store('pictures');
         //$path = Storage::putFile('pictures', $request->file('pict'));
 
+        // $myecho = json_encode($path);
+        // `echo " request->file    " >>/tmp/qaz`;
+        // `echo "$myecho" >>/tmp/qaz`;
+        // exit;
+
         $img = Image::make(asset('storage/' . $path))->resize(50, 50);
         $img->save(public_path('storage/' .  $path . '50_50.jpg' ));
 
