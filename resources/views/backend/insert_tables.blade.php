@@ -41,14 +41,16 @@
                 <label id="picture{{ $color->id }}"" class="picture_color" >
                   <br><br>
                   <label class="btn btn-primary pictures_cur" title="Выберите картинку">
-                    
+                    <label>
+                      Выберите картинку
+                    </label>
                       {{-- <input type="file" id="file-input" style="display: none" name="pict{{ $color->id }}" >
                        {{ $color->title }}
                       <input type="hidden" name="colorid[]" value="{{ $color->id }}"> --}}
-                      Добавить картинку {{ $color->title }}
+                      {{ $color->title }}
                   </label>
                     @foreach ($pictures as $picture)
-                      <label>
+                      <label class="picture_label">
                         <input type="radio" name="pict_radio[{{ $color->id }}]" id="radioAll" class="picture_add" value="{{ $picture->id }}">
                         <img src='{{ asset('storage/' . $picture->path . '50_50.jpg') }}' class=img-thumbnail" alt="Responsive image">
                       </label>
@@ -71,11 +73,11 @@
 
       listen(document, 'DOMContentLoaded', function(){
 
-        var sizeAll = document.querySelectorAll('#cur_size');
-        var picturesAdd = document.querySelectorAll('.picture_add');
         //alert(picturesAdd.length);
         var event_change = new Event("change");
 
+        //показ/скрытие списка цветов
+        var sizeAll = document.querySelectorAll('#cur_size');
         sizeAll.forEach(function(curSize){
           listen(curSize, 'change', function(event) {
             var curSizeId = curSize.value;
@@ -98,8 +100,8 @@
           });
         });
 
+        //показ/скрытие списка картинок
         var colorAll = document.querySelectorAll('#cur_color');
-
         colorAll.forEach(function(curColor){
           listen(curColor, 'change', function(event) {
             var curColorId = curColor.value;
@@ -119,85 +121,48 @@
               }
               //alert('trueChecked2: ' + trueChecked);
               if(!trueChecked){
-                  curPictures.style.display="none";
-                  var allCurPicts = curPictures.getElementsByTagName("input");
-                  // alert(JSON.stringify($.makeArray(allCurPicts)));
-                  allArrayPicts = $.makeArray(allCurPicts); //преобр объект в массив
-                  allArrayPicts.forEach(function(curPicture){
+                curPictures.style.display="none";
+                var allCurPicts = curPictures.getElementsByTagName("input");
+                // alert(JSON.stringify($.makeArray(allCurPicts)));
+                var allArrayPicts = $.makeArray(allCurPicts); //преобр объект в массив
+                allArrayPicts.forEach(function(curPicture){
+                  if(curPicture.checked){
                     curPicture.checked = false;
-                  });
-                }
+                    //curPicture.dispatchEvent(event_change); 
+                  }
+                });
+                var labelPicts = $(allArrayPicts[0]).parent(".picture_label").siblings(".pictures_cur");
+                var labelPicts = $.makeArray(labelPicts);
+                $(labelPicts).children().text("Выберите картинку");//labelPicts.innerHTML = "Выберите картинку";
+                $(labelPicts).removeClass("btn-success");
+                $(labelPicts).addClass("btn-primary");
+              }
             }
           });
         });
 
+        // изменение надписи кнопок для картинок
+        var picturesAdd = document.querySelectorAll('.picture_add');
+        // alert(picturesAdd.length);
         picturesAdd.forEach(function(pictureAdd){
           listen(pictureAdd, 'change', function(event) {
-            var labelPicts = $(pictureAdd).siblings(".pictures_cur");
+            var labelPicts = $(pictureAdd).parent(".picture_label").siblings(".pictures_cur");
             var labelPicts = $.makeArray(labelPicts);
             if(pictureAdd.checked){
-              alert(JSON.stringify(labelPicts));
-              labelPicts.innerHTML = "Картинка выбрана";
+              //alert(JSON.stringify(labelPicts));
+              $(labelPicts).children().text("Картинка выбрана");//labelPicts.innerHTML = "Картинка выбрана";
+              $(labelPicts).removeClass("btn-primary");
+              $(labelPicts).addClass("btn-success");
               //alert("Картинка выбрана");
-            } else{
-              labelPicts.innerHTML = "Выберите картинку";
-              //alert("Выберите картинку");
-            }
+            } 
+            // else{
+            //   $(labelPicts).children().text("Выберите картинку");//labelPicts.innerHTML = "Выберите картинку";
+            //   $(labelPicts).removeClass("btn-success");
+            //   $(labelPicts).addClass("btn-primary");
+            //   //alert("Выберите картинку");
+            // }
           });
         });
-
-
-//           var fileInput = document.querySelectorAll('#file-input'); //querySelectorAll
-
-// alert(document.querySelector('#radioAll').Attr(cur_pict));
-
-// var radioPict = document.querySelectorAll('#radioAll');
-// radioPict.forEach(function(curRadioPict){
-//   listen(radioPict, 'change', function(event){
-//     var curIdPict = curRadioPict.element(cur_pict);
-//     alert(curIdPict.name);
-//   });
-// });
-
-          // fileInput.forEach(function(curfileInput){
-          //   listen(curfileInput, 'change', function(event) {
-          //     var curlistView = curfileInput.name;
-          //     var curlistView = curlistView.replace("pict", "");
-          //     var curlistView = '#list-view' + curlistView;
-          //     var files = curfileInput.files;
-          //     if (files.lenght == 0) {
-          //         return;
-          //     }
-          //     for(var i = 0; i < files.length; i++) {
-          //         generatePreview(files[i], curlistView);
-          //     }
-          //     curfileInput.value = "";
-          //   });
-          // });
-
-          
-
-          // var generatePreview = function(file, curlistView) {
-          //     var listView = document.querySelector(curlistView); //'#list-view'+...
-          //     var reader = new FileReader();
-          //     reader.onload = function(e) {
-          //         var dataUrl = e.target.result;
-          //         var li = document.createElement('LI');
-          //         var image = new Image();
-          //         image.width = 100;
-          //         image.onload = function() {
-          //             // some action here
-          //         };
-          //         image.src = dataUrl;
-          //         //alert(image);
-          //         li.appendChild(image);
-          //         //alert(li);
-          //         var oldli = document.querySelector(curlistView + ' > li');
-          //         if(oldli != null) oldli.remove();
-          //         listView.appendChild(li);
-          //     };
-          //     reader.readAsDataURL(file);
-          // };
       });
     </script>
 </html>
