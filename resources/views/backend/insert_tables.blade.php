@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="/css/bootstrap.min.css">
         <link rel="stylesheet" href="/css/insert_tables.css">
         <script src="/js/jquery.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
 
         <title>Laravel</title>
 
@@ -30,35 +31,50 @@
                   <label id="color{{ $size->id }}" class="color_size"> 
                     @foreach ($colors as $color)
                         <input type="checkbox" name="color[{{ $size->id }}][]" data-name-size="color{{ $size->id }}" id="cur_color" value="{{ $color->id }}" >{{ $color->title }} 
-                        {{-- <Br> --}}
                     @endforeach
                   </label>
                 <Br>
               @endforeach
-              {{-- <br> --}}
               @foreach ($colors as $color)
-                {{-- <input type="file" name="file[{{ $color->id }}]" value=""> --}}
                 <label id="picture{{ $color->id }}"" class="picture_color" >
                   <br><br>
-                  <label class="btn btn-primary pictures_cur" title="Выберите картинку">
+                  <label class="btn btn-primary pictures_cur" data-toggle="modal" data-target="#myModal{{ $color->id }}" title="Выберите картинку">
                     <label>
                       Выберите картинку
                     </label>
-                      {{-- <input type="file" id="file-input" style="display: none" name="pict{{ $color->id }}" >
-                       {{ $color->title }}
-                      <input type="hidden" name="colorid[]" value="{{ $color->id }}"> --}}
                       {{ $color->title }}
                   </label>
-                    @foreach ($pictures as $picture)
-                      <label class="picture_label">
-                        <input type="radio" name="pict_radio[{{ $color->id }}]" id="radioAll" class="picture_add" value="{{ $picture->id }}">
-                        <img src='{{ asset('storage/' . $picture->path . '50_50.jpg') }}' class=img-thumbnail" alt="Responsive image">
-                      </label>
-                    @endforeach
+                  {{-- @foreach ($pictures as $picture)
+                    <label class="picture_label">
+                      <input type="radio" name="pict_radio[{{ $color->id }}]" id="radioAll" class="picture_add" value="{{ $picture->id }}">
+                      <img src='{{ asset('storage/' . $picture->path . '50_50.jpg') }}' class=img-thumbnail" alt="Responsive image">
+                    </label>
+                  @endforeach --}}
+                  <!-- Modal -->
+                  <div class="modal fade" id="myModal{{ $color->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                        </div>
+                        <div class="modal-body">
+                          @foreach ($pictures as $picture)
+                            <label class="picture_label">
+                              <input type="radio" name="pict_radio[{{ $color->id }}]" id="radioAll" class="picture_add" value="{{ $picture->id }}" data-input-colorid="{{ $color->id }}">
+                                <img src='{{ asset('storage/' . $picture->path . '50_50.jpg') }}' class="img-thumbnail" alt="Responsive image">
+                              
+                            </label>
+                          @endforeach
+                        </div>
+                        <div class="modal-footer myModal-image">
+                          <button type="button" class="btn btn-default" data-dismiss="modal" data-close-colorid="{{ $color->id }}">Close</button>
+                          <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </label>
-                {{-- <hr class="picture_color" id="picture{{ $color->id }}" /> --}}
-                {{-- <ul id="list-view{{ $color->id }}" class="list-view"></ul> --}}
-               {{--  <br><br> --}}
               @endforeach
             </p>
             <button type="send" class="btn btn-success">Готово</button>
@@ -75,6 +91,7 @@
 
         //alert(picturesAdd.length);
         var event_change = new Event("change");
+        var event_click = new Event("click");
 
         //показ/скрытие списка цветов
         var sizeAll = document.querySelectorAll('#cur_size');
@@ -143,7 +160,7 @@
 
         // изменение надписи кнопок для картинок
         var picturesAdd = document.querySelectorAll('.picture_add');
-        // alert(picturesAdd.length);
+        //alert(picturesAdd.length);
         picturesAdd.forEach(function(pictureAdd){
           listen(pictureAdd, 'change', function(event) {
             var labelPicts = $(pictureAdd).parent(".picture_label").siblings(".pictures_cur");
@@ -154,15 +171,25 @@
               $(labelPicts).removeClass("btn-primary");
               $(labelPicts).addClass("btn-success");
               //alert("Картинка выбрана");
-            } 
-            // else{
-            //   $(labelPicts).children().text("Выберите картинку");//labelPicts.innerHTML = "Выберите картинку";
-            //   $(labelPicts).removeClass("btn-success");
-            //   $(labelPicts).addClass("btn-primary");
-            //   //alert("Выберите картинку");
-            // }
+              var modalImageId = $(pictureAdd).attr("data-input-colorid");
+              var modalImage = $('.myModal-image button[data-close-colorid^="'+modalImageId+'"]');
+              var modalImage = $.makeArray(modalImage);
+              //alert(JSON.stringify($(modalImage).children(".btn-default")));
+              $(modalImage).click();
+            }
           });
         });
+
+        //управление модальным окном
+        //var modalsImage = document.querySelectorAll('myModal-image');
+        // $.each(picturesAdd, function( index, pictureAdd ) {
+        //   listen(pictureAdd, 'change', function(event) {
+        //     alert("press on image");
+        //     var modalImage = $(pictureAdd).parent(".modal-body").siblings(".myModal-image");
+        //     $(modalImage).children(".btn-default").click();
+        //   });
+        // });
+
       });
     </script>
 </html>
