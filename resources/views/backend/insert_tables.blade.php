@@ -35,6 +35,7 @@
                   </label>
                 <Br>
               @endforeach
+            </p>
               @foreach ($colors as $color)
                 <label id="picture{{ $color->id }}"" class="picture_color" >
                   <br><br>
@@ -44,6 +45,7 @@
                     </label>
                       {{ $color->title }}
                   </label>
+                  <ul id="list-view{{ $color->id }}" class="list-view"></ul>
                   {{-- @foreach ($pictures as $picture)
                     <label class="picture_label">
                       <input type="radio" name="pict_radio[{{ $color->id }}]" id="radioAll" class="picture_add" value="{{ $picture->id }}">
@@ -76,7 +78,7 @@
                   </div>
                 </label>
               @endforeach
-            </p>
+            
             <button type="send" class="btn btn-success">Готово</button>
         </form>
     </body>
@@ -145,6 +147,14 @@
                 allArrayPicts.forEach(function(curPicture){
                   if(curPicture.checked){
                     curPicture.checked = false;
+                    $(curPicture).siblings('img').css('background-color', '#fff');
+                    var curlistView = $(curPicture).attr("data-input-colorid");//var curlistView = curfileInput.name;
+                    //var curlistView = curlistView.replace("pict_radio", "");
+                    var curlistView = '#list-view' + curlistView;
+                    //alert(curlistView);
+                    var listView = document.querySelector(curlistView); //'#list-view'+...
+                    var oldli = document.querySelector(curlistView + ' > li');
+                    if(oldli != null) oldli.remove();
                     //curPicture.dispatchEvent(event_change); 
                   }
                 });
@@ -158,7 +168,7 @@
           });
         });
 
-        // изменение надписи кнопок для картинок
+        // изменение надписи кнопок для картинок, управление модальным окном
         var picturesAdd = document.querySelectorAll('.picture_add');
         //alert(picturesAdd.length);
         picturesAdd.forEach(function(pictureAdd){
@@ -174,11 +184,65 @@
               var modalImageId = $(pictureAdd).attr("data-input-colorid");
               var modalImage = $('.myModal-image button[data-close-colorid^="'+modalImageId+'"]');
               var modalImage = $.makeArray(modalImage);
+              var picture = $(pictureAdd).siblings('.img-thumbnail');
+              $(picture).css('background-color', '#e805f6');
+              var picture_label = $(pictureAdd).parent('.picture_label');
+              var picture_labeles = $(picture_label).siblings('.picture_label');
+              var picture_labeles = $.makeArray(picture_labeles);
+              picture_labeles.forEach(function(picture_lab){
+                $(picture_lab).children('img').css('background-color', '#fff');
+              });
               //alert(JSON.stringify($(modalImage).children(".btn-default")));
               $(modalImage).click();
+            } else{
+              var picture = $(pictureAdd).siblings('.img-thumbnail');
+              $(picture).css('background-color', '#fff');
             }
           });
         });
+
+        //предпросмотр картинок
+        var fileInput = document.querySelectorAll('#radioAll'); //querySelectorAll
+
+        fileInput.forEach(function(curfileInput){
+          listen(curfileInput, 'change', function(event) {
+            var curlistView = $(curfileInput).attr("data-input-colorid");//var curlistView = curfileInput.name;
+            //var curlistView = curlistView.replace("pict_radio", "");
+            var curlistView = '#list-view' + curlistView;
+            files = $(curfileInput).siblings('img');//var files = curfileInput.files;
+            //alert(files);
+            if (files.lenght == 0) {
+                return;
+            }
+            //for(var i = 0; i < files.length; i++) {
+                generatePreview(files, curlistView);
+            //}
+            //curfileInput.value = "";
+          });
+        });
+        
+        var generatePreview = function(file, curlistView) {
+            var listView = document.querySelector(curlistView); //'#list-view'+...
+            // var reader = new FileReader();
+            // reader.onload = function(e) {
+                var dataUrl = $(file).attr('src');//e.target.result;
+                //alert(dataUrl);
+                var li = document.createElement('LI');
+                var image = new Image();
+                image.width = 100;
+                image.onload = function() {
+                    // some action here
+                };
+                image.src = dataUrl;
+                //alert(image);
+                li.appendChild(image);
+                //alert(li);
+                var oldli = document.querySelector(curlistView + ' > li');
+                if(oldli != null) oldli.remove();
+                listView.appendChild(li);
+            // };
+            // reader.readAsDataURL(file);
+        };
 
         //управление модальным окном
         //var modalsImage = document.querySelectorAll('myModal-image');
