@@ -155,19 +155,17 @@ class CrudTablesController extends Controller
             foreach ($goodsSizes as $goodSize){
               foreach ($goodSize->color as $col){
                 $curclrs[$cursize->id][] = $col->id;
+                $pict = Picture::where('id', $col->pivot->pictures_id)->get();
+                $pictPath[$col->id] = $pict[0]->path;
               }                                           
             }
         }
-
-        // $myecho = json_encode($curszs);
-        // $myecho2 = json_encode($curclrs);
-        //     `echo " curszs:    " >>/tmp/qaz`;
+        // $myecho = json_encode($pictPath);
+        //     `echo " pictPath:    " >>/tmp/qaz`;
         //     `echo "$myecho" >>/tmp/qaz`;
-        //     `echo " curclrs:    " >>/tmp/qaz`;
-        //     `echo "$myecho2" >>/tmp/qaz`;
         // exit;
 
-        return view('backend.edit_tables', ["good" => $good, "descrs" => $descrs, "sizes" => $sizes, "colors" => $colors, "curszs" => $curszs, "curclrs" => $curclrs, "pictures" => $pictures]);
+        return view('backend.edit_tables', ["good" => $good, "descrs" => $descrs, "sizes" => $sizes, "colors" => $colors, "curszs" => $curszs, "curclrs" => $curclrs, "pictures" => $pictures, "pictPath" => $pictPath]);
     }
 
     /**

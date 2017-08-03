@@ -30,7 +30,7 @@
                 <input type="checkbox" name="size[]" id="cur_size" value="{{ $size->id }}">{{ $size->title }}
                   <label id="color{{ $size->id }}" class="color_size"> 
                     @foreach ($colors as $color)
-                        <input type="checkbox" name="color[{{ $size->id }}][]" data-name-size="color{{ $size->id }}" id="cur_color" value="{{ $color->id }}" >{{ $color->title }} 
+                      <input type="checkbox" name="color[{{ $size->id }}][]" data-name-size="color{{ $size->id }}" id="cur_color" value="{{ $color->id }}" >{{ $color->title }} 
                     @endforeach
                   </label>
                 <Br>
@@ -71,7 +71,7 @@
                         </div>
                         <div class="modal-footer myModal-image">
                           <button type="button" class="btn btn-default" data-dismiss="modal" data-close-colorid="{{ $color->id }}">Close</button>
-                          <button type="button" class="btn btn-primary">Save changes</button>
+                          {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
                         </div>
                       </div>
                     </div>
