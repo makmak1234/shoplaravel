@@ -92,20 +92,22 @@ class CrudTablesController extends Controller
         $goodsSizes = GoodsSizes::where('goods_id', $goods->id)->get();
         $colors = $request->color;
         foreach ($goodsSizes as $goodSize) {
-            $goodSize->color()->attach($colors[$goodSize->sizes_id]);
+            if(isset($colors[$goodSize->sizes_id])){
+                $goodSize->color()->attach($colors[$goodSize->sizes_id]);
 
-            $allColors[] = $colors[$goodSize->sizes_id];
+                $allColors[] = $colors[$goodSize->sizes_id];
 
-            $colorGoodsSizes = ColorGoodsSizes::where('goods_sizes_id', $goodSize->id)->get();
+                $colorGoodsSizes = ColorGoodsSizes::where('goods_sizes_id', $goodSize->id)->get();
 
-            $pict_radio = $request->pict_radio;
-            foreach ($colorGoodsSizes as $colorGoodsSize) {
-                // $myecho = json_encode($pict_radio[$colorGoodsSize->colors_id]);
-                // `echo " pict_radio[colorGoodsSize->colors_id]:    " >>/tmp/qaz`;
-                // `echo "$myecho" >>/tmp/qaz`;
-                // //exit;
-                $colorGoodsSize->picture()->associate($pict_radio[$colorGoodsSize->colors_id]);
-                $colorGoodsSize->save();
+                $pict_radio = $request->pict_radio;
+                foreach ($colorGoodsSizes as $colorGoodsSize) {
+                    // $myecho = json_encode($pict_radio[$colorGoodsSize->colors_id]);
+                    // `echo " pict_radio[colorGoodsSize->colors_id]:    " >>/tmp/qaz`;
+                    // `echo "$myecho" >>/tmp/qaz`;
+                    // //exit;
+                    $colorGoodsSize->picture()->associate($pict_radio[$colorGoodsSize->colors_id]);
+                    $colorGoodsSize->save();
+                }
             }
         }
 
@@ -157,6 +159,7 @@ class CrudTablesController extends Controller
                 $curclrs[$cursize->id][] = $col->id;
                 $pict = Picture::where('id', $col->pivot->pictures_id)->get();
                 $pictPath[$col->id] = $pict[0]->path;
+                $pictId[$col->id] = $pict[0]->id;
               }                                           
             }
         }
@@ -165,7 +168,7 @@ class CrudTablesController extends Controller
         //     `echo "$myecho" >>/tmp/qaz`;
         // exit;
 
-        return view('backend.edit_tables', ["good" => $good, "descrs" => $descrs, "sizes" => $sizes, "colors" => $colors, "curszs" => $curszs, "curclrs" => $curclrs, "pictures" => $pictures, "pictPath" => $pictPath]);
+        return view('backend.edit_tables', ["good" => $good, "descrs" => $descrs, "sizes" => $sizes, "colors" => $colors, "curszs" => $curszs, "curclrs" => $curclrs, "pictures" => $pictures, "pictPath" => $pictPath, "pictId" => $pictId]);
     }
 
     /**
