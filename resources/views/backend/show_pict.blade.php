@@ -1,21 +1,11 @@
-<!doctype html>
-<html lang="{{ config('app.locale') }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="Cache-control" content="no-cache">
-        <meta http-equiv="Pragma" content="no-cache">
-        <meta http-equiv="Expires" content="-1">
+@extends('layouts.app')
 
-        <title>Laravel</title>
+@section('mycss')
+  {{-- <link rel="stylesheet" href="/css/bootstrap.min.css"> --}}
+  {{-- <link rel="stylesheet" href="/css/welcome.css"> --}}
+@endsection
 
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
-        <script src="/js/jquery.min.js"></script>
-        <script src="/js/bootstrap.min.js"></script>
-        
-    </head>
-    <body>
+@section('content')
             <div class="content">
                 <div class="container">
                     <div class="slogan">
@@ -94,9 +84,9 @@
                     </div>
                 </div>
             </div>
+@endsection
 
-    </body>
-
+@section('myjs')
     <script type="text/javascript">
       $('[id $= deleteRecord]').on('click', function () {
         id = $(this).attr('curid');
@@ -119,4 +109,4 @@
         }, 'json');
       })
     </script>
-</html>
+@endsection

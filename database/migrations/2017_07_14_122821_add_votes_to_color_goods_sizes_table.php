@@ -33,6 +33,6 @@ class AddVotesToColorGoodsSizesTable extends Migration
             $table->dropForeign("pictures_id");
         });
 
-        Schema::dropIfExists('color_goods_sizes');
+       // Schema::dropIfExists('color_goods_sizes');
     }
 }

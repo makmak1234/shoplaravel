@@ -1,19 +1,15 @@
-<!doctype html>
-<html lang="{{ config('app.locale') }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-        <title>Laravel</title>
+@section('mycss')
+  {{-- <link rel="stylesheet" href="/css/bootstrap.min.css"> --}}
+  {{-- <link rel="stylesheet" href="/css/welcome.css"> --}}
+@endsection
 
-    </head>
-    <body>
+@section('content')
         <form method="POST" action="/store_edit_size">
             {{ csrf_field() }}
             <input type="text" class="form-control" name="title" value="{{ $size->title }}">
             <input type="hidden" name="id" value="{{ $size->id }}">
             <button type="send">Готово</button>
         </form>
-    </body>
-</html>
+@endsection

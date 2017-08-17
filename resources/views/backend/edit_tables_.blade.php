@@ -1,20 +1,23 @@
-@extends('layouts.app')
+<!doctype html>
+<html lang="{{ config('app.locale') }}">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-@section('mycss')
-  {{-- <link rel="stylesheet" href="/css/bootstrap.min.css"> --}}
-  {{-- <link rel="stylesheet" href="/css/welcome.css"> --}}
-  {{-- <script src="/js/jquery.min.js"></script>
-  <script src="/js/bootstrap.min.js"></script> --}}
-  <link rel="stylesheet" href="/css/edit_tables.css">
-@endsection
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/insert_tables.css">
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
 
-@section('content')
+        <title>Laravel</title>
 
+    </head>
+    <body>
       {{-- echo(json_encode($curclrs)); --}}
         <form method="POST" action="/store_edit_tables">
             {{ csrf_field() }}
-            <input type="text" class="form-control" name="title" value="{{ $good->title }}" placeholder="Название">
-            <br>
+            <input type="text" class="form-control" name="title" value="{{ $good->title }}">
             <select type="text" class="form-control" name="descriptions" value="" required
             >
               @foreach ($descrs as $descr)
@@ -25,40 +28,16 @@
                 <option value="{{ $descr->id }}" {{ $selected }}>{{ $descr->title }}</option>
               @endforeach
             </select>
-            <br>
-            <select type="text" class="form-control" name="category" value="" required
-            >
-              @foreach ($categories as $category)
-                <?php $selected = '' ?>
-                @if ($good->categories_id == $category->id)
-                  <?php $selected = 'selected' ?>
-                @endif
-                <option value="{{ $category->id }}" {{ $selected }}>{{ $category->title }}</option>
-              @endforeach
-            </select>
-            <br>
-            <select type="text" class="form-control" name="subcat" value="" required
-            >
-              @foreach ($subcats as $subcat)
-                <?php $selected = '' ?>
-                @if ($good->subcategories_id == $subcat->id)
-                  <?php $selected = 'selected' ?>
-                @endif
-                <option value="{{ $subcat->id }}" {{ $selected }}>{{ $subcat->title }}</option>
-              @endforeach
-            </select>
-            <br>
             <p>
               @foreach ($sizes as $size)
-                <?php $checked= ''; $display = 'none'; ?>
+                <?php $checked= '' ?>
                 <?php 
                   if (in_array($size->id, $curszs)){
                     $checked = 'checked';
-                    $display = 'inline';
                   }
                 ?>
                 <input type="checkbox" name="size[]" id="cur_size" value="{{ $size->id }}" {{ $checked }}>{{ $size->title }}
-                  <label id="color{{ $size->id }}" class="color_size" style="display:{{ $display }};"> 
+                  <label id="color{{ $size->id }}" class="color_size"> 
                     @foreach ($colors as $color)
                       <?php $checked = '' ?>
                       @if (isset($curclrs[$size->id]))
@@ -67,7 +46,8 @@
                           <?php $curclrs2[] = $color->id; ?>
                         @endif
                       @endif
-                      <input type="checkbox" name="color[{{ $size->id }}][]" data-name-size="color{{ $size->id }}" id="cur_color" value="{{ $color->id }}" {{ $checked }}>{{ $color->title }} 
+                      <input type="checkbox" name="color[{{ $size->id }}][]" id="cur_color" value="{{ $color->id }}" data-name-size="color{{ $size->id }}" {{ $checked }}>{{ $color->title }} 
+                      {{-- <Br> --}}
                     @endforeach
                   </label>
                 <Br>
@@ -80,27 +60,20 @@
                     <?php $display = 'inline' ?>
                   @endif
                 @endif
-                <label id="picture{{ $color->id }}"" class="picture_color"  style="display:{{ $display }};">
+                <label id="picture{{ $color->id }}"" class="picture_color" style="display:{{ $display }};">
                   <br><br>
                   <label class="btn btn-primary pictures_cur" data-toggle="modal" data-target="#myModal{{ $color->id }}" title="Выберите картинку">
                     <label>
                       Выберите картинку
                     </label>
                       {{ $color->title }}
-                  </label>
+                  </label>                 
                   <ul id="list-view{{ $color->id }}" class="list-view">
-                    @if(isset($pictPath[$color->id]))
-                      <li>
-                        <img src='{{ asset('storage/' . $pictPath[$color->id] . '50_50.jpg') }}' class="img-thumbnail" alt="Responsive image">
-                      </li>
-                    @endif
+                    <li>
+                      <img src='{{ asset('storage/' . $pictPath[$color->id] . '50_50.jpg') }}' alt="Responsive image">
+                    </li>
                   </ul>
-                  {{-- @foreach ($pictures as $picture)
-                    <label class="picture_label">
-                      <input type="radio" name="pict_radio[{{ $color->id }}]" id="radioAll" class="picture_add" value="{{ $picture->id }}">
-                      <img src='{{ asset('storage/' . $picture->path . '50_50.jpg') }}' class=img-thumbnail" alt="Responsive image">
-                    </label>
-                  @endforeach --}}
+                  
                   <!-- Modal -->
                   <div class="modal fade" id="myModal{{ $color->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                     <div class="modal-dialog" role="document">
@@ -112,15 +85,12 @@
                         <div class="modal-body">
                           @foreach ($pictures as $picture)
                             <?php $backgr_color = '#fff';  $checked = '';?>
-                            @if (isset($pictId[$color->id]))
-                              @if ($pictId[$color->id] == $picture->id)
-                                <?php $backgr_color = '#e805f6'; $checked = 'checked'; ?>
-                              @endif
+                            @if ($pictId[$color->id] == $picture->id)
+                              <?php $backgr_color = '#e805f6'; $checked = 'checked'; ?>
                             @endif
                             <label class="picture_label">
                               <input type="radio" name="pict_radio[{{ $color->id }}]" id="radioAll" class="picture_add" value="{{ $picture->id }}" data-input-colorid="{{ $color->id }}" {{ $checked }}>
                                 <img src='{{ asset('storage/' . $picture->path . '50_50.jpg') }}' class="img-thumbnail" alt="Responsive image" style="background-color:{{$backgr_color}};">
-                              
                             </label>
                           @endforeach
                         </div>
@@ -134,13 +104,12 @@
                 </label>
               @endforeach
             
-            <input type="hidden" name="id" value="{{ $good->id }}">
-            <button type="send" class="btn btn-success">Готово</button>
-        </form>
-        <br><br>
-@endsection
 
-@section('myjs')
+            <input type="hidden" name="id" value="{{ $good->id }}">
+            <button type="send">Готово</button>
+        </form>
+    </body>
+
     <script>
       var listen = function(element, event, fn) {
           return element.addEventListener(event, fn, false);
@@ -291,8 +260,6 @@
                     // some action here
                 };
                 image.src = dataUrl;
-                image.classList.add("img-thumbnail");
-                image.style.backgroundColor = '#e805f6';
                 //alert(image);
                 li.appendChild(image);
                 //alert(li);
@@ -315,4 +282,5 @@
 
       });
     </script>
-@endsection
+
+</html>

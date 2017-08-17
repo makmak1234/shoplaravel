@@ -1,31 +1,25 @@
-<!doctype html>
-<html lang="{{ config('app.locale') }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
+@section('mycss')
+  {{-- <link rel="stylesheet" href="/css/bootstrap.min.css"> --}}
+  {{-- <link rel="stylesheet" href="/css/welcome.css"> --}}
+@endsection
 
-        <title>Laravel</title>
-
-    </head>
-    <body>
+@section('content')
         <form method="POST" action="/store_pict" ENCTYPE="multipart/form-data">
           {{ csrf_field() }}
           <label class="btn btn-primary" title="Кликни для замены">
             <input style="display: none" name="pict" type="file" onchange="submit()">
             Добавить картинку
           </label>
-        </form>
-    </body>
-
+@endsection
     {{-- <form action="">
             <input type="file" id="file-input" multiple="multiple" accept="image/jpeg" />
         </form>
         <hr/>
         <ul id="list-view"></ul> --}}
 
+@section('myjs')
     <script>
         var listen = function(element, event, fn) {
             return element.addEventListener(event, fn, false);
@@ -65,4 +59,5 @@
             };
         });
     </script>
-</html>
+@endsection
+

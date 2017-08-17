@@ -1,48 +1,71 @@
-<!doctype html>
-<html lang="{{ config('app.locale') }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-        <title>Laravel</title>
+@section('mycss')
+  {{-- <link rel="stylesheet" href="/css/bootstrap.min.css"> --}}
+  <link rel="stylesheet" href="/css/welcome.css">
+@endsection
 
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/css/welcome.css">
-        <script src="/js/jquery.min.js"></script>
-        <script src="/js/bootstrap.min.js"></script>
-        
-    </head>
-    <body>
-    {{-- {{$pictures}}<br><br> --}}
-    {{-- {{$goodsSizes}} --}}
+@section('content')
+  <br>
             <div class="content">
                 <div class="container">
+                    <div class="btn-group" role="group" aria-label="...">
+                      <a href="/insert_tables" type="button" class="btn btn-default">Добавить запись</a>
+                      <a href="/show_category" type="button" class="btn btn-default">Редактировать категории</a>
+                      <a href="/show_subcat" type="button" class="btn btn-default">Редактировать субкатегории</a>
+                      <a href="/show_descr" type="button" class="btn btn-default">Редактировать описание</a>
+                      <a href="/show_size" type="button" class="btn btn-default">Редактировать размер</a>
+                      <a href="/show_color" type="button" class="btn btn-default">Редактировать цвет</a>
+                      <a href="/show_pict" type="button" class="btn btn-default">Редактировать картинки</a>
+                    </div>
                     <div class="slogan">
-                        <h1>Заголовок</h1>
+                        <h1>Панель управления</h1>
                     </div> 
                     <div class="bread-crumbs">Все категории</div>
-                    <div class="row">
-                        @foreach ($goods as $good)
+                    @foreach ($categories as $category)  
+                      <h2>{{ $category->title }}</h2>                  
+                      <?php $goods = App\Goods::where('categories_id', $category->id)->get(); ?>
+                      <?php 
+                        $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [$category->id]); 
+                      ?>
+                      @foreach ($subcats as $subcat)
+                        <?php 
+                          $goods = App\Goods::where([
+                              ['categories_id', '=', $category->id],
+                              ['subcategories_id', '=', $subcat->subcategories_id],
+                          ])->get();
+                          //DB::select('select * from goods where categories_id = ? and subcategories_id = ?'   , [$category->id, $subcat->subcategories_id]); 
+                        ?>
+                        
+                        <h3>{{ $goods[0]->subcategory->title }} <small>({{ $category->title }})</small></h3>
+                        {{-- {{json_encode($goods)}} --}}
+                        <div class="row content-main">
+                          <?php $myClear = 3; ?>
+                          @foreach ($goods as $good)
                             <div class="col-md-4 col-sm-6 col-xs-12">
                               <div class="thumbnail">
                                 <div class="row">                                    
                                   <?php $allcolor = array(); ?>
+                                  <?php $myClearImg = 3; $curLoop = 1;?>
                                   @foreach ($good->size as $s)
                                     <?php $goodsSizes = App\GoodsSizes::where('id', $s->pivot->id)->get(); ?>
                                     @foreach ($goodsSizes as $goodSize)
                                       @foreach ($goodSize->color as $col)
                                         @if (!(in_array($col->id, $allcolor)))
-                                          <div class="col-sm-6 col-md-4">
+                                          <div class="col-md-4">
                                             <div class="thumbnail">     
                                                 <?php $pict = App\Picture::where('id', $col->pivot->pictures_id)->get(); ?>
                                                 <img src='{{ asset('storage/' . $pict[0]->path . '50_50.jpg') }}' alt="...">
                                                 <div class="caption">
-                                                  {{-- <h3>Thumbnail label</h3> --}}
                                                   <p class="img_caption_color">{{ $col->title }}</p>
                                                 </div>
                                             </div>
-                                          </div>    
+                                          </div>
+                                          @if ($curLoop == $myClearImg)
+                                            <div class="clearfix visible-*-block"></div>
+                                            <?php $myClearImg = 3;  $curLoop = 1;?>
+                                          @endif
+                                          <?php $curLoop++; ?>    
                                         @endif
                                         <?php $allcolor[] = $col->id; ?>
                                       @endforeach 
@@ -52,6 +75,8 @@
                                   <div class="caption">
                                       <h4>{{ $good->title }}</h4>
                                       <p>{{ $good->descriptions->title }}</p>
+                                      <p>{{ $good->category->title }}</p>
+                                      <p>{{ $good->subcategory->title }}</p>
                                       <p>
                                         @foreach ($good->size as $s)
                                           <ii style="color: red">{{ $s->title }}</ii>
@@ -83,7 +108,7 @@
                                                       <span class="input-group-addon">
                                                         <input type="checkbox" id="del_desc{{ $good->id }}" value="">
                                                       </span>
-                                                      <label type="text" class="form-control" aria-label="drop_descr">Удалить описание</label>
+                                                      <label type="text" class="form-control" aria-label="drop_descr{{ $good->id }}">Удалить описание</label>
                                                     </div><!-- /input-group -->
                                                   </div><!-- /.col-lg-6 -->
                                                 </div><!-- /.row -->
@@ -100,11 +125,21 @@
                                   </div>
                                 </div>
                             </div>
+                            @if ($loop->iteration == $myClear)
+                              <div class="clearfix visible-*-block"></div>
+                              <?php $myClear += 3; ?>
+                            @endif
                         @endforeach
-                    </div>
+                      
+                      </div>
+                      <br>
+                      @endforeach
+                    @endforeach
                     <br>
                     <div class="btn-group" role="group" aria-label="...">
                       <a href="/insert_tables" type="button" class="btn btn-default">Добавить запись</a>
+                      <a href="/show_category" type="button" class="btn btn-default">Редактировать категории</a>
+                      <a href="/show_subcat" type="button" class="btn btn-default">Редактировать субкатегории</a>
                       <a href="/show_descr" type="button" class="btn btn-default">Редактировать описание</a>
                       <a href="/show_size" type="button" class="btn btn-default">Редактировать размер</a>
                       <a href="/show_color" type="button" class="btn btn-default">Редактировать цвет</a>
@@ -112,32 +147,55 @@
                     </div>
                 </div>
             </div>
+            <br><br>
 
-       <!--  </div> -->
+@endsection
 
-    </body>
+@section('myjs')
+  {{-- <script src="/js/jquery.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script> --}}
+  <script type="text/javascript">
+    $('[id $= deleteRecord]').on('click', function () {
+      id = $(this).attr('curid');
+      // console.log(id);
+      del_desc = $('#del_desc' + id).is(':checked');//.prop("checked");
 
-    <script type="text/javascript">
-      $('[id $= deleteRecord]').on('click', function () {
-        id = $(this).attr('curid');
-        //alert('id= '+id);
-        del_desc = $('#del_desc' + id).is(':checked');//.prop("checked");
+      $.get('/delete_row', {id:id, del_desc:del_desc}, function( data ) {
+        if(data.success == true){
+          $('#erralert' + id).removeAttr('hidden');
+          $('#erralert' + id).text(data.message);
+          $(location).attr('href', '/');
+        }
+        else if(data.success == false){
+          //alert('count= '+ data.success);
+          document.getElementById('del_desc' + id).checked = false;
+          del_desc = $('#del_desc' + id).is(':checked');
+          $("[aria-label='drop_descr" + id + "']").text(data.message);
+        }
+        
+      }, 'json');
+    })
+  </script>
+@endsection
 
-        $.get('/delete_row', {id:id, del_desc:del_desc}, function( data ) {
-          if(data.success == true){
-            $('#erralert' + id).removeAttr('hidden');
-            $('#erralert' + id).text(data.message);
-            $(location).attr('href', '/');
-          }
-          else if(data.success == false){
-            //alert('count= '+ data.success);
-            document.getElementById('del_desc' + id).checked = false;
-            del_desc = $('#del_desc' + id).is(':checked');
-            $("[aria-label='drop_descr']").text(data.message);
-          }
-          
-        }, 'json');
-      })
-    </script>
+{{-- <!doctype html>
+<html lang="{{ config('app.locale') }}">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Laravel</title>
+
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/welcome.css">
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        
+    </head>
+    <body>
+    </body> --}}
+    {{-- {{$pictures}}<br><br> --}}
+    {{-- {{$goodsSizes}} --}}
+            
    
-</html>

@@ -1,19 +1,11 @@
-<!doctype html>
-<html lang="{{ config('app.locale') }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/css/insert_tables.css">
-        <script src="/js/jquery.min.js"></script>
-        <script src="/js/bootstrap.min.js"></script>
+@section('mycss')
+  {{-- <link rel="stylesheet" href="/css/bootstrap.min.css"> --}}
+  <link rel="stylesheet" href="/css/insert_tables.css">
+@endsection
 
-        <title>Laravel</title>
-
-    </head>
-    <body>
+@section('content')
         <form method="POST" action="/store_tables">
             {{ csrf_field() }}
             <input type="text" class="form-control" name="title" value="" placeholder="Название">
@@ -25,6 +17,20 @@
               @endforeach
             </select>
             <br>
+            <select type="text" class="form-control" name="category" value="" required
+            >
+              @foreach ($categories as $category)
+                <option value="{{ $category->id }}">{{ $category->title }}</option>
+              @endforeach
+            </select>
+            <br>
+            <select type="text" class="form-control" name="subcat" value="" required
+            >
+              @foreach ($subcats as $subcat)
+                <option value="{{ $subcat->id }}">{{ $subcat->title }}</option>
+              @endforeach
+            </select>
+            <br>
             <p>
               @foreach ($sizes as $size)
                 <input type="checkbox" name="size[]" id="cur_size" value="{{ $size->id }}">{{ $size->title }}
@@ -33,12 +39,13 @@
                       <input type="checkbox" name="color[{{ $size->id }}][]" data-name-size="color{{ $size->id }}" id="cur_color" value="{{ $color->id }}" >{{ $color->title }} 
                     @endforeach
                   </label>
-                <Br>
+                <br>
               @endforeach
             </p>
+            
               @foreach ($colors as $color)
                 <label id="picture{{ $color->id }}"" class="picture_color" >
-                  <br><br>
+                  {{-- <br><br> --}}
                   <label class="btn btn-primary pictures_cur" data-toggle="modal" data-target="#myModal{{ $color->id }}" title="Выберите картинку">
                     <label>
                       Выберите картинку
@@ -81,9 +88,10 @@
             
             <button type="send" class="btn btn-success">Готово</button>
         </form>
-    </body>
+@endsection
 
 
+@section('myjs')
     <script>
       var listen = function(element, event, fn) {
           return element.addEventListener(event, fn, false);
@@ -234,6 +242,8 @@
                     // some action here
                 };
                 image.src = dataUrl;
+                image.classList.add("img-thumbnail");
+                image.style.backgroundColor = '#e805f6';
                 //alert(image);
                 li.appendChild(image);
                 //alert(li);
@@ -256,4 +266,4 @@
 
       });
     </script>
-</html>
+@endsection

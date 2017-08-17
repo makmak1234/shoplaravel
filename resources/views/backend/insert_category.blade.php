@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-        <form method="POST" action="/store_descr">
+        <form method="POST" action="/store_category">
             {{ csrf_field() }}
             <input type="text" class="form-control" name="title" value="">
             <button type="send">Готово</button>

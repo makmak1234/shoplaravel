@@ -53,7 +53,9 @@ class CrudPictController extends Controller
         // `echo "$myecho" >>/tmp/qaz`;
         // exit;
 
-        $img = Image::make(asset('storage/' . $path))->resize(50, 50);
+        $img = Image::make(asset('storage/' . $path))->resize(null, 100, function ($constraint) {
+            $constraint->aspectRatio();
+        });
         $img->save(public_path('storage/' .  $path . '50_50.jpg' ));
 
         $pict->path = $path;

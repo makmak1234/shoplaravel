@@ -4,18 +4,14 @@ namespace App\Http\Controllers\Backend;
 
 use App\Goods;
 use App\Description;
-use App\Category;
-use App\Subcategory;
 use App\Size;
 use App\Color;
 use App\GoodsSizes;
 use App\ColorGoodsSizes;
-use App\CategorySubcat;
 use App\Picture;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\UploadedFile;
 use Intervention\Image\Facades\Image;
 //use Intervention\Image\ImageManager;
@@ -59,10 +55,6 @@ class CrudTablesController extends Controller
     {
         $descrs = Description::all();
 
-        $categories = Category::all();
-
-        $subcats = Subcategory::all();
-
         $sizes = Size::all();
 
         $colors = Color::all();
@@ -71,7 +63,7 @@ class CrudTablesController extends Controller
 
         //$manager = new ImageManager(array('driver' => 'imagick'));
 
-        return view('backend.insert_tables', ["descrs" => $descrs, "categories" => $categories, "subcats" => $subcats, "sizes" => $sizes, "colors" => $colors, "pictures" => $pictures]);//
+        return view('backend.insert_tables', ["descrs" => $descrs, "sizes" => $sizes, "colors" => $colors, "pictures" => $pictures]);//
     }
 
     /**
@@ -92,37 +84,28 @@ class CrudTablesController extends Controller
         $goods = new Goods;
         $goods->title = $request->title;
         $goods->descriptions()->associate($request->descriptions);//($descriptions);
-        $goods->category()->associate($request->category);
-        $goods->subcategory()->associate($request->subcat);
         $goods->save();
-
         $goods->size()->attach($request->size);
+
         $goods->save();
-
-        // $category = Category::where('id', $request->category)->get();
-
-        // $category[0]->subcategory()->attach($request->subcat);
-        // $category[0]->save();
 
         $goodsSizes = GoodsSizes::where('goods_id', $goods->id)->get();
         $colors = $request->color;
         foreach ($goodsSizes as $goodSize) {
-            if(isset($colors[$goodSize->sizes_id])){
-                $goodSize->color()->attach($colors[$goodSize->sizes_id]);
+            $goodSize->color()->attach($colors[$goodSize->sizes_id]);
 
-                $allColors[] = $colors[$goodSize->sizes_id];
+            $allColors[] = $colors[$goodSize->sizes_id];
 
-                $colorGoodsSizes = ColorGoodsSizes::where('goods_sizes_id', $goodSize->id)->get();
+            $colorGoodsSizes = ColorGoodsSizes::where('goods_sizes_id', $goodSize->id)->get();
 
-                $pict_radio = $request->pict_radio;
-                foreach ($colorGoodsSizes as $colorGoodsSize) {
-                    // $myecho = json_encode($pict_radio[$colorGoodsSize->colors_id]);
-                    // `echo " pict_radio[colorGoodsSize->colors_id]:    " >>/tmp/qaz`;
-                    // `echo "$myecho" >>/tmp/qaz`;
-                    // //exit;
-                    $colorGoodsSize->picture()->associate($pict_radio[$colorGoodsSize->colors_id]);
-                    $colorGoodsSize->save();
-                }
+            $pict_radio = $request->pict_radio;
+            foreach ($colorGoodsSizes as $colorGoodsSize) {
+                // $myecho = json_encode($pict_radio[$colorGoodsSize->colors_id]);
+                // `echo " pict_radio[colorGoodsSize->colors_id]:    " >>/tmp/qaz`;
+                // `echo "$myecho" >>/tmp/qaz`;
+                // //exit;
+                $colorGoodsSize->picture()->associate($pict_radio[$colorGoodsSize->colors_id]);
+                $colorGoodsSize->save();
             }
         }
 
@@ -140,28 +123,16 @@ class CrudTablesController extends Controller
 
         $pictures = Picture::all();
 
-        $categories = Category::all();
-        $subcats = Subcategory::all();
+        //$goodsSizes = GoodsSizes::where('goods_id', '13')->get();
 
-        // $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [1]);
+        //$colors = Color::where('id', '3')->get();
 
-        // $subcatsmass = array();
-        // foreach ($subcats as $subcat) {
-        //     $subcatsmass[] = $subcat->subcategories_id;
-        // }
-        // $subcats = implode(',', $subcatsmass);
-
-        // $goods2 = Goods::where([
-        //     ['categories_id', '=', '1'],
-        //     ['subcategories_id', '=', '1'],
-        // ])->get();//DB::select('select * from goods where categories_id = ? and subcategories_id in(' . $subcats . ')', [1]); 
-
-        // $myecho = json_encode($goods2[0]->size);
-        // `echo " goods2->size    " >>/tmp/qaz`;
+        // $myecho = json_encode($colors);
+        // `echo " colors:    " >>/tmp/qaz`;
         // `echo "$myecho" >>/tmp/qaz`;
-        //exit;
+        // //exit;
 
-        return view('welcome', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats]);//, "goodsSizes" => $goodsSizes
+        return view('welcome', ["goods" => $goods, "pictures" => $pictures]);//, "goodsSizes" => $goodsSizes
     }
 
     /**
@@ -173,8 +144,6 @@ class CrudTablesController extends Controller
     {
         $good = Goods::find($id);
         $descrs = Description::all();
-        $categories = Category::all();
-        $subcats = Subcategory::all();
         $sizes = Size::all();
         $colors = Color::all();
         $pictures = Picture::all();
@@ -197,7 +166,7 @@ class CrudTablesController extends Controller
         //     `echo "$myecho" >>/tmp/qaz`;
         // exit;
 
-        return view('backend.edit_tables', ["good" => $good, "descrs" => $descrs, "categories" => $categories, "subcats" => $subcats, "sizes" => $sizes, "colors" => $colors, "curszs" => $curszs, "curclrs" => $curclrs, "pictures" => $pictures, "pictPath" => $pictPath, "pictId" => $pictId]);
+        return view('backend.edit_tables', ["good" => $good, "descrs" => $descrs, "sizes" => $sizes, "colors" => $colors, "curszs" => $curszs, "curclrs" => $curclrs, "pictures" => $pictures, "pictPath" => $pictPath, "pictId" => $pictId]);
     }
 
     /**
@@ -276,16 +245,6 @@ class CrudTablesController extends Controller
             $descriptions->delete();
             return response()->json(["success" => true, "message" => "Запись и описание удалены"]);
         }
-
-        // $category = Category::where('id', $good->categories_id)->get();
-
-        // $myecho = json_encode($category);
-        // `echo " category:    " >>/tmp/qaz`;
-        // `echo "$myecho" >>/tmp/qaz`;
-        // exit;
-
-        // $category[0]->subcategory()->detach($good->subcategories_id);
-        //$category[0]->save();
 
         $good->delete();
         
