@@ -60,7 +60,7 @@
                     <br>
                     <div class="btn-group" role="group" aria-label="...">
                       <a href="/insert_color" type="button" class="btn btn-default">Добавить запись</a>
-                      <a href="/" type="button" class="btn btn-default">Назад к товару</a>
+                      <a href="{{route('showTables')}}" type="button" class="btn btn-default">Назад к товару</a>
                     </div>
                 </div>
             </div>

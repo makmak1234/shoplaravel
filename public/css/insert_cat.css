@@ -1,0 +1,36 @@
+#list-view {
+    list-style: none;
+    overflow: hidden;
+}
+
+#list-view li {
+    float: left;
+    margin: 0 10px 10px 0;
+    padding: 4px;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+#list-view li img, .list-view li canvas {
+    display: inline-block;
+    vertical-align: top;
+    width: 100px;
+}
+
+.color_size{
+    display: none;
+}
+
+.picture_color{
+    display: none;
+}
+
+.img-thumbnail{
+    cursor: pointer;
+}
+
+.picture_add{opacity:0}
+.picture_label{display:inline-block; width:100px; height:100px}
+.picture_label>img{width:100%}

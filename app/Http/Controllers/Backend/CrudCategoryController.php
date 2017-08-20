@@ -6,6 +6,7 @@ use App\Goods;
 use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Intervention\Image\Facades\Image;
 //use Illuminate\Support\Facades\DB;
 
 class CrudCategoryController extends Controller
@@ -23,6 +24,23 @@ class CrudCategoryController extends Controller
         $category = new Category;
 
         $category->title = $request->title;
+
+        $path = $request->file('pict')->store('pict_cat');
+        //$path = Storage::putFile('pictures', $request->file('pict'));
+
+        // $myecho = json_encode($path);
+        // `echo " request->file    " >>/tmp/qaz`;
+        // `echo "$myecho" >>/tmp/qaz`;
+        // exit;
+
+        $img = Image::make(asset('storage/' . $path))->resize(null, 100, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->save(public_path('storage/' .  $path . '50_50.jpg' ));
+
+        $category->path = $path;
+
+        //return redirect()->route('showPict');
 
         $category->save();
     }
@@ -66,21 +84,26 @@ class CrudCategoryController extends Controller
 
         $category = new Category;
 
-        //$descriptions = new Description;
-
         $category->title = $request->title;
 
-        //$descriptions->title = $request->descriptions;
+        // $myecho = json_encode($request->file('pict'));
+        // `echo " request->file    " >>/tmp/qaz`;
+        // `echo "$myecho" >>/tmp/qaz`;
+        // exit;
 
-        //$descriptions->save();
+        $path = $request->file('pict')->store('pict_cat');
+        //$path = Storage::putFile('pictures', $request->file('pict'));
+
+        $img = Image::make(asset('storage/' . $path))->resize(null, 100, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->save(public_path('storage/' .  $path . '50_50.jpg' ));
+
+        $category->path = $path;
 
         $category->save();
 
         return redirect()->route('showCategory');
-
-        // $goods = Goods::all();
-
-        // return view('welcome', ["goods" => $goods]);
     }
 
     /**

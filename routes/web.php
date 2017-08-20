@@ -12,7 +12,7 @@
 */
 
 Route::middleware(['auth'])->group(function () {
-	Route::get('/', 'Backend\CrudTablesController@showTables')->name('showTables');
+	Route::get('/show_tables', 'Backend\CrudTablesController@showTables')->name('showTables');
 	Route::get('/create_tables', 'Backend\CreateTablesController@createTables');
 	Route::get('/insert_tables', 'Backend\CrudTablesController@insertTables');
 	//Route::get('/insert_descr', 'Backend\CrudTablesController@insertTables');
@@ -66,6 +66,8 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/delete_pict', 'Backend\CrudPictController@deleteRowPict')->name('deleteRowPict');
 });
 
+Route::get('/', 'Frontend\IndexController@index')->name('index');
+Route::get('/sucat/{cat_id}/{subcat_id}', 'Frontend\IndexController@catSubcatShow')->name('cat_sub_show');
 
 Auth::routes();
 

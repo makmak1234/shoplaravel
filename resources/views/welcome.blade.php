@@ -19,25 +19,22 @@
                       <a href="/show_pict" type="button" class="btn btn-default">Редактировать картинки</a>
                     </div>
                     <div class="slogan">
-                        <h1>Панель управления</h1>
+                        <h1>Все категории</h1>
                     </div> 
-                    <div class="bread-crumbs">Все категории</div>
+                    <div class="bread-crumbs"></div>
                     @foreach ($categories as $category)  
                       <h2>{{ $category->title }}</h2>                  
-                      <?php $goods = App\Goods::where('categories_id', $category->id)->get(); ?>
-                      <?php 
-                        $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [$category->id]); 
-                      ?>
+                      @php $subcats = $category->subcategory; 
+                      @endphp
                       @foreach ($subcats as $subcat)
-                        <?php 
+                        @php 
                           $goods = App\Goods::where([
                               ['categories_id', '=', $category->id],
-                              ['subcategories_id', '=', $subcat->subcategories_id],
+                              ['subcategories_id', '=', $subcat->id],
                           ])->get();
-                          //DB::select('select * from goods where categories_id = ? and subcategories_id = ?'   , [$category->id, $subcat->subcategories_id]); 
-                        ?>
+                        @endphp
                         
-                        <h3>{{ $goods[0]->subcategory->title }} <small>({{ $category->title }})</small></h3>
+                        <h3>{{ $subcat->title }} <small>({{ $category->title }})</small></h3>
                         {{-- {{json_encode($goods)}} --}}
                         <div class="row content-main">
                           <?php $myClear = 3; ?>

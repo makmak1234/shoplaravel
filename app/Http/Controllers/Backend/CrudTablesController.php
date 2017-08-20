@@ -126,6 +126,17 @@ class CrudTablesController extends Controller
             }
         }
 
+        DB::table('category_subcats')->truncate();
+        $categories = Category::all();
+        foreach ($categories as $category){        
+            //$goods = App\Goods::where('categories_id', $category->id)->get();
+            $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [$category->id]); 
+            foreach ($subcats as $subcat){
+                $category->subcategory()->attach($subcat);
+            }
+            $category->save();
+        }
+
         return redirect()->route('showTables');
     }
 
@@ -142,6 +153,8 @@ class CrudTablesController extends Controller
 
         $categories = Category::all();
         $subcats = Subcategory::all();
+
+        $category_subcats = CategorySubcat::all();
 
         // $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [1]);
 
@@ -161,7 +174,7 @@ class CrudTablesController extends Controller
         // `echo "$myecho" >>/tmp/qaz`;
         //exit;
 
-        return view('welcome', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats]);//, "goodsSizes" => $goodsSizes
+        return view('welcome', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats, "category_subcats" => $category_subcats]);//, "goodsSizes" => $goodsSizes
     }
 
     /**
