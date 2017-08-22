@@ -24,7 +24,7 @@
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="card">
                                 <h4>{{ $category->title }}</h4>
-                                <div id='{{ "category" . $loop->index }}' class="category" style="background-image: grey;">
+                                <div id='{{ "category" . $loop->index }}' class="category" style="background-image: url({{ asset('storage/' . $category->path) }});">
                                     @php $subcats = $category->subcategory; @endphp
                                     @foreach ($subcats as $subcat)
                                         @php 

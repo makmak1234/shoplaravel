@@ -7,53 +7,11 @@ use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 //use Illuminate\Support\Facades\DB;
 
 class CrudCategoryController extends Controller
 {
-    /**
-     * Create a new goods instance.
-     *
-     * @param  Request  $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        // Validate the request...
-
-        $category = new Category;
-
-        $category->title = $request->title;
-
-        $path = $request->file('pict')->store('pict_cat');
-        //$path = Storage::putFile('pictures', $request->file('pict'));
-
-        // $myecho = json_encode($path);
-        // `echo " request->file    " >>/tmp/qaz`;
-        // `echo "$myecho" >>/tmp/qaz`;
-        // exit;
-
-        $img = Image::make(asset('storage/' . $path))->resize(null, 100, function ($constraint) {
-            $constraint->aspectRatio();
-        });
-        $img->save(public_path('storage/' .  $path . '50_50.jpg' ));
-
-        $category->path = $path;
-
-        //return redirect()->route('showPict');
-
-        $category->save();
-    }
-
-    /**
-     * Create a new goods instance.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        
-    }
 
     /**
      * Show the profile for the given user.
@@ -141,6 +99,29 @@ class CrudCategoryController extends Controller
 
         $category->title = $request->title;
 
+        // if (Storage::disk('local')->exists(asset('storage/' . $category->path))) {
+            // $myecho = json_encode('yes');
+            // `echo " category->path    " >>/tmp/qaz`;
+            // `echo "$myecho" >>/tmp/qaz`;
+            // exit;
+            // Storage::delete(asset('storage/' . $category->path));
+        // }
+
+        if(!empty($category->path)){
+            $path = $request->file('pict')->storeAs('', $category->path);
+        }
+        else{
+            $path = $request->file('pict')->store('pict_cat'); 
+        }
+
+
+        $img = Image::make(asset('storage/' . $path))->resize(null, 100, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->save(public_path('storage/' .  $path . '50_50.jpg' ));
+
+        $category->path = $path;
+
         $category->save();
 
         return redirect()->route('showCategory');
@@ -158,7 +139,12 @@ class CrudCategoryController extends Controller
         $id = $request->id;
         $del_desc = $request->del_desc;
 
-        $category = Category::find($id)->delete();
+        $category = Category::find($id);
+
+        Storage::delete($category->path);
+        Storage::delete($category->path . '50_50.jpg');
+
+        $category->delete();
 
         return response()->json(["success" => true, "message" => "Запись удалена"]);
 

@@ -108,6 +108,11 @@ class CrudPictController extends Controller
         //$path = $request->file('pict')->storeAs('pictures', str_replace('pictures/', '', $pict->path));
         $path = $request->file('pict')->storeAs('', $pict->path);
 
+        $img = Image::make(asset('storage/' . $path))->resize(null, 100, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->save(public_path('storage/' .  $path . '50_50.jpg' ));
+
         $pict->path = $path;
 
         $pict->save();
@@ -130,6 +135,7 @@ class CrudPictController extends Controller
         // exit;
         $pict = Picture::find($id);
         Storage::delete($pict->path);
+        Storage::delete($pict->path . '50_50.jpg');
         $pict->delete();
 
         return response()->json(["success" => true, "message" => "Запись удалена"]);

@@ -13,9 +13,11 @@
                     </div> 
                     <div class="bread-crumbs">Категории</div>
                     <div class="row">
+                        @php $myClearImg = 3; @endphp
                         @foreach ($categories as $category)
                             <div class="col-md-4 col-sm-6 col-xs-12">
                                 <div class="thumbnail">
+                                    <img src="{{ asset('storage/' . $category->path) }}" alt="...">
                                     <div class="caption">
                                         <p>{{ $category->title }}</p>
                                         <p>
@@ -55,6 +57,10 @@
                                     </div>
                                 </div>
                             </div>
+                            @if ($loop->iteration == $myClearImg)
+                              <div class="clearfix visible-*-block"></div>
+                              @php $myClearImg = 3; @endphp
+                            @endif
                         @endforeach
                     </div>
                     <br>

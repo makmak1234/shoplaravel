@@ -22,8 +22,13 @@
                         <h1>Все категории</h1>
                     </div> 
                     <div class="bread-crumbs"></div>
-                    @foreach ($categories as $category)  
-                      <h2>{{ $category->title }}</h2>                  
+                    @foreach ($categories as $category)
+                      <div class="thumbnail">
+                        <div class="caption text-center"> 
+                          <h2>{{ $category->title }}</h2>
+                        </div>
+                        <img src="{{ asset('storage/' . $category->path . '50_50.jpg') }}" alt="...">
+                                       
                       @php $subcats = $category->subcategory; 
                       @endphp
                       @foreach ($subcats as $subcat)
@@ -131,6 +136,7 @@
                       </div>
                       <br>
                       @endforeach
+                      </div>
                     @endforeach
                     <br>
                     <div class="btn-group" role="group" aria-label="...">
