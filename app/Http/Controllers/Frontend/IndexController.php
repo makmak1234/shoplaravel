@@ -65,9 +65,69 @@ class IndexController extends Controller
      *
      * @return Response
      */
-    public function catSubcatShow()
+    public function catSubcatShow($cat_id, $subcat_id)
     {
-    	
+    	$goods = Goods::where([
+              ['categories_id', '=', $cat_id],
+              ['subcategories_id', '=', $subcat_id],
+          ])->get();
+
+        //$pictures = Picture::all();
+
+        $picts = array();
+        foreach ($goods as $good){
+            foreach ($good->size as $s){
+                $goodsSizes = GoodsSizes::where('id', $s->pivot->id)->get();
+                foreach ($goodsSizes as $goodSize){
+                    foreach ($goodSize->color as $col){
+                        //if (!(in_array($col->id, $allcolor))) 
+                        $pict = Picture::where('id', $col->pivot->pictures_id)->get();
+                        $picts[] = $pict[0]->path;
+                    }
+                }
+            }
+        }
+
+        //$categories = Category::all();
+        //$subcats = Subcategory::all();
+
+        $category_subcats = CategorySubcat::all();
+
+        // $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [1]);
+
+        // $subcatsmass = array();
+        // foreach ($subcats as $subcat) {
+        //     $subcatsmass[] = $subcat->subcategories_id;
+        // }
+        // $subcats = implode(',', $subcatsmass);
+
+        // $goods2 = Goods::where([
+        //     ['categories_id', '=', '1'],
+        //     ['subcategories_id', '=', '1'],
+        // ])->get();//DB::select('select * from goods where categories_id = ? and subcategories_id in(' . $subcats . ')', [1]); 
+
+        // $myecho = json_encode($goods2[0]->size);
+        // `echo " goods2->size    " >>/tmp/qaz`;
+        // `echo "$myecho" >>/tmp/qaz`;
+        //exit;
+
+        return view('frontend.subcat', ["goods" => $goods, "picts" => $picts]);//, "goodsSizes" => $goodsSizes
+    }
+
+    /**
+     * Show the profile for the given user.
+     *
+     * @return Response
+     */
+    public function goodShow($cat_id, $subcat_id, $id)
+    {
+        $good = Goods::where([
+              ['id', '=', $id],
+          ])->get();
+
+        $good = $good[0]; 
+
+        return view('frontend.good', ["good" => $good]);
     }
 
 
