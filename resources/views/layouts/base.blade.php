@@ -26,6 +26,7 @@
         	@include('frontend/common_footer')
         @show
         @section('javascripts')
+            
         @show
     </body>
 </html>

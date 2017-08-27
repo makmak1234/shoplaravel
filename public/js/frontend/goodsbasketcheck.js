@@ -21,7 +21,9 @@ function goodbasketcheck(id, mclon, route_name){
 		var color_true = null;
 		var image_true = null;
 	}*/
-	var route = Routing.generate(route_name, { id: id, size: color_true, color: image_true, mclon: mclon}); //,  mclon: mclon
+	var route = Router.route(route_name, { id: id, size: color_true, color: image_true, mclon: mclon});
+	console.log(route) ;
+	//var route = Routing.generate(route_name, { id: id, size: color_true, color: image_true, mclon: mclon}); //,  mclon: mclon
 	//alert('color_true: ' + color_true + ' image_true: ' + image_true + ' title_size: ' + title_size + ' title_color: ' + title_color);
 	//alert(route);
 
@@ -54,7 +56,8 @@ function goodbasketcheck(id, mclon, route_name){
 
 //bigBag.html.twig
 function goodbasketdel(id, color_del, image_del, mclon, route_name){
-	var route = Routing.generate(route_name, { id: id, size: color_del, color: image_del, mclon: mclon}); //,  mclon: mclon
+	var route = Router.route(route_name, { id: id, size: color_del, color: image_del, mclon: mclon});
+	//var route = Routing.generate(route_name, { id: id, size: color_del, color: image_del, mclon: mclon}); //,  mclon: mclon
 	//alert('color_true: ' + color_true + ' image_true: ' + image_true + ' title_size: ' + title_size + ' title_color: ' + title_color);
 	//alert(route);
 	//var fonclass = '.fountainG' + id;
@@ -74,7 +77,8 @@ function goodbasketdel(id, color_del, image_del, mclon, route_name){
 
 //showGood.html.twig
 function goodbuycheck(id, mclon, route_name){
-	var route = Routing.generate(route_name, { id: id, size: color_true, color: image_true, mclon: mclon}); //,  mclon: mclon
+	var route = Router.route(route_name, { id: id, size: color_true, color: image_true, mclon: mclon});
+	//var route = Routing.generate(route_name, { id: id, size: color_true, color: image_true, mclon: mclon}); //,  mclon: mclon
 	//alert('color_true: ' + color_true + ' image_true: ' + image_true + ' title_size: ' + title_size + ' title_color: ' + title_color);
 	//alert(route);
 	$('.bubblingG').css("display", "block");
@@ -117,7 +121,8 @@ function basketbigchange(row2, nidk, k, itemnumber){
 	}
 	document.getElementById("priceall").innerHTML = "К оплате всего: " + priceall;
 
-	var route = Routing.generate('basket_big_change', { kg2: k, nidaj: nidk }); //,  mclon: mclon
+	var route = Router.route('basket_big_change', { kg2: k, nidaj: nidk });
+	//var route = Routing.generate('basket_big_change', { kg2: k, nidaj: nidk }); //,  mclon: mclon
 	
 	nid1 = 4;
 

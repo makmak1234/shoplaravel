@@ -131,4 +131,24 @@ class IndexController extends Controller
     }
 
 
+    public function smallBagAction(Request $request = null)
+    {
+        //$nidAll = $request->query->get('nidAll');
+        if($request !== null){
+            $session = $request->session();
+        }
+        else{$session = null;}
+
+        $nidAll = 0;
+        if ($session !== null) {
+            $nid = $session->nid;
+            foreach ($nid as $key => $value) {
+                $nidAll += $value;
+            }
+        }
+
+        return view('frontend.smallBag', ['nidAll' => $nidAll]);
+    }
+
+
 }

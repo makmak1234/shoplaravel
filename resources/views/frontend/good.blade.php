@@ -8,10 +8,13 @@
 @endsection
 
 @section('javascripts')
+    @parent
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{asset('js/frontend/indexUser.js')}}"></script>
     <script src="{{asset('js/frontend/goodsbasketcheck.js')}}"></script>
     <script src="{{asset('js/frontend/select_visible.js')}}"></script>
     <script src="{{asset('js/frontend/hinclude.js')}}"></script>
+    <script src="{{asset('js/routes.js')}}"></script>
 @endsection
 
         <div class="bubblingG">
@@ -87,6 +90,8 @@
                     <div id="bascetsmall" class="bascetsmall">
                         {{-- ВКЛЮЧИТЬ ПОЗЖЕ КОРЗИНУ {{ render_esi(controller('UserBundle:ajaxUser:ajaxBagUser',
                             { 'id': 0})) }} --}}
+                        @inject('ajaxBagUser', 'App\Http\Controllers\Frontend\ajaxUserController')
+                        {{ $ajaxBagUser->ajaxBagUserAction(0) }}
                     </div>
                   </div>
 

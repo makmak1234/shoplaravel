@@ -7,6 +7,7 @@
 @endsection
 
 @section('javascripts')
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{asset('js/frontend/indexUser.js')}}"></script>
 @endsection
 

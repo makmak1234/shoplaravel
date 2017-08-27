@@ -7,10 +7,13 @@
 @endsection
 
 @section('javascripts')
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{asset('js/frontend/indexUser.js')}}"></script>
 @endsection
 
     {{-- ВКЛЮЧИТЬ ПОЗЖЕ КОРЗИНУ {{ render_esi(controller('UserBundle:indexUser:smallBag')) }}  --}}
+    @inject('smallBag', 'App\Http\Controllers\Frontend\indexController')
+    {{ $smallBag->smallBagAction() }}
 
    @section('content')
         <div class="content">
