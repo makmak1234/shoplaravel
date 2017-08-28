@@ -3,6 +3,16 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Goods;
+//use App\Description;
+//use App\Category;
+//use App\Subcategory;
+//use App\Size;
+//use App\Color;
+use App\GoodsSizes;
+//use App\ColorGoodsSizes;
+//use App\CategorySubcat;
+use App\Picture;
 
 /**
  * indexUserController controller.
@@ -31,12 +41,13 @@ class ajaxUserServController extends Controller
 
     public function ajaxBagUserServAction($id, $size = '0', $color = '0', $bagreg, $request)
     {
-    	$myecho = json_encode(" id=".$id."size=".$size."color=".$color."bagreg=".$bagreg);
-        `echo " ajaxBagUserServAction    " >>/tmp/qaz`;
-        `echo "$myecho" >>/tmp/qaz`;
-        // //exit;
 
-    	$flag = false;
+    	$myecho = json_encode(" id=".$id." size=".$size." color=".$color." bagreg=".$bagreg);
+        `echo " ajaxBagUserServAction id size..   " >>/tmp/qaz`;
+        `echo "$myecho" >>/tmp/qaz`;
+        //exit;
+
+    	$flag = 0;
 
     	if($request !== null){
             $session = $request->session();
@@ -45,7 +56,7 @@ class ajaxUserServController extends Controller
         
     	//$session = $request->session();
         
-		if($session !== null){//($session->get('idbasketsmall') != null){//
+		if(isset($session->idbasketsmall)){//($session->get('idbasketsmall') != null){//
 			$this->idarr = $session->idbasketsmall;
 			$this->sizearr = $session->sizearr;
 			$this->colorarr = $session->colorarr;
@@ -57,10 +68,14 @@ class ajaxUserServController extends Controller
 			$clearone = $request->mclon;//$mclon;
 			$this->bigBagDisp = 'block';
 			//наличие значения в массиве
-				if($bagreg == true){
+				if($bagreg == 1){
 					foreach($this->idarr as $k=>$v){
+						$myecho = json_encode(" v=".$v);
+				        `echo " ajaxBagUserServAction v   " >>/tmp/qaz`;
+				        `echo "$myecho" >>/tmp/qaz`;
+				        //exit;
 						if($v == $id && $this->sizearr[$k] == $size  && $this->colorarr[$k] == $color){
-							$flag = true;
+							$flag = 1;
     						if($clearone == 'false'){
 								$this->nid[$k]++;
 							}
@@ -73,12 +88,20 @@ class ajaxUserServController extends Controller
 							}
 						}	
 					}
-					if (!$flag) {
+					if ($flag == 0) {
 						$this->idarr[] = $id;
 						$this->sizearr[] = $size;
 						$this->colorarr[] = $color;
 						$this->nid[] = 1;
 					}
+					$myecho = json_encode(" flag=".$flag);
+			        `echo " ajaxBagUserServAction flag   " >>/tmp/qaz`;
+			        `echo "$myecho" >>/tmp/qaz`;
+			        //exit;
+			        $myecho = json_encode(" id=".$id);
+			        `echo " ajaxBagUserServAction id   " >>/tmp/qaz`;
+			        `echo "$myecho" >>/tmp/qaz`;
+			        //exit;
 				}
 
 			if(count($this->idarr) == 0) $id= -1;	
@@ -94,8 +117,12 @@ class ajaxUserServController extends Controller
 
         	//$repository = $em->getRepository('AdminBundle:childrenGoods');
 
+			$myecho = " this->idarr[]=".implode(',',$this->idarr);
+	        `echo " ajaxBagUserServAction this->idarr[]  " >>/tmp/qaz`;
+	        `echo "$myecho" >>/tmp/qaz`;
+	        //exit;
 			foreach ($this->idarr as $key => $value) {
-	        	$query = App\Goods::find($value);
+	        	$query = Goods::find($value);
 	        	$this->childrenGoods[] = $query;
 	        }
 	    
@@ -105,7 +132,6 @@ class ajaxUserServController extends Controller
 				$this->priceone[$k] = $row * $n;
 				$this->priceall += $this->priceone[$k];
 				$this->nidAll += $n;
-
 				
 				if ($this->sizearr[$k] != 'undefined') {
 					$tmp_size = $this->childrenGoods[$k]->size;
@@ -114,14 +140,43 @@ class ajaxUserServController extends Controller
 				else{
 					$this->sizeTitle[$k] = '';
 				}
-				
+
+				$myecho = " this->sizeTitle[]=".implode(',',$this->sizeTitle);
+		        `echo " ajaxBagUserServAction this->sizeTitle[]  " >>/tmp/qaz`;
+		        `echo "$myecho" >>/tmp/qaz`;
+		        //exit;
+					
 
 				if ($this->colorarr[$k] != 'undefined') {
 
 					//foreach ($good->size as $s)
-                            $goodsSizes = App\GoodsSizes::find($tmp_size[$this->sizearr[$k]]->id);//App\GoodsSizes::where('id', $s->pivot->id)->get(); 
-                                   	$goodSize = $goodsSizes[0];
-                           
+                            $goodsSizes = GoodsSizes::find($tmp_size[$this->sizearr[$k]]->pivot->id);//App\GoodsSizes::where('id', $s->pivot->id)->get(); 
+                                   	$goodSize = $goodsSizes;
+
+                                   	$myecho =" tmp_size=" . $tmp_size;
+							        `echo " ajaxBagUserServAction tmp_size" >>/tmp/qaz`;
+							        `echo "$myecho" >>/tmp/qaz`;
+							        //exit;
+
+							        $myecho =" this->sizearr[k]=" . $this->sizearr[$k];
+							        `echo " ajaxBagUserServAction this->sizearr[k] " >>/tmp/qaz`;
+							        `echo "$myecho" >>/tmp/qaz`;
+							        //exit;
+
+							        $myecho =" tmp_size[this->sizearr[k]]=" . $tmp_size[$this->sizearr[$k]];
+							        `echo " ajaxBagUserServAction tmp_size[this->sizearr[k]] " >>/tmp/qaz`;
+							        `echo "$myecho" >>/tmp/qaz`;
+							        //exit;
+
+							        $myecho =" tmp_size[this->sizearr[k]]->pivot->id=" . $tmp_size[$this->sizearr[$k]]->pivot->id;
+							        `echo " ajaxBagUserServAction tmp_size[this->sizearr[k]]->pivot->id " >>/tmp/qaz`;
+							        `echo "$myecho" >>/tmp/qaz`;
+							        //exit;
+
+							        $myecho =" goodsSizes=" . $goodsSizes;
+							        `echo " ajaxBagUserServAction goodsSizes" >>/tmp/qaz`;
+							        `echo "$myecho" >>/tmp/qaz`;
+							        //exit;
                         
                                 //foreach ($goodSize->color as $col)
                                    	$tmp_goodSizeColor = $goodSize->color;
@@ -131,9 +186,14 @@ class ajaxUserServController extends Controller
                           
                                 //foreach ($goodSize->color as $col)
                          
-                                    $pict = App\Picture::find($tmp_goodSizeColor[$this->colorarr[$k]]->pivot->pictures_id);
+                                    $pict = Picture::find($tmp_goodSizeColor[$this->colorarr[$k]]->pivot->pictures_id);
                                     
-                                    $this->pathImages[$k] = asset('storage/' . $pict[0]->path);
+                                    $this->pathImages[$k] = asset('storage/' . $pict->path);
+
+                                    $myecho =" pict->path=" . $pict->path;
+							        `echo " ajaxBagUserServAction pict->path" >>/tmp/qaz`;
+							        `echo "$myecho" >>/tmp/qaz`;
+							        //exit;
                                     
 
 					// $this->colorTitle[$k] = $this->childrenGoods[$k]->getChildrenGoodsSizeNumber()->get($this->sizearr[$k])->getChildrenGoodsColorNumber()->get($this->colorarr[$k])->getColor()->getColor();

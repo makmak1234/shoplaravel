@@ -55,16 +55,16 @@ class ajaxUserController extends Controller
         // `echo "$myecho" >>/tmp/qaz`;
         // //exit;
 
-        $myecho = json_encode(" id=".$id." size=".$size." color=".$color." bagreg=".$bagreg);
-        `echo " ajaxBagUserAction    " >>/tmp/qaz`;
-        `echo "$myecho" >>/tmp/qaz`;
+        // $myecho = json_encode(" id=".$id." size=".$size." color=".$color." bagreg=".$bagreg);
+        // `echo " ajaxBagUserAction    " >>/tmp/qaz`;
+        // `echo "$myecho" >>/tmp/qaz`;
         // //exit;
 
         $this->ajaxUserServ->ajaxBagUserServAction($id, $size, $color, $bagreg, $request);
 
-        $myecho = json_encode($this->ajaxUserServ->getSizearr());
-        `echo " bigBag  sizearr  " >>/tmp/qaz`;
-        `echo "$myecho" >>/tmp/qaz`;
+        // $myecho = json_encode($this->ajaxUserServ->getSizearr());
+        // `echo " bigBag  sizearr  " >>/tmp/qaz`;
+        // `echo "$myecho" >>/tmp/qaz`;
 
         return view('frontend.bigBag', 
             ["goods" => $this->ajaxUserServ->getChildrenGoods(), 

@@ -70,6 +70,7 @@ Route::get('/', 'Frontend\IndexController@index')->name('index');
 Route::get('/sucat/{cat_id}/{subcat_id}', 'Frontend\IndexController@catSubcatShow')->name('cat_sub_show');
 Route::get('/good/{cat_id}/{subcat_id}/{id}', 'Frontend\IndexController@goodShow')->name('good');
 Route::get('/ajax_bag_user/{id}', 'Frontend\ajaxUserController@ajaxBagUserAction')->name('ajax_bag_user');
+Route::get('/bag_register_secure/', 'Frontend\IndexController@bagRegisterAction')->name('bag_register_secure');
 
 Auth::routes();
 

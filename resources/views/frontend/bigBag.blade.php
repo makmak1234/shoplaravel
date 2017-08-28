@@ -14,7 +14,7 @@
 			<th> </th>
 		</tr>
 
-		@foreach($good as $goods)
+		@foreach($goods as $good)
 		<tr class="onerow">
 			<td>{{ $good->title }}</td>
 			<td>
@@ -23,7 +23,7 @@
 			<td>
 				{{ $colorTitle[$loop->index] }}
 			</td>
-			<td>{{ $good->price->rub }}</td>
+			<td>{{ 100 }}</td> {{-- $good->price->rub --}}
 			<td>{{ $nid[$loop->index] }}</td>
 			<td>{{ $priceone[$loop->index] }}</td>
 			<td>
@@ -37,7 +37,7 @@
 					<i id="fountainG_7" class="fountainG"></i>
 					<i id="fountainG_8" class="fountainG"></i>
 				</i>
-				<img class="goodsbasketclearone" id="good_click_id" src="{{ asset('storage/delete_16x16.png')}}" onclick="goodbasketdel({{ $good->id }}, {{ $sizearr[$loop->index] }}, {{ $colorarr[$loop->index] }}, 'true', 'ajax_bag_user')">
+				<img class="goodsbasketclearone" id="good_click_id" src="{{ asset('storage/img/delete_16x16.png')}}" onclick="goodbasketdel({{ $good->id }}, {{ $sizearr[$loop->index] }}, {{ $colorarr[$loop->index] }}, 'true', 'ajax_bag_user')">
 			</td>
 		</tr>		
 		@endforeach

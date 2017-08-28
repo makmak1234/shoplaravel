@@ -23,7 +23,7 @@
 		<img src="{{ asset('bundles/app/user/elements/delete_16x16.png')}}" class="goodsbasketclearmb" onclick="goodbasketcheck('-1', 'false', 'ajax_bag_user')" title="Очистить корзину">
 		<table class="m-cart-fullmb" title="Оформить">
 			<tr>
-				<td><a class="a-block" href="{{ path('bag_register_secure') }}">В корзине: <span id='nidAll'>{{ $nidAll }}</span> шт</a><td>
+				<td><a class="a-block" href="{{ route('bag_register_secure') }}">В корзине: <span id='nidAll'>{{ $nidAll }}</span> шт</a><td>
 			</tr>
 		</table>
 	</div>

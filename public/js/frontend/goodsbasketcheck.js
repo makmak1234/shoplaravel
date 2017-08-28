@@ -17,41 +17,22 @@
 
 //showGood.html.twig
 function goodbasketcheck(id, mclon, route_name){
-	/*if(id == -1){
-		var color_true = null;
-		var image_true = null;
-	}*/
 	var route = Router.route(route_name, { id: id, size: color_true, color: image_true, mclon: mclon});
 	console.log(route) ;
-	//var route = Routing.generate(route_name, { id: id, size: color_true, color: image_true, mclon: mclon}); //,  mclon: mclon
-	//alert('color_true: ' + color_true + ' image_true: ' + image_true + ' title_size: ' + title_size + ' title_color: ' + title_color);
-	//alert(route);
-
-	/*$('#myButton').click(function () {
-	    var $btn = $('#myButton').button('loading');
-	    //$('#myButton').addClass("anim");    
-  	})*/
+	
   	$("i[data-fountain]").css("display", "block");
   	$("#fountainSmall").css("display", "block");
   	$("#fountainIncart").css("display", "block");
-  	
-  	//alert('fontainG');
 
-  	/*$('#myButton').on('click', function () {
-	    $btn = $(this).button('loading')
-	  })*/
-
+ // убрать коммент когда отлажу
   	$.ajax({ 
 	  url: route,
 	  success: function(data) {
 	    $('.bascetsmall').html(data);
-	    //nall = Number(document.getElementById('nall').firstChild.data);
-	    //document.getElementById('nidAll').innerHTML = Number(nall);
-	  	//alert(nall);
-	  	//$btn.button('reset');
 	  	$("#fountainIncart").css("display", "none");
 	  }
 	});
+	// $(location).attr('href', route);
 }
 
 //bigBag.html.twig
