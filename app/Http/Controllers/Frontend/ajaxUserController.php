@@ -24,47 +24,41 @@ class ajaxUserController extends Controller
     }
 
     /**
-     * Lists all childrenGoods entities.
+     * Update the specified user.
      *
-     * @Route("/ajax_bag_user/{id}", name="ajax_bag_user", requirements={"id": ".*\d+"})
-     * @Method("GET")
+     * @param  Request  $request
+     * @param  string  $id
+     * @return Response
      */
-    public function ajaxBagUserAction($id, $bagreg = true, Request $request = null)
+    public function ajaxBagUserAction($id, $bagreg = 1, Request $request = null)
     {
-
         //$ajaxUserServ = $this->get('ajax.user.serv');
 
+        // $size = $request->size;
+        // if ($size == null) {
+        //     $size = 0;
+        // }
 
-        if($request !== null){
+        // $color = $request->color;
+        // if ($color == null) {
+        //     $color = 0;
+        // }
+
+        $myecho = json_encode($request);
+        `echo " bigBag  request  " >>/tmp/qaz`;
+        `echo "$myecho" >>/tmp/qaz`;
+
+        if($request != null){
             $size = $request->size;
         } 
         else{$size = 0;}
 
-        if($request !== null){
+        if($request != null){
             $color = $request->color;
         } 
         else{$color = 0;}
 
-        // $myecho = json_encode($size);
-        // `echo " size    " >>/tmp/qaz`;
-        // `echo "$myecho" >>/tmp/qaz`;
-        // //exit;
-
-        // $myecho = json_encode($color);
-        // `echo " color    " >>/tmp/qaz`;
-        // `echo "$myecho" >>/tmp/qaz`;
-        // //exit;
-
-        // $myecho = json_encode(" id=".$id." size=".$size." color=".$color." bagreg=".$bagreg);
-        // `echo " ajaxBagUserAction    " >>/tmp/qaz`;
-        // `echo "$myecho" >>/tmp/qaz`;
-        // //exit;
-
         $this->ajaxUserServ->ajaxBagUserServAction($id, $size, $color, $bagreg, $request);
-
-        // $myecho = json_encode($this->ajaxUserServ->getSizearr());
-        // `echo " bigBag  sizearr  " >>/tmp/qaz`;
-        // `echo "$myecho" >>/tmp/qaz`;
 
         return view('frontend.bigBag', 
             ["goods" => $this->ajaxUserServ->getChildrenGoods(), 
@@ -88,20 +82,36 @@ class ajaxUserController extends Controller
      * @Route("/ajax_checkout_user/{id}", name="ajax_checkout_user", requirements={"id": ".*\d+"})
      * @Method("GET")
      */
-    public function ajaxCheckoutUserAction($id, $bagreg = true, Request $request)
+    public function ajaxCheckoutUserAction($id, $bagreg = 1, Request $request = null) //$bagreg = 1
     {
+        $myecho = json_encode($request);
+        `echo " ajax_checkout_user  request  " >>/tmp/qaz`;
+        `echo "$myecho" >>/tmp/qaz`;
+
+        $myecho = json_encode($id);
+        `echo " ajax_checkout_user  id  " >>/tmp/qaz`;
+        `echo "$myecho" >>/tmp/qaz`;
+        
         $sourcePath = array();
 
         //$ajaxUserServ = $this->get('ajax.user.serv');
 
-        $size = $request->size;
-        if ($size == null) {
-        	$size = 0;
+        if($request != null){
+            $size = $request->size;
+            // if ($size == null) {
+            // 	$size = 0;
+            // }
+        }else{
+           $size = 0; 
         }
 
-        $color = $request->color;
-        if ($color == null) {
-        	$color = 0;
+        if($request != null){
+            $color = $request->color;
+            // if ($color == null) {
+            // 	$color = 0;
+            // }
+        }else{
+            $color = 0;
         }
 
         $this->ajaxUserServ->ajaxBagUserServAction($id, $size, $color, $bagreg, $request);
@@ -125,7 +135,7 @@ class ajaxUserController extends Controller
             'nid' => $this->ajaxUserServ->getNid(),
             'sizeTitle' => $this->ajaxUserServ->getSizeTitle(),
             'colorTitle' => $this->ajaxUserServ->getColorTitle(),
-            'sourcePath' => $this->sourcePath,//$ajaxUserServ->getPathImages(),
+            'sourcePath' => $sourcePath,//$ajaxUserServ->getPathImages(),
         ]);
     }
 
@@ -138,19 +148,20 @@ class ajaxUserController extends Controller
     public function basketBigChangeAction(Request $request)
     {
 
-    	$session = $request->getSession();
+    	$session = $request->session();
     	
-	    $nidaj = $request->query->get('nidaj');
+	    $nidaj = $request->nidaj;
 
-		$k = $request->query->get('kg2');
+		$k = $request->kg2;
 
 		$nid = $session->get('nid');
 
 		$nid[$k] = $nidaj;
 
-		$session->set('nid', $nid);
+		$session->put('nid', $nid);
 
-		return new Response();
+		// return new Response();
+        return;
 	}
 
 }

@@ -4,16 +4,22 @@
     @parent
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/frontend/indexUser.css')}}">
+    <link rel="stylesheet" href="{{asset('css/frontend/smallBag.css')}}">
 @endsection
 
 @section('javascripts')
     <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{asset('js/routes.js')}}"></script>
     <script src="{{asset('js/frontend/indexUser.js')}}"></script>
+    <script src="{{asset('js/frontend/goodsbasketcheck.js')}}"></script>
+    
 @endsection
 
-    {{-- ВКЛЮЧИТЬ ПОЗЖЕ КОРЗИНУ {{ render_esi(controller('UserBundle:indexUser:smallBag')) }}  --}}
-    @inject('smallBag', 'App\Http\Controllers\Frontend\indexController')
-    {{ $smallBag->smallBagAction() }}
+    @section('small_bag')
+        {{-- ВКЛЮЧИТЬ ПОЗЖЕ КОРЗИНУ {{ render_esi(controller('UserBundle:indexUser:smallBag')) }}  --}}
+        @inject('smallBag', 'App\Http\Controllers\Frontend\IndexController')
+        {!! $smallBag->smallBagAction() !!}
+    @endsection
 
    @section('content')
         <div class="content">

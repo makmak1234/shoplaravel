@@ -1,18 +1,13 @@
-{#ajaxUserController#}
 
-{% block javascripts %}
-        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script> 
-{% endblock %}
 
-{% if bigBagDisp == 'block' %} 
+@if($bigBagDisp == 'block') 
 	
 		<div class="panel panel-default">
 		  <!-- Default panel contents -->
 		  <div class="panel-heading">Ваши покупки</div>
 		    <table class="table goodsbasketfont m-cart-full">
 				<tr>
-					<th>{{ childrenGoods|length }}</th>
+					<th>@php echo count($childrenGoods); @endphp</th>
 					<th>Товар</th>
 					<th class="hide_col1">Размер</th>
 					<th class="hide_col1">Цвет</th>
@@ -21,32 +16,33 @@
 					<th class="hide_col2">Цена за все</th>
 					<th></th>
 				</tr>
-				{% for childrenGood in childrenGoods %}
-					{% set idtr = "idtr" ~ loop.index0 %}
-					{% set idrow2 = "idrow2" ~ loop.index0 %}
-					{% set idnidk = "idnidk" ~ loop.index0 %}
-					{% set idrowk = "idrowk" ~ loop.index0 %}
+				@foreach($childrenGoods as $childrenGood)
+					@php $idtr = "idtr" . $loop->index;
+						$idrow2 = "idrow2" . $loop->index;
+						$idnidk = "idnidk" . $loop->index;
+						$idrowk = "idrowk" . $loop->index;
+					@endphp
 
-				<tr id="{{ idtr }}" class="onerow">
+				<tr id="{{ $idtr }}" class="onerow">
 
 					<td>
-						<img class="show__img" src="{{ asset(sourcePath[loop.index0]) }}">
+						<img class="show__img" src="{{ asset($sourcePath[$loop->index]) }}">
 					</td>
-					<td class="title">{{ childrenGood.title }}</td>
+					<td class="title">{{ $childrenGood->title }}</td>
 					<td class="hide_col1">
-						{{ sizeTitle[loop.index0] }}
+						{{ $sizeTitle[$loop->index] }}
 					</td>
 					<td class="hide_col1">
-						{{ colorTitle[loop.index0] }}
+						{{ $colorTitle[$loop->index] }}
 					</td>
 					
-					<td class="hide_col1" id="{{ idrow2 }}">{{ childrenGood.priceGoods.rub }}</td>
+					<td class="hide_col1" id="{{ $idrow2 }}">{{ 100 }}</td>
 					
-					<td id="{{ idnidk }}"><input type="number" min="1" max="99" size="3" name="numbergoods" value="{{ nid[loop.index0] }}" onchange="basketbigchange({{ childrenGood.priceGoods.rub }}, this.value, {{ loop.index0 }}, {{ childrenGoods|length }})"/></td>
+					<td id="{{ $idnidk }}"><input type="number" min="1" max="99" size="3" name="numbergoods" value="{{ $nid[$loop->index] }}" onchange="basketbigchange({{ 100 }}, this.value, {{ $loop->index }}, @php echo count($childrenGoods); @endphp)"/></td>
 					
-					<td class="hide_col2" id="{{ idrowk }}">{{ priceone[loop.index0] }}</td>
+					<td class="hide_col2" id="{{ $idrowk }}">{{ $priceone[$loop->index] }}</td>
 					<td>
-						<i id="fountainCheck" class="fountainG{{ childrenGood.id }}{{ sizearr[loop.index0] }}{{ colorarr[loop.index0]}}"  data-fountain>
+						<i id="fountainCheck" class="fountainG{{ $childrenGood->id }}{{ $sizearr[$loop->index] }}{{ $colorarr[$loop->index]}}"  data-fountain>
 							<i id="fountainG_1" class="fountainG"></i>
 							<i id="fountainG_2" class="fountainG"></i>
 							<i id="fountainG_3" class="fountainG"></i>
@@ -56,19 +52,19 @@
 							<i id="fountainG_7" class="fountainG"></i>
 							<i id="fountainG_8" class="fountainG"></i>
 						</i>
-						<img id="good_click_id" class="del_click" src="{{ asset('bundles/app/user/elements/delete_16x16.png')}}" onclick="goodbasketdel({{ childrenGood.id }}, {{ sizearr[loop.index0] }}, {{ colorarr[loop.index0] }}, 'true', 'ajax_checkout_user')">
+						<img id="good_click_id" class="del_click" src="{{ asset('storage/img/delete_16x16.png')}}" onclick="goodbasketdel({{ $childrenGood->id }}, {{ $sizearr[$loop->index] }}, {{ $colorarr[$loop->index] }}, 'true', 'ajax_checkout_user')">
 					</td>
 				</tr>		
-				{% endfor %}
-				<tr><td colspan= "8" id="priceall">К оплате: {{ priceall }}</td></tr>{#$prsite#}
+				@endforeach
+				<tr><td colspan= "8" id="priceall">К оплате: {{ $priceall }}</td></tr>
 				
 			</table>
 		</div>
 	
-{% else %}
+@else
 	Корзина пустая 
 	<script>
-		route = Routing.generate('index_user');
+		route = Router.route('index');
 		window.location.href = route;
 	</script>
-{% endif %}
+@endif

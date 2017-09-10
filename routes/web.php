@@ -71,6 +71,10 @@ Route::get('/sucat/{cat_id}/{subcat_id}', 'Frontend\IndexController@catSubcatSho
 Route::get('/good/{cat_id}/{subcat_id}/{id}', 'Frontend\IndexController@goodShow')->name('good');
 Route::get('/ajax_bag_user/{id}', 'Frontend\ajaxUserController@ajaxBagUserAction')->name('ajax_bag_user');
 Route::get('/bag_register_secure/', 'Frontend\IndexController@bagRegisterAction')->name('bag_register_secure');
+Route::post('/bag_register_store/', 'Frontend\IndexController@bagRegisterStore')->name('bag_register_store');
+Route::get('/ajax_checkout_user/{id}', 'Frontend\ajaxUserController@ajaxCheckoutUserAction')->name('ajax_checkout_user');
+Route::get('/basket_big_change/', 'Frontend\ajaxUserController@basketBigChangeAction')->name('basket_big_change');
+
 
 Auth::routes();
 

@@ -20,6 +20,7 @@
             @section('header')
             	@include('frontend/common_header')
             @show
+            @yield('small_bag')
             @yield('content')
         @show
         @section('footer')

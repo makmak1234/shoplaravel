@@ -39,4 +39,12 @@ class Goods extends Model
     {
         return $this->belongsTo('App\Subcategory', 'subcategories_id');
     }
+
+    /**
+     * Get the goods for the description.
+     */
+    public function clientBuy()
+    {
+        return $this->hasMany('App\clientBuy');
+    }
 }
