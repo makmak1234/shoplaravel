@@ -65,7 +65,7 @@
                                           </div>
                                           @if ($curLoop == $myClearImg)
                                             <div class="clearfix visible-*-block"></div>
-                                            <?php $myClearImg = 3;  $curLoop = 1;?>
+                                            <?php $myClearImg = 3;  $curLoop = 0;?>
                                           @endif
                                           <?php $curLoop++; ?>    
                                         @endif

@@ -147,14 +147,14 @@ class CrudTablesController extends Controller
      */
     public function showTables()
     {
-        $goods = Goods::all();
+        $goods = Goods::with(['descriptions', 'category', 'subcategory', 'size'])->get();//Goods::all();
 
         $pictures = Picture::all();
 
         $categories = Category::all();
         $subcats = Subcategory::all();
 
-        $category_subcats = CategorySubcat::all();
+        // $category_subcats = CategorySubcat::all();
 
         // $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [1]);
 
@@ -174,7 +174,7 @@ class CrudTablesController extends Controller
         // `echo "$myecho" >>/tmp/qaz`;
         //exit;
 
-        return view('welcome', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats, "category_subcats" => $category_subcats]);//, "goodsSizes" => $goodsSizes
+        return view('welcome', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats ]);//, "category_subcats" => $category_subcats
     }
 
     /**

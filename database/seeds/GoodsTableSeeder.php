@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Model;
 use App\Goods;
 use App\Description;
 use App\Category;
@@ -21,26 +22,31 @@ class GoodsTableSeeder extends Seeder
      */
     public function run()
     {
-    	// factory(App\Goods::class, 10)->create()->each(function ($g) {
-	    //     $g->descriptions()->save(factory(App\Description::class)->make());
-	    //     $g->category()->save(factory(App\Category::class)->make());
-	    //     $g->subcategory()->save(factory(App\Subategory::class)->make());
-	    // });
+    	// factory(Goods::class, 10)->create()
+	    // 	->each(function ($g) {
+		   //      $g->descriptions()->save(factory(Description::class)->make());
+		   //      })
+	    // 	->each(function ($g) {
+		   //      $g->category()->save(factory(Category::class)->make());
+		   //  	})
+	    // 	->each(function ($g) {
+		   //      $g->subcategory()->save(factory(Subcategory::class)->make());
+		   //  	})
+	    // ;
 
 	    $descriptionCount = Description::count();
-	    // $description = Description::all();
 	    $categoryCount = Category::count();
 	    $subcatCount = Subcategory::count();
 	    $sizeCount = Size::count();
 	    $colorCount = Color::count();
 	    $pictureCount = Picture::count();
 
-	    `echo "  -----------------------------------------------------------------------------  " >>/tmp/qaz`;
+	    // `echo "  -----------------------------------------------------------------------------  " >>/tmp/qaz`;
 
         for ($k = 1; $k <= $descriptionCount ; $k++) { 
         	$goods = new Goods;
 	        $goods->title = 'Good' . $k;
-	        $goods->descriptions()->associate($k);//($descriptions);
+	        $goods->descriptions()->associate($k);
 	        $goods->category()->associate(rand(1, $categoryCount));
 	        $goods->subcategory()->associate(rand(1, $subcatCount));
 	        $goods->save();
@@ -76,43 +82,25 @@ class GoodsTableSeeder extends Seeder
 		        }
 	        }
 
-	        $myecho = json_encode($goodsSizes);
-	        `echo " goodsSizes:    " >>/tmp/qaz`;
-	        `echo "$myecho" >>/tmp/qaz`;
-	        // exit;
-
-	        $myecho = json_encode($colorArr);
-	        `echo " colorArr:    " >>/tmp/qaz`;
-	        `echo "$myecho" >>/tmp/qaz`;
-	        // exit;
-
 	        $i = 0;
 	        foreach ($goodsSizes as $goodSize) {
 
-	            // if(isset($colorArr[$i])){
 	                $goodSize->color()->attach($colorArr[$i]);
 
 	                $allColors[] = $colorArr[$i];
 
 	                $colorGoodsSizes = ColorGoodsSizes::where('goods_sizes_id', $goodSize->id)->get();
 
-	                //$pict_radio = $request->pict_radio;
 	                foreach ($colorGoodsSizes as $colorGoodsSize) {
-	                    // $myecho = json_encode($pict_radio[$colorGoodsSize->colors_id]);
-	                    // `echo " pict_radio[colorGoodsSize->colors_id]:    " >>/tmp/qaz`;
-	                    // `echo "$myecho" >>/tmp/qaz`;
-	                    // //exit;
 	                    $colorGoodsSize->picture()->associate(rand(1, $pictureCount));
 	                    $colorGoodsSize->save();
 	                }
-	            // }
 	            $i++;
 	        }
 
 	        DB::table('category_subcats')->truncate();
 	        $categories = Category::all();
 	        foreach ($categories as $category){        
-	            //$goods = App\Goods::where('categories_id', $category->id)->get();
 	            $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [$category->id]); 
 	            foreach ($subcats as $subcat){
 	                $category->subcategory()->attach($subcat);
