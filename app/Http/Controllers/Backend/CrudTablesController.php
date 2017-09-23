@@ -90,6 +90,8 @@ class CrudTablesController extends Controller
         // `echo "$myecho" >>/tmp/qaz`;
         // exit;
 
+        Cache::flush();
+
         $goods = new Goods;
         $goods->title = $request->title;
         $goods->descriptions()->associate($request->descriptions);//($descriptions);
@@ -150,25 +152,20 @@ class CrudTablesController extends Controller
     {
         // Cache::flush();
         // exit;
-        if (file_exists('./cache/showTables.cache')) {//if (Cache::has('showTables')) {
-            $showTables = readfile('./cache/showTables.cache');//$showTables = Cache::get('showTables');
+        if (Cache::has('showTables1')) {
+            $categories = Category::get();//remember(60)->
 
-            $myecho = $showTables;
-            `echo " showTables has    " >>/tmp/qaz`;
-            `echo "$myecho" >>/tmp/qaz`;
-            //exit;
-
-            return view('welcome', ['showTables' => $showTables]);
+            return view('welcome', ["categories" => $categories]);
         }else{
 
             // Cache::forever('key', 'value');
 
-            $goods = Goods::remember(60)->with(['descriptions', 'category', 'subcategory', 'size'])->get();//Goods::all();
+            $goods = Goods::with(['descriptions', 'category', 'subcategory', 'size'])->get();//Goods::all();
 
-            $pictures = Picture::remember(60)->get();//all();
+            $pictures = Picture::get();//all();
 
-            $categories = Category::remember(60)->get();
-            $subcats = Subcategory::remember(60)->get();
+            $categories = Category::get();
+            $subcats = Subcategory::get();
 
             // $category_subcats = CategorySubcat::all();
 
@@ -318,6 +315,8 @@ class CrudTablesController extends Controller
         //$category[0]->save();
 
         $good->delete();
+
+        Cache::flush();
         
         return response()->json(["success" => true, "message" => "Запись удалена"]);
     }

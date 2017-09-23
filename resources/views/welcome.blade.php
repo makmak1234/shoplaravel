@@ -41,16 +41,18 @@
                     </div> 
                     <div class="bread-crumbs"></div>
                     @foreach ($categories as $category)
-                      @if (file_exists('./cache/showTables'.$loop->iteration.'.cache'))
+                      @if (Cache::has('showTables'.$loop->iteration)) 
+                     {{--  @if (file_exists('./cache/showTables'.$loop->iteration.'.cache')) --}}
                         @php
-                          $showTables = readfile('./cache/showTables'.$loop->iteration.'.cache');//$showTables = Cache::get('showTables');
+                          // $showTables = readfile('./cache/showTables'.$loop->iteration.'.cache');
+                          $showTables = Cache::get('showTables'.$loop->iteration);
 
                           $myecho = $showTables;
                           `echo " showTables $loop->iteration  " >>/tmp/qaz`;
                           `echo "$myecho" >>/tmp/qaz`;
                           //exit;
 
-                          // echo $showTables;
+                          echo $showTables;
                           continue;
                         @endphp
                       @else
@@ -180,11 +182,11 @@
 
                         ob_end_clean();
 
-                        // Cache::forever('showTables', $showTables);
+                        Cache::forever('showTables'.$loop->iteration, $showTables);
                         // Сохранение кэш-файла с контентом
-                        $fp = fopen('./cache/showTables'.$loop->iteration.'.cache', 'w');
-                        fwrite($fp, $showTables);
-                        fclose($fp);
+                        // $fp = fopen('./cache/showTables'.$loop->iteration.'.cache', 'w');
+                        // fwrite($fp, $showTables);
+                        // fclose($fp);
                         
                         echo $showTables;
                       @endphp
