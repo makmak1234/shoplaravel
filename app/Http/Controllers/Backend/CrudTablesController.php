@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\UploadedFile;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Cache;
 //use Intervention\Image\ImageManager;
 //use Illuminate\Support\Facades\DB;
 
@@ -147,34 +148,50 @@ class CrudTablesController extends Controller
      */
     public function showTables()
     {
-        $goods = Goods::with(['descriptions', 'category', 'subcategory', 'size'])->get();//Goods::all();
+        // Cache::flush();
+        // exit;
+        if (file_exists('./cache/showTables.cache')) {//if (Cache::has('showTables')) {
+            $showTables = readfile('./cache/showTables.cache');//$showTables = Cache::get('showTables');
 
-        $pictures = Picture::all();
+            $myecho = $showTables;
+            `echo " showTables has    " >>/tmp/qaz`;
+            `echo "$myecho" >>/tmp/qaz`;
+            //exit;
 
-        $categories = Category::all();
-        $subcats = Subcategory::all();
+            return view('welcome', ['showTables' => $showTables]);
+        }else{
 
-        // $category_subcats = CategorySubcat::all();
+            // Cache::forever('key', 'value');
 
-        // $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [1]);
+            $goods = Goods::remember(60)->with(['descriptions', 'category', 'subcategory', 'size'])->get();//Goods::all();
 
-        // $subcatsmass = array();
-        // foreach ($subcats as $subcat) {
-        //     $subcatsmass[] = $subcat->subcategories_id;
-        // }
-        // $subcats = implode(',', $subcatsmass);
+            $pictures = Picture::remember(60)->get();//all();
 
-        // $goods2 = Goods::where([
-        //     ['categories_id', '=', '1'],
-        //     ['subcategories_id', '=', '1'],
-        // ])->get();//DB::select('select * from goods where categories_id = ? and subcategories_id in(' . $subcats . ')', [1]); 
+            $categories = Category::remember(60)->get();
+            $subcats = Subcategory::remember(60)->get();
 
-        // $myecho = json_encode($goods2[0]->size);
-        // `echo " goods2->size    " >>/tmp/qaz`;
-        // `echo "$myecho" >>/tmp/qaz`;
-        //exit;
+            // $category_subcats = CategorySubcat::all();
 
-        return view('welcome', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats ]);//, "category_subcats" => $category_subcats
+            // $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [1]);
+
+            // $subcatsmass = array();
+            // foreach ($subcats as $subcat) {
+            //     $subcatsmass[] = $subcat->subcategories_id;
+            // }
+            // $subcats = implode(',', $subcatsmass);
+
+            // $goods2 = Goods::where([
+            //     ['categories_id', '=', '1'],
+            //     ['subcategories_id', '=', '1'],
+            // ])->get();//DB::select('select * from goods where categories_id = ? and subcategories_id in(' . $subcats . ')', [1]); 
+
+            // $myecho = json_encode($goods2[0]->size);
+            // `echo " goods2->size    " >>/tmp/qaz`;
+            // `echo "$myecho" >>/tmp/qaz`;
+            //exit;
+
+            return view('welcome', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats ]);//, "category_subcats" => $category_subcats
+        }
     }
 
     /**

@@ -1,3 +1,20 @@
+{{-- @if(isset($showTables) && !empty($showTables))
+  @php
+    // echo 'showTables';
+    // $myecho = json_encode($showTables);
+    // `echo " showTables blade    " >>/tmp/qaz`;
+    // `echo "$myecho" >>/tmp/qaz`;
+
+    // echo $showTables;
+    exit;
+  @endphp
+
+@else
+
+@php
+  ob_start();
+@endphp --}}
+
 @extends('layouts.app')
 
 @section('mycss')
@@ -6,6 +23,7 @@
 @endsection
 
 @section('content')
+
   <br>
             <div class="content">
                 <div class="container">
@@ -23,6 +41,22 @@
                     </div> 
                     <div class="bread-crumbs"></div>
                     @foreach ($categories as $category)
+                      @if (file_exists('./cache/showTables'.$loop->iteration.'.cache'))
+                        @php
+                          $showTables = readfile('./cache/showTables'.$loop->iteration.'.cache');//$showTables = Cache::get('showTables');
+
+                          $myecho = $showTables;
+                          `echo " showTables $loop->iteration  " >>/tmp/qaz`;
+                          `echo "$myecho" >>/tmp/qaz`;
+                          //exit;
+
+                          // echo $showTables;
+                          continue;
+                        @endphp
+                      @else
+                      @php 
+                        ob_start();
+                      @endphp
                       <div class="thumbnail">
                         <div class="caption text-center"> 
                           <h2>{{ $category->title }}</h2>
@@ -137,6 +171,24 @@
                       <br>
                       @endforeach
                       </div>
+                      @php
+                        $showTables = ob_get_contents();
+
+                        $myecho = $showTables;
+                        `echo " showTables iter: $loop->iteration    " >>/tmp/qaz`;
+                        `echo "$myecho" >>/tmp/qaz`;
+
+                        ob_end_clean();
+
+                        // Cache::forever('showTables', $showTables);
+                        // Сохранение кэш-файла с контентом
+                        $fp = fopen('./cache/showTables'.$loop->iteration.'.cache', 'w');
+                        fwrite($fp, $showTables);
+                        fclose($fp);
+                        
+                        echo $showTables;
+                      @endphp
+                      @endif
                     @endforeach
                     <br>
                     <div class="btn-group" role="group" aria-label="...">
@@ -153,6 +205,27 @@
             <br><br>
 
 @endsection
+
+{{-- @php
+  $showTables = ob_get_contents();
+
+  $myecho = $showTables;
+  `echo " showTables ob_get    " >>/tmp/qaz`;
+  `echo "$myecho" >>/tmp/qaz`;
+
+  ob_end_clean();
+
+  // Cache::forever('showTables', $showTables);
+  // Сохранение кэш-файла с контентом
+  $fp = fopen('./cache/showTables.cache', 'w');
+  fwrite($fp, $showTables);
+  fclose($fp);
+  
+  echo $showTables;
+@endphp
+
+
+@endif --}}
 
 @section('myjs')
   {{-- <script src="/js/jquery.min.js"></script>
@@ -180,6 +253,8 @@
     })
   </script>
 @endsection
+
+
 
 {{-- <!doctype html>
 <html lang="{{ config('app.locale') }}">
