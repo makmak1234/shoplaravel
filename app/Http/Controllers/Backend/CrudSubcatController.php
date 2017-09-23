@@ -25,6 +25,7 @@ class CrudSubcatController extends Controller
         $subcat->title = $request->title;
 
         $subcat->save();
+        Cache::flush();
     }
 
     /**
@@ -75,6 +76,7 @@ class CrudSubcatController extends Controller
         //$descriptions->save();
 
         $subcat->save();
+        Cache::flush();
 
         return redirect()->route('showSubcat');
 
@@ -119,6 +121,7 @@ class CrudSubcatController extends Controller
         $subcat->title = $request->title;
 
         $subcat->save();
+        Cache::flush();
 
         return redirect()->route('showSubcat');
     }
@@ -136,6 +139,7 @@ class CrudSubcatController extends Controller
         $del_subcat = $request->del_subcat;
 
         $subcat = Subcategory::find($id)->delete();
+        Cache::flush();
         return response()->json(["success" => true, "message" => "Запись удалена"]);
 
         // `echo $size >>/tmp/qaz`;

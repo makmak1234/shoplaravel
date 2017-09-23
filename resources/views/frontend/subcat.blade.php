@@ -23,34 +23,58 @@
     @section('content')
         <div class="content">
             <div class="container">
-                <div class="slogan">
-                    <h1>Заголовок</h1>
-                </div> 
-                <div class="bread-crumbs"><a href="{{ route('index') }}">Все категории</a>->
-                    {{ $goods[0]->category->title }}-> 
-                    {{ $goods[0]->subcategory->title }}   
-                </div>
-                <div class="row">
-                    @foreach ($goods as $good)
-                        @php   
-                            $idDiv = "category" . $loop->index;
-                        @endphp
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <div class="card">
-                                <h4>{{ $good->title }}</h4>
-                                <div id='{{ $idDiv }}' class="category" style="background-image: url({{ asset('storage/' . $picts[$loop->index]) }});">
-                                    <a class="a-card" href="{{ route('good', ['cat'=>$good->categories_id , 'subcat'=>$good->subcategories_id, 'id'=>$good->id ]) }}">
-                                        <div>
-                                            <b>Название:</b>{{ $good->title }}
-                                            <br>
-                                            <b>Описание:</b> {{ $good->description }}
-                                        </div>
-                                    </a>
+                @if (Cache::has($catSubcat)) 
+                    @php
+                      $indexSubcat = Cache::get($catSubcat);
+                      echo $indexSubcat;
+                    @endphp
+                @else
+                    @php 
+                        ob_start();
+                    @endphp  
+                    <div class="slogan">
+                        <h1>Заголовок</h1>
+                    </div> 
+                    <div class="bread-crumbs"><a href="{{ route('index') }}">Все категории</a>->
+                        {{ $goods[0]->category->title }}-> 
+                        {{ $goods[0]->subcategory->title }}   
+                    </div>
+                    <div class="row">
+                        @foreach ($goods as $good)
+                            @php   
+                                $idDiv = "category" . $loop->index;
+                            @endphp
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="card">
+                                    <h4>{{ $good->title }}</h4>
+                                    <div id='{{ $idDiv }}' class="category" style="background-image: url({{ asset('storage/' . $picts[$loop->index]) }});">
+                                        <a class="a-card" href="{{ route('good', ['cat'=>$good->categories_id , 'subcat'=>$good->subcategories_id, 'id'=>$good->id ]) }}">
+                                            <div>
+                                                <b>Название:</b>{{ $good->title }}
+                                                <br>
+                                                <b>Описание:</b> {{ $good->description }}
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
+
+                    @php
+                        $indexSubcat = ob_get_contents();
+
+                        ob_end_clean();
+
+                        Cache::forever($catSubcat, $indexSubcat);
+                        
+                        // $myecho = $index;
+                        // `echo " index :  " >>/tmp/qaz`;
+                        // `echo "$myecho" >>/tmp/qaz`;
+
+                        echo $indexSubcat;
+                    @endphp
+                @endif 
 
                 @section('nav')
                     @include('frontend/common_nav')

@@ -61,6 +61,7 @@ class CrudPictController extends Controller
         $pict->path = $path;
 
         $pict->save();
+        Cache::flush();
 
         return redirect()->route('showPict');
     }
@@ -116,6 +117,7 @@ class CrudPictController extends Controller
         $pict->path = $path;
 
         $pict->save();
+        Cache::flush();
 
         return redirect()->route('showPict');
     }
@@ -137,6 +139,7 @@ class CrudPictController extends Controller
         Storage::delete($pict->path);
         Storage::delete($pict->path . '50_50.jpg');
         $pict->delete();
+        Cache::flush();
 
         return response()->json(["success" => true, "message" => "Запись удалена"]);
 

@@ -22,6 +22,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
 // use Validator;
 //use Intervention\Image\ImageManager;
@@ -36,16 +37,23 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $goods = Goods::all();
+        // Cache::flush();
+        // exit;
+        if (Cache::has('index')) {
+            return view('frontend.index');
+        }else{
 
-        $pictures = Picture::all();
+            $goods = Goods::all();
 
-        $categories = Category::all();
-        $subcats = Subcategory::all();
+            $pictures = Picture::all();
 
-        $category_subcats = CategorySubcat::all();
+            $categories = Category::all();
+            $subcats = Subcategory::all();
 
-        return view('frontend.index', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats, "category_subcats" => $category_subcats]);//, "goodsSizes" => $goodsSizes
+            $category_subcats = CategorySubcat::all();
+
+            return view('frontend.index', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats, "category_subcats" => $category_subcats]);//, "goodsSizes" => $goodsSizes
+        }
     }
 
     /**
@@ -55,30 +63,36 @@ class IndexController extends Controller
      */
     public function catSubcatShow($cat_id, $subcat_id)
     {
-    	$goods = Goods::where([
-              ['categories_id', '=', $cat_id],
-              ['subcategories_id', '=', $subcat_id],
-          ])->get();
+        $catSubcat = 'catSubcat'.$cat_id.'_'.$subcat_id;
+        if (Cache::has($catSubcat)) {
+            return view('frontend.subcat', ["catSubcat" => $catSubcat]);
+        }else{
 
-        //$pictures = Picture::all();
+        	$goods = Goods::where([
+                  ['categories_id', '=', $cat_id],
+                  ['subcategories_id', '=', $subcat_id],
+              ])->get();
 
-        $picts = array();
-        foreach ($goods as $good){
-            foreach ($good->size as $s){
-                $goodsSizes = GoodsSizes::where('id', $s->pivot->id)->get();
-                foreach ($goodsSizes as $goodSize){
-                    foreach ($goodSize->color as $col){
-                        //if (!(in_array($col->id, $allcolor))) 
-                        $pict = Picture::where('id', $col->pivot->pictures_id)->get();
-                        $picts[] = $pict[0]->path;
+            //$pictures = Picture::all();
+
+            $picts = array();
+            foreach ($goods as $good){
+                foreach ($good->size as $s){
+                    $goodsSizes = GoodsSizes::where('id', $s->pivot->id)->get();
+                    foreach ($goodsSizes as $goodSize){
+                        foreach ($goodSize->color as $col){
+                            //if (!(in_array($col->id, $allcolor))) 
+                            $pict = Picture::where('id', $col->pivot->pictures_id)->get();
+                            $picts[] = $pict[0]->path;
+                        }
                     }
                 }
             }
+
+            $category_subcats = CategorySubcat::all();
+
+            return view('frontend.subcat', ["goods" => $goods, "picts" => $picts, "catSubcat" => $catSubcat]);//, "goodsSizes" => $goodsSizes
         }
-
-        $category_subcats = CategorySubcat::all();
-
-        return view('frontend.subcat', ["goods" => $goods, "picts" => $picts]);//, "goodsSizes" => $goodsSizes
     }
 
     /**
@@ -88,13 +102,18 @@ class IndexController extends Controller
      */
     public function goodShow($cat_id, $subcat_id, $id)
     {
-        $good = Goods::where([
-              ['id', '=', $id],
-          ])->get();
+        $goodShow = 'good'.$cat_id.'_'.$subcat_id.'_'.$id;
+        if (Cache::has($goodShow)) {
+            return view('frontend.good', ["goodShow" => $goodShow]);
+        }else{
+            $good = Goods::where([
+                  ['id', '=', $id],
+              ])->get();
 
-        $good = $good[0]; 
+            $good = $good[0]; 
 
-        return view('frontend.good', ["good" => $good]);
+            return view('frontend.good', ["good" => $good, "goodShow" => $goodShow]);
+        }
     }
 
 

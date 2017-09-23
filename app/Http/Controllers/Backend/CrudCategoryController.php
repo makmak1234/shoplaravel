@@ -60,6 +60,7 @@ class CrudCategoryController extends Controller
         $category->path = $path;
 
         $category->save();
+        Cache::flush();
 
         return redirect()->route('showCategory');
     }
@@ -123,6 +124,7 @@ class CrudCategoryController extends Controller
         $category->path = $path;
 
         $category->save();
+        Cache::flush();
 
         return redirect()->route('showCategory');
     }
@@ -145,6 +147,7 @@ class CrudCategoryController extends Controller
         Storage::delete($category->path . '50_50.jpg');
 
         $category->delete();
+        Cache::flush();
 
         return response()->json(["success" => true, "message" => "Запись удалена"]);
 

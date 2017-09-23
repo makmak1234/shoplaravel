@@ -29,6 +29,15 @@
     @section('content')
         <div class="content">
             <div class="container">
+                @if (Cache::has($goodShow)) 
+                    @php
+                      $indexGood = Cache::get($goodShow);
+                      echo $indexGood;
+                    @endphp
+                @else
+                    @php 
+                        ob_start();
+                    @endphp 
 
                 <div class="slogan">
                     <h1>Заголовок</h1>
@@ -86,6 +95,20 @@
                     </div>
                   </div>
 
+                    @php
+                        $indexGood = ob_get_contents();
+
+                        ob_end_clean();
+
+                        Cache::forever($goodShow, $indexGood);
+                        
+                        // $myecho = $index;
+                        // `echo " index :  " >>/tmp/qaz`;
+                        // `echo "$myecho" >>/tmp/qaz`;
+
+                        echo $indexGood;
+                    @endphp
+                @endif 
                   <div class="col-sm-6 col-md-6">
                     <div id="bascetsmall" class="bascetsmall">
                         {{-- ВКЛЮЧИТЬ ПОЗЖЕ КОРЗИНУ {{ render_esi(controller('UserBundle:ajaxUser:ajaxBagUser',

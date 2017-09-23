@@ -25,6 +25,7 @@ class CrudColorController extends Controller
         $colors->title = $request->title;
 
         $colors->save();
+        Cache::flush();
     }
 
     /**
@@ -75,6 +76,7 @@ class CrudColorController extends Controller
         //$descriptions->save();
 
         $color->save();
+        Cache::flush();
 
         return redirect()->route('showColor');
 
@@ -119,6 +121,7 @@ class CrudColorController extends Controller
         $color->title = $request->title;
 
         $color->save();
+        Cache::flush();
 
         return redirect()->route('showColor');
     }

@@ -25,6 +25,7 @@ class CrudSizeController extends Controller
         $goods->title = $request->title;
 
         $goods->save();
+        Cache::flush();
     }
 
     /**
@@ -75,6 +76,7 @@ class CrudSizeController extends Controller
         //$descriptions->save();
 
         $size->save();
+        Cache::flush();
 
         return redirect()->route('showSize');
 
@@ -119,6 +121,7 @@ class CrudSizeController extends Controller
         $size->title = $request->title;
 
         $size->save();
+        Cache::flush();
 
         return redirect()->route('showSize');
     }
@@ -134,6 +137,7 @@ class CrudSizeController extends Controller
         $del_desc = $request->del_desc;
         
         $size = Size::find($id)->delete();
+        Cache::flush();
         return response()->json(["success" => true, "message" => "Запись удалена"]);
 
         //$id = $request->id; 

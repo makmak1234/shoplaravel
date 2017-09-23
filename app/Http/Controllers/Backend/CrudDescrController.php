@@ -25,6 +25,7 @@ class CrudDescrController extends Controller
         $goods->title = $request->title;
 
         $goods->save();
+        Cache::flush();
     }
 
     /**
@@ -75,6 +76,7 @@ class CrudDescrController extends Controller
         //$descriptions->save();
 
         $descr->save();
+        Cache::flush();
 
         return redirect()->route('showDescr');
 
@@ -119,6 +121,7 @@ class CrudDescrController extends Controller
         $descr->title = $request->title;
 
         $descr->save();
+        Cache::flush();
 
         return redirect()->route('showDescr');
     }
