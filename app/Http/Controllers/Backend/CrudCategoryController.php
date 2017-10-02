@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Backend;
 
 use App\Goods;
 use App\Category;
+use App\CategorySubcat;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 //use Illuminate\Support\Facades\DB;
 
 class CrudCategoryController extends Controller
@@ -60,8 +62,9 @@ class CrudCategoryController extends Controller
         $category->path = $path;
 
         $category->save();
-        Cache::flush();
-
+        
+        $this->clearCache($category);
+        
         return redirect()->route('showCategory');
     }
 
@@ -108,23 +111,25 @@ class CrudCategoryController extends Controller
             // Storage::delete(asset('storage/' . $category->path));
         // }
 
-        if(!empty($category->path)){
+        if(!empty($category->path) && !empty($request->file('pict'))){
             $path = $request->file('pict')->storeAs('', $category->path);
         }
-        else{
-            $path = $request->file('pict')->store('pict_cat'); 
+        elseif(!empty($request->file('pict'))){
+                $path = $request->file('pict')->store('pict_cat'); 
         }
 
+        if (!empty($path)) {
+            $img = Image::make(asset('storage/' . $path))->resize(null, 100, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            $img->save(public_path('storage/' .  $path . '50_50.jpg' ));
 
-        $img = Image::make(asset('storage/' . $path))->resize(null, 100, function ($constraint) {
-            $constraint->aspectRatio();
-        });
-        $img->save(public_path('storage/' .  $path . '50_50.jpg' ));
-
-        $category->path = $path;
+            $category->path = $path;
+        }
 
         $category->save();
-        Cache::flush();
+
+        $this->clearCache($category);
 
         return redirect()->route('showCategory');
     }
@@ -146,8 +151,9 @@ class CrudCategoryController extends Controller
         Storage::delete($category->path);
         Storage::delete($category->path . '50_50.jpg');
 
+        $this->clearCache($category);
+
         $category->delete();
-        Cache::flush();
 
         return response()->json(["success" => true, "message" => "Запись удалена"]);
 
@@ -167,6 +173,36 @@ class CrudCategoryController extends Controller
         
         // return 'Ok';
         // //exit;
+    }
+
+    private function clearCache($category){
+        if (Cache::has('index')) {
+            Cache::forget('index');
+        }
+
+        $subcats = $category->subcategory;
+        // $myecho = json_encode($subcats);
+        // `echo " subcats    " >>/tmp/qaz`;
+        // `echo "$myecho" >>/tmp/qaz`;
+        foreach ($subcats as $subcat) {
+            // $myecho = json_encode('catSubcat'.$category->id.'_'.$subcat->id);
+            // `echo " catSubcat    " >>/tmp/qaz`;
+            // `echo "$myecho" >>/tmp/qaz`;
+            if (Cache::has('catSubcat'.$category->id.'_'.$subcat->id)) {
+                Cache::forget('catSubcat'.$category->id.'_'.$subcat->id);
+
+            }
+            $goods = Goods::where([
+                  ['categories_id', '=', $category->id],
+                  ['subcategories_id', '=', $subcat->id],
+              ])->get();
+            foreach ($goods as $good) {
+                $goodShow = 'good'.$category->id.'_'.$subcat->id.'_'.$good->id;
+                if (Cache::has($goodShow)) {
+                    Cache::forget($goodShow);
+                }
+            }
+        }
     }
 
 

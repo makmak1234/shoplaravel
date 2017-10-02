@@ -81,7 +81,7 @@ class CrudTablesController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function storeTables(Request $request)
+    public function storeTables(Request $request, $goods_del = false)
     {
         // Validate the request...
 
@@ -90,7 +90,6 @@ class CrudTablesController extends Controller
         // `echo "$myecho" >>/tmp/qaz`;
         // exit;
 
-        Cache::flush();
 
         $goods = new Goods;
         $goods->title = $request->title;
@@ -101,6 +100,13 @@ class CrudTablesController extends Controller
 
         $goods->size()->attach($request->size);
         $goods->save();
+
+        if ($goods_del == false) {
+            $this->clearCache($goods);
+        }else{
+            $this->clearCache($goods_del);
+        }
+        
 
         // $category = Category::where('id', $request->category)->get();
 
@@ -152,7 +158,14 @@ class CrudTablesController extends Controller
     {
         // Cache::flush();
         // exit;
-        if (Cache::has('showTables1')) {
+
+        $good = Goods::first();
+
+        // $myecho = json_encode($good);
+        // `echo " good   " >>/tmp/qaz`;
+        // `echo "$myecho" >>/tmp/qaz`;
+
+        if (Cache::has('showTable'.$good->categories_id)) {
             $categories = Category::get();//remember(60)->
 
             return view('welcome', ["categories" => $categories]);
@@ -236,7 +249,12 @@ class CrudTablesController extends Controller
     {
         $goods = Goods::find($request->id)->delete();
 
-        $this->storeTables($request);
+        // $myecho = json_encode('showTables'.$goods->categories_id);
+        // `echo " showTables:    " >>/tmp/qaz`;
+        // `echo "$myecho" >>/tmp/qaz`;
+        // exit;
+
+        $this->storeTables($request, $goods);
 
         return redirect()->route('showTables');
 
@@ -300,6 +318,9 @@ class CrudTablesController extends Controller
             $descriptions = $good->descriptions;
             //$good->descriptions()->associate($descriptions);
             $good->delete();
+
+            $this->clearCache($good);
+
             $descriptions->delete();
             return response()->json(["success" => true, "message" => "Запись и описание удалены"]);
         }
@@ -316,9 +337,29 @@ class CrudTablesController extends Controller
 
         $good->delete();
 
-        Cache::flush();
+        $this->clearCache($good);
         
         return response()->json(["success" => true, "message" => "Запись удалена"]);
+    }
+
+    private function clearCache($good){
+        if (Cache::has('showTables'.$good->categories_id)) {
+            Cache::forget('showTables'.$good->categories_id);
+        }
+
+        $catSubcat = 'catSubcat'.$good->categories_id.'_'.$good->subcategories_id;
+        if (Cache::has($catSubcat)) {
+            Cache::forget($catSubcat);
+        }
+        $goodShow = 'good'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
+        if (Cache::has($goodShow)) {
+            Cache::forget($goodShow);
+        }
+
+        $myecho = json_encode('showTables'.$good->categories_id. ' catSubcat'.$good->categories_id.'_'.$good->subcategories_id. ' good'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id);
+        `echo " clearCache:    " >>/tmp/qaz`;
+        `echo "$myecho" >>/tmp/qaz`;
+        // exit;
     }
 
 }

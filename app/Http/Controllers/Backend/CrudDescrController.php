@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Goods;
+use App\Color;
+use App\Category;
+use App\Subcategory;
 use App\Description;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 //use Illuminate\Support\Facades\DB;
 
 class CrudDescrController extends Controller
@@ -25,7 +29,8 @@ class CrudDescrController extends Controller
         $goods->title = $request->title;
 
         $goods->save();
-        Cache::flush();
+
+        $this->clearCache();
     }
 
     /**
@@ -76,7 +81,8 @@ class CrudDescrController extends Controller
         //$descriptions->save();
 
         $descr->save();
-        Cache::flush();
+        
+        $this->clearCache($descr->id);
 
         return redirect()->route('showDescr');
 
@@ -121,7 +127,8 @@ class CrudDescrController extends Controller
         $descr->title = $request->title;
 
         $descr->save();
-        Cache::flush();
+        
+        $this->clearCache($descr->id);
 
         return redirect()->route('showDescr');
     }
@@ -139,6 +146,9 @@ class CrudDescrController extends Controller
         $del_desc = $request->del_desc;
 
         $size = Description::find($id)->delete();
+
+        $this->clearCache($descr->id);
+
         return response()->json(["success" => true, "message" => "Запись удалена"]);
 
         // `echo $size >>/tmp/qaz`;
@@ -158,6 +168,22 @@ class CrudDescrController extends Controller
         // return 'Ok';
         // //exit;
     }
+
+    private function clearCache($descr_id){
+        $goods = Goods::where('descriptions_id', $descr_id)->get();
+
+        // $myecho = json_encode($goods);
+        // `echo " goods    " >>/tmp/qaz`;
+        // `echo "$myecho" >>/tmp/qaz`;
+    
+        foreach ($goods as $good) {
+            $goodShow = 'good'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
+            if (Cache::has($goodShow)) {
+                Cache::forget($goodShow);
+            }
+        }
+    }
+
 
 
 }

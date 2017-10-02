@@ -43,7 +43,7 @@
                     <h1>Заголовок</h1>
                 </div> 
                 <div class="bread-crumbs"><a href="{{ route('index') }}">Все категории</a>-> 
-                    <a href="{{ route('cat_sub_show', ['cat_id'=>$good->categories_id , 'subcat_id'=>$good->categories_id  ]) }}">{{ $good->category->title }}</a>->  
+                    <a href="{{ route('cat_sub_show', ['cat_id'=>$good->categories_id , 'subcat_id'=>$good->subcategories_id  ]) }}">{{ $good->category->title }}</a>->  
                     {{ $good->subcategory->title }}
                 </div>
 

@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Backend;
 use App\ColorGoodsSize;
 use App\Color;
 use App\Picture;
+use App\Goods;
+use App\Category;
+use App\Subcategory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Cache;
 
 
 //use Illuminate\Support\Facades\DB;
@@ -61,7 +65,8 @@ class CrudPictController extends Controller
         $pict->path = $path;
 
         $pict->save();
-        Cache::flush();
+        
+        $this->clearCache();
 
         return redirect()->route('showPict');
     }
@@ -117,7 +122,8 @@ class CrudPictController extends Controller
         $pict->path = $path;
 
         $pict->save();
-        Cache::flush();
+        
+        $this->clearCache();
 
         return redirect()->route('showPict');
     }
@@ -139,7 +145,8 @@ class CrudPictController extends Controller
         Storage::delete($pict->path);
         Storage::delete($pict->path . '50_50.jpg');
         $pict->delete();
-        Cache::flush();
+        
+        $this->clearCache();
 
         return response()->json(["success" => true, "message" => "Запись удалена"]);
 
@@ -164,6 +171,10 @@ class CrudPictController extends Controller
         
         // return 'Ok';
         //exit;
+    }
+
+    private function clearCache(){
+        Cache::flush();
     }
 
 

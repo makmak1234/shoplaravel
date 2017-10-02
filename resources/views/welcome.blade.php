@@ -41,15 +41,15 @@
                     </div> 
                     <div class="bread-crumbs"></div>
                     @foreach ($categories as $category)
-                      @if (Cache::has('showTables'.$loop->iteration)) 
+                      @if (Cache::has('showTables'.$category->id)) 
                      {{--  @if (file_exists('./cache/showTables'.$loop->iteration.'.cache')) --}}
                         @php
                           // $showTables = readfile('./cache/showTables'.$loop->iteration.'.cache');
                           $showTables = Cache::get('showTables'.$loop->iteration);
 
-                          $myecho = $showTables;
-                          `echo " showTables $loop->iteration  " >>/tmp/qaz`;
-                          `echo "$myecho" >>/tmp/qaz`;
+                          // $myecho = $showTables;
+                          // `echo " showTables $loop->iteration  " >>/tmp/qaz`;
+                          // `echo "$myecho" >>/tmp/qaz`;
                           //exit;
 
                           echo $showTables;
@@ -176,13 +176,13 @@
                       @php
                         $showTables = ob_get_contents();
 
-                        $myecho = $showTables;
-                        `echo " showTables iter: $loop->iteration    " >>/tmp/qaz`;
-                        `echo "$myecho" >>/tmp/qaz`;
+                        // $myecho = $showTables;
+                        // `echo " showTables iter: $loop->iteration    " >>/tmp/qaz`;
+                        // `echo "$myecho" >>/tmp/qaz`;
 
                         ob_end_clean();
 
-                        Cache::forever('showTables'.$loop->iteration, $showTables);
+                        Cache::forever('showTables'.$category->id, $showTables);
                         // Сохранение кэш-файла с контентом
                         // $fp = fopen('./cache/showTables'.$loop->iteration.'.cache', 'w');
                         // fwrite($fp, $showTables);
@@ -242,7 +242,7 @@
         if(data.success == true){
           $('#erralert' + id).removeAttr('hidden');
           $('#erralert' + id).text(data.message);
-          $(location).attr('href', '/');
+          $(location).attr('href', '/show_tables');
         }
         else if(data.success == false){
           //alert('count= '+ data.success);

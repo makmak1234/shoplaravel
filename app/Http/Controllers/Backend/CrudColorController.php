@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Backend;
 
 use App\Goods;
 use App\Color;
+use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 //use Illuminate\Support\Facades\DB;
 
 class CrudColorController extends Controller
@@ -25,7 +27,9 @@ class CrudColorController extends Controller
         $colors->title = $request->title;
 
         $colors->save();
-        Cache::flush();
+
+        
+
     }
 
     /**
@@ -76,7 +80,8 @@ class CrudColorController extends Controller
         //$descriptions->save();
 
         $color->save();
-        Cache::flush();
+
+        $this->clearCache();
 
         return redirect()->route('showColor');
 
@@ -121,7 +126,8 @@ class CrudColorController extends Controller
         $color->title = $request->title;
 
         $color->save();
-        Cache::flush();
+        
+        $this->clearCache();
 
         return redirect()->route('showColor');
     }
@@ -137,6 +143,9 @@ class CrudColorController extends Controller
         $del_desc = $request->del_desc;
 
         $size = Color::find($id)->delete();
+
+        $this->clearCache();
+
         return response()->json(["success" => true, "message" => "Запись удалена"]);
 
         //$id = $request->id; 
@@ -160,6 +169,23 @@ class CrudColorController extends Controller
         
         // return 'Ok';
         //exit;
+    }
+
+    private function clearCache(){
+        $categories = Category::all();
+        foreach ($categories as $category) {
+            if (Cache::has('showTables'.$category->id)) {
+                Cache::forget('showTables'.$category->id);
+            }
+        }
+        
+        $goods = Goods::all();
+        foreach ($goods as $good) {
+            $goodShow = 'good'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
+            if (Cache::has($goodShow)) {
+                Cache::forget($goodShow);
+            }
+        }
     }
 
 

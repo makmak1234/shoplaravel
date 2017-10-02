@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Goods;
+use App\Category;
 use App\Subcategory;
+use App\CategorySubcat;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-//use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class CrudSubcatController extends Controller  
 {
@@ -25,7 +28,8 @@ class CrudSubcatController extends Controller
         $subcat->title = $request->title;
 
         $subcat->save();
-        Cache::flush();
+        
+        $this->clearCache($subcat);
     }
 
     /**
@@ -76,7 +80,8 @@ class CrudSubcatController extends Controller
         //$descriptions->save();
 
         $subcat->save();
-        Cache::flush();
+        
+        $this->clearCache($subcat);
 
         return redirect()->route('showSubcat');
 
@@ -121,7 +126,8 @@ class CrudSubcatController extends Controller
         $subcat->title = $request->title;
 
         $subcat->save();
-        Cache::flush();
+        
+        $this->clearCache($subcat);
 
         return redirect()->route('showSubcat');
     }
@@ -138,8 +144,12 @@ class CrudSubcatController extends Controller
         $id = $request->id;
         $del_subcat = $request->del_subcat;
 
-        $subcat = Subcategory::find($id)->delete();
-        Cache::flush();
+        $subcat = Subcategory::find($id);
+        
+        $this->clearCache($subcat);
+
+        $subcat->delete();
+
         return response()->json(["success" => true, "message" => "Запись удалена"]);
 
         // `echo $size >>/tmp/qaz`;
@@ -158,6 +168,37 @@ class CrudSubcatController extends Controller
         
         // return 'Ok';
         // //exit;
+    }
+
+    private function clearCache($subcat){
+        if (Cache::has('index')) {
+            Cache::forget('index');
+        }
+
+        // $categories = CategorySubcat::where(['subcategory_id',$subcat->id]);
+        $categories = DB::select('select category_id from category_subcats where subcategory_id = ?', [$subcat->id]); 
+        // $myecho = json_encode($categories);
+        // `echo " categories    " >>/tmp/qaz`;
+        // `echo "$myecho" >>/tmp/qaz`;
+        foreach ($categories as $category) {
+            // $myecho = json_encode($category->category_id);
+            // `echo " category->category_id    " >>/tmp/qaz`;
+            // `echo "$myecho" >>/tmp/qaz`;
+            if (Cache::has('catSubcat'.$category->category_id.'_'.$subcat->id)) {
+                Cache::forget('catSubcat'.$category->category_id.'_'.$subcat->id);
+            }
+            $goods = Goods::where([
+                  ['categories_id', '=', $category->category_id],
+                  ['subcategories_id', '=', $subcat->id],
+              ])->get();
+            foreach ($goods as $good) {
+                $goodShow = 'good'.$category->category_id.'_'.$subcat->id.'_'.$good->id;
+                if (Cache::has($goodShow)) {
+                    Cache::forget($goodShow);
+                }
+            }
+        }
+
     }
 
 
