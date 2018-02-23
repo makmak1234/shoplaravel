@@ -35,6 +35,7 @@
                       <a href="/show_size" type="button" class="btn btn-default">Редактировать размер</a>
                       <a href="/show_color" type="button" class="btn btn-default">Редактировать цвет</a>
                       <a href="/show_pict" type="button" class="btn btn-default">Редактировать картинки</a>
+                        <a href="/clear_cache" type="button" class="btn btn-danger">Стереть кеш</a>
                     </div>
                     <div class="slogan">
                         <h1>Все категории</h1>

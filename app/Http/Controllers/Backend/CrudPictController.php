@@ -176,6 +176,13 @@ class CrudPictController extends Controller
     private function clearCache(){
         Cache::flush();
     }
+    
+    public function clearAllCache(){
+        // $myecho = json_encode($request->fullUrl());
+        // `echo "request: " $myecho >>/tmp/qaz`;
+        Cache::flush();
+    }
+
 
 
 }

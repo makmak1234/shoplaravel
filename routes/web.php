@@ -64,6 +64,10 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/edit_pict/{id}', 'Backend\CrudPictController@editPict');
 	Route::post('/store_edit_pict', 'Backend\CrudPictController@storeEditPict');
 	Route::get('/delete_pict', 'Backend\CrudPictController@deleteRowPict')->name('deleteRowPict');
+    
+    Route::get('/clear_cache', 'Backend\CrudPictController@clearAllCache')->name('clearCache');
+    Route::get('/artisan/{command}', 'Backend\CrudTablesController@artisanCommand')->name('artisan');
+
 });
 
 Route::get('/', 'Frontend\IndexController@index')->name('index');

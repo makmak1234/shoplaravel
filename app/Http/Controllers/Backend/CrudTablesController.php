@@ -361,5 +361,25 @@ class CrudTablesController extends Controller
         `echo "$myecho" >>/tmp/qaz`;
         // exit;
     }
+    
+    public function artisanCommand(Request $request, $command){
+        $name1 = "--verbose";
+        $name2 = "--verbose";
+        $value1 = "true";
+        $value2 = "true";
+        if ($request->has('name1')) {
+          $name1 = $request->name1;
+          $value1 = $request->value1;
+        }
+        if ($request->has('name2')) {
+          $name2 = $request->name2;
+          $value2 = $request->value2;
+        }
+        $exitCode = Artisan::call($command, [$name1 => $value1, $name2 => $value2]);
+        $my_echo = $command + $name1+ "=" + $value1 + $name2 + "="+ $value2 + "  " + json_encode($exitCode);
+        echo ("$command $name1=$value1 $name2=$value2");
+        echo "\n";
+        echo json_encode($exitCode);
+      }
 
 }
