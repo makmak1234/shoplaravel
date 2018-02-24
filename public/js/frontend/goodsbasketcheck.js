@@ -16,7 +16,7 @@
 })*/
 
 //showGood.html.twig
-function goodbasketcheck(id, mclon, route_name){
+function goodbasketcheck(id, mclon, route_name) {
 	var route = Router.route(route_name, { id: id, size: color_true, color: image_true, mclon: mclon});
 	console.log(route) ;
 	
