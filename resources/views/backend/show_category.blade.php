@@ -55,6 +55,8 @@
 
                                         </p>
                                     </div>
+<!--                                trans('validation.required');-->
+                                @lang('frontend.category6')
                                 </div>
                             </div>
                             @if ($loop->iteration == $myClearImg)

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\UploadedFile;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Artisan;
 //use Intervention\Image\ImageManager;
 //use Illuminate\Support\Facades\DB;
 
@@ -48,7 +49,7 @@ class CrudTablesController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -106,7 +107,7 @@ class CrudTablesController extends Controller
         }else{
             $this->clearCache($goods_del);
         }
-        
+
 
         // $category = Category::where('id', $request->category)->get();
 
@@ -137,9 +138,9 @@ class CrudTablesController extends Controller
 
         DB::table('category_subcats')->truncate();
         $categories = Category::all();
-        foreach ($categories as $category){        
+        foreach ($categories as $category){
             //$goods = App\Goods::where('categories_id', $category->id)->get();
-            $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [$category->id]); 
+            $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [$category->id]);
             foreach ($subcats as $subcat){
                 $category->subcategory()->attach($subcat);
             }
@@ -165,7 +166,7 @@ class CrudTablesController extends Controller
         // `echo " good   " >>/tmp/qaz`;
         // `echo "$myecho" >>/tmp/qaz`;
 
-        if (Cache::has('showTable'.$good->categories_id)) {
+        if (is_object($good) && Cache::has('showTable'.$good->categories_id) ) {
             $categories = Category::get();//remember(60)->
 
             return view('welcome', ["categories" => $categories]);
@@ -193,11 +194,11 @@ class CrudTablesController extends Controller
             // $goods2 = Goods::where([
             //     ['categories_id', '=', '1'],
             //     ['subcategories_id', '=', '1'],
-            // ])->get();//DB::select('select * from goods where categories_id = ? and subcategories_id in(' . $subcats . ')', [1]); 
+            // ])->get();//DB::select('select * from goods where categories_id = ? and subcategories_id in(' . $subcats . ')', [1]);
 
-            // $myecho = json_encode($goods2[0]->size);
+            $myecho = json_encode($categories[0]->path);
             // `echo " goods2->size    " >>/tmp/qaz`;
-            // `echo "$myecho" >>/tmp/qaz`;
+            `echo "path: $myecho" >>/tmp/qaz`;
             //exit;
 
             return view('welcome', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats ]);//, "category_subcats" => $category_subcats
@@ -229,7 +230,7 @@ class CrudTablesController extends Controller
                 $pict = Picture::where('id', $col->pivot->pictures_id)->get();
                 $pictPath[$col->id] = $pict[0]->path;
                 $pictId[$col->id] = $pict[0]->id;
-              }                                           
+              }
             }
         }
         // $myecho = json_encode($pictPath);
@@ -247,7 +248,7 @@ class CrudTablesController extends Controller
      */
     public function storeEditTables(Request $request)
     {
-        $goods = Goods::find($request->id)->delete();
+        $goods = Goods::find($request->id);
 
         // $myecho = json_encode('showTables'.$goods->categories_id);
         // `echo " showTables:    " >>/tmp/qaz`;
@@ -255,6 +256,8 @@ class CrudTablesController extends Controller
         // exit;
 
         $this->storeTables($request, $goods);
+
+        $goods->delete();
 
         return redirect()->route('showTables');
 
@@ -273,7 +276,7 @@ class CrudTablesController extends Controller
         //     foreach ($goodsSizes as $goodSize){
         //       foreach ($goodSize->color as $col){
         //         $curcolor[$cs->id][] = $col->id;
-        //       }                                           
+        //       }
         //     }
         // }
 
@@ -317,9 +320,10 @@ class CrudTablesController extends Controller
 
             $descriptions = $good->descriptions;
             //$good->descriptions()->associate($descriptions);
-            $good->delete();
 
             $this->clearCache($good);
+
+            $good->delete();
 
             $descriptions->delete();
             return response()->json(["success" => true, "message" => "Запись и описание удалены"]);
@@ -335,15 +339,16 @@ class CrudTablesController extends Controller
         // $category[0]->subcategory()->detach($good->subcategories_id);
         //$category[0]->save();
 
-        $good->delete();
 
         $this->clearCache($good);
-        
+
+        $good->delete();
+
         return response()->json(["success" => true, "message" => "Запись удалена"]);
     }
 
     private function clearCache($good){
-        if (Cache::has('showTables'.$good->categories_id)) {
+        if (is_object($good) && Cache::has('showTables'.$good->categories_id)) {
             Cache::forget('showTables'.$good->categories_id);
         }
 
@@ -361,5 +366,25 @@ class CrudTablesController extends Controller
         `echo "$myecho" >>/tmp/qaz`;
         // exit;
     }
+
+  public function artisanCommand(Request $request, $command){
+    $name1 = "--verbose";
+    $name2 = "--verbose";
+    $value1 = "true";
+    $value2 = "true";
+    if ($request->has('name1')) {
+      $name1 = $request->name1;
+      $value1 = $request->value1;
+    }
+    if ($request->has('name2')) {
+      $name2 = $request->name2;
+      $value2 = $request->value2;
+    }
+    $exitCode = Artisan::call($command, [$name1 => $value1, $name2 => $value2]);
+    $my_echo = $command + $name1+ "=" + $value1 + $name2 + "="+ $value2 + "  " + json_encode($exitCode);
+    echo ("$command $name1=$value1 $name2=$value2");
+    echo "\n";
+    echo json_encode($exitCode);
+  }
 
 }

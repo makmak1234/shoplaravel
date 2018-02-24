@@ -35,6 +35,7 @@
                       <a href="/show_size" type="button" class="btn btn-default">Редактировать размер</a>
                       <a href="/show_color" type="button" class="btn btn-default">Редактировать цвет</a>
                       <a href="/show_pict" type="button" class="btn btn-default">Редактировать картинки</a>
+                      <a href="/clear_cache" type="button" class="btn btn-danger">Стереть кеш</a>
                     </div>
                     <div class="slogan">
                         <h1>Все категории</h1>
@@ -47,9 +48,9 @@
                           // $showTables = readfile('./cache/showTables'.$loop->iteration.'.cache');
                           $showTables = Cache::get('showTables'.$loop->iteration);
 
-                          // $myecho = $showTables;
+                          $myecho = $showTables;
                           // `echo " showTables $loop->iteration  " >>/tmp/qaz`;
-                          // `echo "$myecho" >>/tmp/qaz`;
+                          `echo "cache: true" >>/tmp/qaz`;
                           //exit;
 
                           echo $showTables;

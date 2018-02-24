@@ -73,6 +73,9 @@ class OrderShipped extends Mailable
                         'colorTitle' => $this->colorTitle,
                         'nid' => $this->nid,
                         'priceone' => $this->priceone,
-                    ]);;
+                        // 'name' => "Максим готовы принимать инвестиции",
+                        // 'hash' => "39cb78b52437fd2369bb17fcc47e318b",
+                        // 'path_redirect' => 'http://invest.holding.bz' . '/private/hash_investor/' . '39cb78b52437fd2369bb17fcc47e318b',
+                    ]);
     }
 }

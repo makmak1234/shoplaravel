@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\App;
 // use Validator;
 //use Intervention\Image\ImageManager;
 //use Illuminate\Support\Facades\DB;
@@ -35,8 +36,9 @@ class IndexController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index($locale="en")
     {
+        App::setLocale($locale);
         // Cache::flush();
         // exit;
         if (Cache::has('index')) {
@@ -81,7 +83,7 @@ class IndexController extends Controller
                     $goodsSizes = GoodsSizes::where('id', $s->pivot->id)->get();
                     foreach ($goodsSizes as $goodSize){
                         foreach ($goodSize->color as $col){
-                            //if (!(in_array($col->id, $allcolor))) 
+                            //if (!(in_array($col->id, $allcolor)))
                             $pict = Picture::where('id', $col->pivot->pictures_id)->get();
                             $picts[] = $pict[0]->path;
                         }
@@ -110,7 +112,7 @@ class IndexController extends Controller
                   ['id', '=', $id],
               ])->get();
 
-            $good = $good[0]; 
+            $good = $good[0];
 
             return view('frontend.good', ["good" => $good, "goodShow" => $goodShow]);
         }
@@ -150,7 +152,7 @@ class IndexController extends Controller
      */
     public function bagRegisterAction(Request $request)
     {
-        
+
         $session = $request->session();
 
         //$bagRegister->setRegDatetime(new \DateTime('now'));
@@ -161,7 +163,7 @@ class IndexController extends Controller
             $city = $session->get('city');
             $tel = $session->get('tel');
             $comment = $session->get('comment');
-            $token = $session->get('token');      
+            $token = $session->get('token');
         }else{
             $name = null;
             $city = null;
@@ -173,7 +175,7 @@ class IndexController extends Controller
         // $form = $this->createForm('UserBundle\Form\bagRegisterType', $bagRegister);
         // $form->handleRequest($request);
 
-        
+
 
         if($request->has('id')){
             $id = $request->id;
@@ -181,7 +183,7 @@ class IndexController extends Controller
         else{
             $id = 0;
         }
-        
+
         return view('frontend.bagRegister', [
             'name' => $name,
             'city' => $city,
@@ -214,7 +216,7 @@ class IndexController extends Controller
             $back_shop = $request->input('back_shop'); //$_POST["back_shop"];
 
             //$request->session()->put('token', $_POST["bag_register"]["_token"]);
-            
+
             return redirect()->route('index');
         }
 
@@ -231,7 +233,7 @@ class IndexController extends Controller
                         ->withInput();
         }
 
-        
+
         $bagRegister = new ClientRegistr;
 
         $myecho = json_encode($request);
@@ -239,7 +241,7 @@ class IndexController extends Controller
         `echo "$myecho" >>/tmp/qaz`;
 
         //if ($form->isSubmitted()) {
-            
+
 
             // if ($form->isValid()) {
                 //$em = $this->getDoctrine()->getManager();
@@ -249,7 +251,7 @@ class IndexController extends Controller
                 //     FROM UserBundle:bagRegister p
                 //     '
                 // );
-                
+
                 $orderclientmax = DB::table('client_registrs')->max('orderclient');
 
                 // $myecho = json_encode($orderclientmax[0][1]);//??????????????????????????????????
@@ -293,7 +295,7 @@ class IndexController extends Controller
                     else{
                         $sizeTitle[] = '';
                     }
-                    
+
 
                     if ($colorarr[$k] != 'undefined') {
                         $goodSize = GoodsSizes::find($tmp_size[$sizearr[$k]]->pivot->id);
@@ -321,10 +323,10 @@ class IndexController extends Controller
 
                     //отправка email
                     $title[] = $childrenGoods->title;
-                        
+
                 }
 
-                
+
                 // $em->persist($bagRegister);
                 // $em->flush();
                 $name = $bagRegister->name;
@@ -372,7 +374,7 @@ class IndexController extends Controller
                 //     );
 
                 // $this->get('mailer')->send($message);
-                //end email 
+                //end email
 
                 $session->flush();
 

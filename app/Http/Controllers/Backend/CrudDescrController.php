@@ -147,7 +147,7 @@ class CrudDescrController extends Controller
 
         $size = Description::find($id)->delete();
 
-        $this->clearCache($descr->id);
+        $this->clearCache($del_desc->id);
 
         return response()->json(["success" => true, "message" => "Запись удалена"]);
 

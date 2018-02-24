@@ -11,6 +11,8 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 //use Illuminate\Support\Facades\DB;
+//use Spatie\TranslationLoader\LanguageLine;
+
 
 class CrudCategoryController extends Controller
 {
@@ -62,6 +64,12 @@ class CrudCategoryController extends Controller
         $category->path = $path;
 
         $category->save();
+        
+//        LanguageLine::create([
+//           'group' => 'frontend',
+//           'key' => 'category6',
+//           'text' => ['en' => 'category6', 'ru' => 'категория6'],
+//        ]);
         
         $this->clearCache($category);
         

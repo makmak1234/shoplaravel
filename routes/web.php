@@ -21,6 +21,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('/store_edit_tables', 'Backend\CrudTablesController@storeEditTables');
 	//Route::post('/delete_row', 'Backend\CrudTablesController@deleteRowTables')->name('deleteRow');
 	Route::get('/delete_row', 'Backend\CrudTablesController@deleteRowTables')->name('deleteRow1');///{id}/{dell_desc}
+	Route::get('/delete_row', 'Backend\CrudTablesController@deleteRowTables')->name('deleteRow1');//
 
 	Route::get('/show_category', 'Backend\CrudCategoryController@showCategory')->name('showCategory');
 	Route::get('/insert_category', 'Backend\CrudCategoryController@insertCategory');
@@ -64,17 +65,28 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/edit_pict/{id}', 'Backend\CrudPictController@editPict');
 	Route::post('/store_edit_pict', 'Backend\CrudPictController@storeEditPict');
 	Route::get('/delete_pict', 'Backend\CrudPictController@deleteRowPict')->name('deleteRowPict');
+	Route::get('/clear_cache', 'Backend\CrudPictController@clearAllCache')->name('clearCache');
+
+	Route::get('/artisan/{command}', 'Backend\CrudTablesController@artisanCommand')->name('artisan');
 });
 
-Route::get('/', 'Frontend\IndexController@index')->name('index');
+Route::get('/{locale?}', 'Frontend\IndexController@index')->name('index')->where('locale', '(ru|en)');;
 Route::get('/sucat/{cat_id}/{subcat_id}', 'Frontend\IndexController@catSubcatShow')->name('cat_sub_show');
 Route::get('/good/{cat_id}/{subcat_id}/{id}', 'Frontend\IndexController@goodShow')->name('good');
 Route::get('/ajax_bag_user/{id}', 'Frontend\ajaxUserController@ajaxBagUserAction')->name('ajax_bag_user');
-Route::get('/bag_register_secure/', 'Frontend\IndexController@bagRegisterAction')->name('bag_register_secure');
-Route::post('/bag_register_store/', 'Frontend\IndexController@bagRegisterStore')->name('bag_register_store');
+Route::get('/bag_register_secure', 'Frontend\IndexController@bagRegisterAction')->name('bag_register_secure');
+Route::post('/bag_register_store', 'Frontend\IndexController@bagRegisterStore')->name('bag_register_store');
 Route::get('/ajax_checkout_user/{id}', 'Frontend\ajaxUserController@ajaxCheckoutUserAction')->name('ajax_checkout_user');
-Route::get('/basket_big_change/', 'Frontend\ajaxUserController@basketBigChangeAction')->name('basket_big_change');
+Route::get('/basket_big_change', 'Frontend\ajaxUserController@basketBigChangeAction')->name('basket_big_change');
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
