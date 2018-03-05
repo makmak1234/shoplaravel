@@ -11,7 +11,8 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 //use Illuminate\Support\Facades\DB;
-//use Spatie\TranslationLoader\LanguageLine;
+use Spatie\TranslationLoader\LanguageLine;
+use Illuminate\Support\Facades\App;
 
 
 class CrudCategoryController extends Controller
@@ -65,11 +66,11 @@ class CrudCategoryController extends Controller
 
         $category->save();
         
-//        LanguageLine::create([
-//           'group' => 'frontend',
-//           'key' => 'category6',
-//           'text' => ['en' => 'category6', 'ru' => 'категория6'],
-//        ]);
+        LanguageLine::create([
+           'group' => 'frontend',
+           'key' => 'category6',
+           'text' => ['en' => 'category6', 'ru' => 'категория6'],
+        ]);
         
         $this->clearCache($category);
         
@@ -81,8 +82,9 @@ class CrudCategoryController extends Controller
      *
      * @return Response
      */
-    public function showCategory()
+    public function showCategory($locale="en")
     {
+        App::setLocale($locale);
         $categories = Category::all();
 
         return view('backend.show_category', ["categories" => $categories]);

@@ -23,7 +23,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/delete_row', 'Backend\CrudTablesController@deleteRowTables')->name('deleteRow1');///{id}/{dell_desc}
 	Route::get('/delete_row', 'Backend\CrudTablesController@deleteRowTables')->name('deleteRow1');//
 
-	Route::get('/show_category', 'Backend\CrudCategoryController@showCategory')->name('showCategory');
+	Route::get('/show_category/{locale?}', 'Backend\CrudCategoryController@showCategory')->name('showCategory')->where('locale', '(ru|en)');
 	Route::get('/insert_category', 'Backend\CrudCategoryController@insertCategory');
 	Route::post('/store_category', 'Backend\CrudCategoryController@storeCategory');
 	Route::get('/edit_category/{id}', 'Backend\CrudCategoryController@editCategory');
@@ -69,10 +69,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/clear_cache', 'Backend\CrudPictController@clearAllCache')->name('clearCache');
     Route::get('/artisan/{command}', 'Backend\CrudTablesController@artisanCommand')->name('artisan');
 
->>>>>>> a70230e7bf3acca8cc86f30241b8ddffab30cc5d
 });
 
-Route::get('/{locale?}', 'Frontend\IndexController@index')->name('index')->where('locale', '(ru|en)');;
+Route::get('/', 'Frontend\IndexController@index')->name('index');
 Route::get('/sucat/{cat_id}/{subcat_id}', 'Frontend\IndexController@catSubcatShow')->name('cat_sub_show');
 Route::get('/good/{cat_id}/{subcat_id}/{id}', 'Frontend\IndexController@goodShow')->name('good');
 Route::get('/ajax_bag_user/{id}', 'Frontend\ajaxUserController@ajaxBagUserAction')->name('ajax_bag_user');
@@ -80,6 +79,7 @@ Route::get('/bag_register_secure', 'Frontend\IndexController@bagRegisterAction')
 Route::post('/bag_register_store', 'Frontend\IndexController@bagRegisterStore')->name('bag_register_store');
 Route::get('/ajax_checkout_user/{id}', 'Frontend\ajaxUserController@ajaxCheckoutUserAction')->name('ajax_checkout_user');
 Route::get('/basket_big_change', 'Frontend\ajaxUserController@basketBigChangeAction')->name('basket_big_change');
+Route::get('/{locale?}', 'Frontend\IndexController@language')->name('language')->where('locale', '(ru|en)');
 
 
 Auth::routes();

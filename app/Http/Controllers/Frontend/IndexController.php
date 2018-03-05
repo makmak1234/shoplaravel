@@ -31,31 +31,57 @@ use Illuminate\Support\Facades\App;
 
 class IndexController extends Controller
 {
+    private $goods;
+    private $pictures;
+    private $categories;
+    private $subcats;
+    private $category_subcats;
+    
     /**
      * Show the profile for the given user.
      *
      * @return Response
      */
-    public function index($locale="en")
+    public function index(Request $request)
     {
-        App::setLocale($locale);
+        $language = $request->cookie('language') ?? 'en';
+        App::setLocale($language);
         // Cache::flush();
         // exit;
         if (Cache::has('index')) {
             return view('frontend.index');
         }else{
+            $this->index_data();
 
-            $goods = Goods::all();
-
-            $pictures = Picture::all();
-
-            $categories = Category::all();
-            $subcats = Subcategory::all();
-
-            $category_subcats = CategorySubcat::all();
-
-            return view('frontend.index', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats, "category_subcats" => $category_subcats]);//, "goodsSizes" => $goodsSizes
+            return view('frontend.index', ["goods" => $this->goods, "pictures" => $this->pictures, "categories" => $this->categories, "subcats" => $this->subcats, "category_subcats" => $this->category_subcats]);//, "goodsSizes" => $goodsSizes
         }
+    }
+    
+    public function language($language="en")
+    {
+        App::setLocale($language);
+        if (Cache::has('index')) {
+//            return view('frontend.index')->cookie('language', $language, 2592000);
+            return response()
+                ->view('frontend.index')->cookie('language', $language, 2592000);
+        }else{
+            $this->index_data();
+
+            return response()
+                ->view('frontend.index', ["goods" => $this->goods, "pictures" => $this->pictures, "categories" => $this->categories, "subcats" => $this->subcats, "category_subcats" => $this->category_subcats])->cookie('language', $language, 2592000);
+        }
+    }
+    
+    public function index_data()
+    {
+        $this->goods = Goods::all();
+
+        $this->pictures = Picture::all();
+
+        $this->categories = Category::all();
+        $this->subcats = Subcategory::all();
+
+        $this->category_subcats = CategorySubcat::all();
     }
 
     /**
@@ -63,8 +89,11 @@ class IndexController extends Controller
      *
      * @return Response
      */
-    public function catSubcatShow($cat_id, $subcat_id)
+    public function catSubcatShow(Request $request, $cat_id, $subcat_id)
     {
+        $language = $request->cookie('language') ?? 'en';
+        App::setLocale($language);
+        
         $catSubcat = 'catSubcat'.$cat_id.'_'.$subcat_id;
         if (Cache::has($catSubcat)) {
             return view('frontend.subcat', ["catSubcat" => $catSubcat]);
@@ -102,8 +131,11 @@ class IndexController extends Controller
      *
      * @return Response
      */
-    public function goodShow($cat_id, $subcat_id, $id)
+    public function goodShow(Request $request, $cat_id, $subcat_id, $id)
     {
+        $language = $request->cookie('language') ?? 'en';
+        App::setLocale($language);
+        
         $goodShow = 'good'.$cat_id.'_'.$subcat_id.'_'.$id;
         if (Cache::has($goodShow)) {
             return view('frontend.good', ["goodShow" => $goodShow]);
