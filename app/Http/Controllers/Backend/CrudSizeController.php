@@ -72,7 +72,8 @@ class CrudSizeController extends Controller
 
         //$descriptions = new Description;
 
-        $size->title = $request->title;
+        $size->en = $request->en;
+        $size->ru = $request->ru;
 
         //$descriptions->title = $request->descriptions;
 
@@ -122,7 +123,8 @@ class CrudSizeController extends Controller
     {
         $size = Size::find($request->id);
 
-        $size->title = $request->title;
+        $size->en = $request->en;
+        $size->ru = $request->ru;
 
         $size->save();
         
@@ -173,14 +175,21 @@ class CrudSizeController extends Controller
     private function clearCache(){
         $categories = Category::all();
         foreach ($categories as $category) {
-            if (Cache::has('showTables'.$category->id)) {
-                Cache::forget('showTables'.$category->id);
+            if (Cache::has('showTables_en'.$category->id)) {
+                Cache::forget('showTables_en'.$category->id);
+            }
+            if (Cache::has('showTables_ru'.$category->id)) {
+                Cache::forget('showTables_ru'.$category->id);
             }
         }
         
         $goods = Goods::all();
         foreach ($goods as $good) {
-            $goodShow = 'good'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
+            $goodShow = 'good_en'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
+            if (Cache::has($goodShow)) {
+                Cache::forget($goodShow);
+            }
+            $goodShow = 'good_ru'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
             if (Cache::has($goodShow)) {
                 Cache::forget($goodShow);
             }

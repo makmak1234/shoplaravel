@@ -181,6 +181,7 @@ class CrudPictController extends Controller
         // $myecho = json_encode($request->fullUrl());
         // `echo "request: " $myecho >>/tmp/qaz`;
         Cache::flush();
+        return view('backend.clear_all_cache');//redirect()->route('showTables');
     }
 
 }

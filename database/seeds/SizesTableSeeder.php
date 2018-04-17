@@ -11,19 +11,29 @@ class SizesTableSeeder extends Seeder
      */
     public function run()
     {
-        $sizeCall  = array();
-        $sizeCall[] = 'S';
-        $sizeCall[] = 'M';
-        $sizeCall[] = 'L';
-        $sizeCall[] = 'X';
-        $sizeCall[] = 'XS';
-        $sizeCall[] = 'XL';
-        $sizeCall[] = 'XXL';
-        $sizeCall[] = 'XXXL';
+        $sizeCallen  = array();
+        $sizeCallen[] = 'S';
+        $sizeCallen[] = 'M';
+        $sizeCallen[] = 'L';
+        $sizeCallen[] = 'X';
+        $sizeCallen[] = 'XS';
+        $sizeCallen[] = 'XL';
+        $sizeCallen[] = 'XXL';
+        $sizeCallen[] = 'XXXL';
+        $sizeCallru  = array();
+        $sizeCallru[] = '28';
+        $sizeCallru[] = '30';
+        $sizeCallru[] = '32';
+        $sizeCallru[] = '34';
+        $sizeCallru[] = '36';
+        $sizeCallru[] = '38';
+        $sizeCallru[] = '40';
+        $sizeCallru[] = '42';
 
-        for ($i = 0; $i < count($sizeCall); $i++) {           
+        for ($i = 0; $i < count($sizeCallen); $i++) {           
             DB::table('sizes')->insert([
-	            'title' => $sizeCall[$i],
+	            'en' => $sizeCallen[$i],
+                'ru' => $sizeCallru[$i],
 	        ]);
         }
     }

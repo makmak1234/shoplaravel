@@ -73,7 +73,8 @@ class CrudSubcatController extends Controller
 
         //$descriptions = new Description;
 
-        $subcat->title = $request->title;
+        $subcat->en = $request->en;
+        $subcat->ru = $request->ru;
 
         //$descriptions->title = $request->descriptions;
 
@@ -123,7 +124,8 @@ class CrudSubcatController extends Controller
     {
         $subcat = Subcategory::find($request->id);
 
-        $subcat->title = $request->title;
+        $subcat->en = $request->en;
+        $subcat->ru = $request->ru;
 
         $subcat->save();
         
@@ -171,8 +173,11 @@ class CrudSubcatController extends Controller
     }
 
     private function clearCache($subcat){
-        if (Cache::has('index')) {
-            Cache::forget('index');
+        if (Cache::has('index_en')) {
+            Cache::forget('index_en');
+        }
+        if (Cache::has('index_ru')) {
+            Cache::forget('index_ru');
         }
 
         // $categories = CategorySubcat::where(['subcategory_id',$subcat->id]);
@@ -184,15 +189,22 @@ class CrudSubcatController extends Controller
             // $myecho = json_encode($category->category_id);
             // `echo " category->category_id    " >>/tmp/qaz`;
             // `echo "$myecho" >>/tmp/qaz`;
-            if (Cache::has('catSubcat'.$category->category_id.'_'.$subcat->id)) {
-                Cache::forget('catSubcat'.$category->category_id.'_'.$subcat->id);
+            if (Cache::has('catSubcat_en'.$category->category_id.'_'.$subcat->id)) {
+                Cache::forget('catSubcat_en'.$category->category_id.'_'.$subcat->id);
+            }
+            if (Cache::has('catSubcat_ru'.$category->category_id.'_'.$subcat->id)) {
+                Cache::forget('catSubcat_ru'.$category->category_id.'_'.$subcat->id);
             }
             $goods = Goods::where([
                   ['categories_id', '=', $category->category_id],
                   ['subcategories_id', '=', $subcat->id],
               ])->get();
             foreach ($goods as $good) {
-                $goodShow = 'good'.$category->category_id.'_'.$subcat->id.'_'.$good->id;
+                $goodShow = 'good_en'.$category->category_id.'_'.$subcat->id.'_'.$good->id;
+                if (Cache::has($goodShow)) {
+                    Cache::forget($goodShow);
+                }
+                $goodShow = 'good_ru'.$category->category_id.'_'.$subcat->id.'_'.$good->id;
                 if (Cache::has($goodShow)) {
                     Cache::forget($goodShow);
                 }

@@ -16,7 +16,7 @@
 
 		@foreach($goods as $good)
 		<tr class="onerow">
-			<td>{{ $good->title }}</td>
+			<td>{{ $good->$language }}</td>
 			<td>
 				{{ $sizeTitle[$loop->index] }}
 			</td>

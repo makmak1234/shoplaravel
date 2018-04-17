@@ -37,8 +37,8 @@
                         <h1>Заголовок</h1>
                     </div> 
                     <div class="bread-crumbs"><a href="{{ route('index') }}">Все категории</a>->
-                        {{ $goods[0]->category->title }}-> 
-                        {{ $goods[0]->subcategory->title }}   
+                        {{ $goods[0]->category->$language }}-> 
+                        {{ $goods[0]->subcategory->$language }}   
                     </div>
                     <div class="row">
                         @foreach ($goods as $good)
@@ -51,9 +51,9 @@
                                     <div id='{{ $idDiv }}' class="category" style="background-image: url({{ asset('storage/' . $picts[$loop->index]) }});">
                                         <a class="a-card" href="{{ route('good', ['cat'=>$good->categories_id , 'subcat'=>$good->subcategories_id, 'id'=>$good->id ]) }}">
                                             <div>
-                                                <b>Название:</b>{{ $good->title }}
+                                                <b>Название:</b>{{ $good->$language }}
                                                 <br>
-                                                <b>Описание:</b> {{ $good->description }}
+                                                <b>Описание:</b> {{ $good->descriptions->$language }}
                                             </div>
                                         </a>
                                     </div>

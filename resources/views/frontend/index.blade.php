@@ -30,9 +30,9 @@
                     </div> 
                     <div class="bread-crumbs">Все категории</div>
                     <div class="row"> 
-                        @if (Cache::has('index')) 
+                        @if (Cache::has('index_'.$language)) 
                             @php
-                              $index = Cache::get('index');
+                              $index = Cache::get('index_'.$language);
                               echo $index;
                             @endphp
                         @else
@@ -42,7 +42,7 @@
                             @foreach ($categories as $category)  
                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                     <div class="card">
-                                        <h4>{{ $category->title }}</h4>
+                                        <h4>{{ $category->$language }}</h4>
                                         <div id='{{ "category" . $loop->index }}' class="category" style="background-image: url({{ asset('storage/' . $category->path) }});">
                                             @php $subcats = $category->subcategory; @endphp
                                             @foreach ($subcats as $subcat)
@@ -52,7 +52,7 @@
                                                       ['subcategories_id', '=', $subcat->id],
                                                   ])->get();
                                                 @endphp
-                                                <a class="a-card" href="{{  route('cat_sub_show', ['cat_id'=> $category->id, 'subcat_id'=> $subcat->id]) }}">{{ $subcat->title }}</a>
+                                                <a class="a-card" href="{{  route('cat_sub_show', ['cat_id'=> $category->id, 'subcat_id'=> $subcat->id]) }}">{{ $subcat->$language }}</a>
                                                 <br> 
                                             @endforeach
                                             <br>
@@ -65,7 +65,7 @@
 
                                 ob_end_clean();
 
-                                Cache::forever('index', $index);
+                                Cache::forever('index_'.$language, $index);
                                 
                                 // $myecho = $index;
                                 // `echo " index :  " >>/tmp/qaz`;

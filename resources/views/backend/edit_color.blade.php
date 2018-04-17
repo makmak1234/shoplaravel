@@ -8,7 +8,8 @@
 @section('content')
         <form method="POST" action="/store_edit_color">
             {{ csrf_field() }}
-            <input type="text" class="form-control" name="title" value="{{ $color->title }}">
+            <input type="text" class="form-control" name="en" value="{{ $color->en }}" placeholder="en">
+            <input type="text" class="form-control" name="ru" value="{{ $color->ru }}" placeholder="ru">
             <input type="hidden" name="id" value="{{ $color->id }}">
             <button type="send">Готово</button>
         </form>

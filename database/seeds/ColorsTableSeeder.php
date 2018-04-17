@@ -11,19 +11,29 @@ class ColorsTableSeeder extends Seeder
      */
     public function run()
     {
-        $colorCall  = array();
-        $colorCall[] = 'red';
-        $colorCall[] = 'green';
-        $colorCall[] = 'blue';
-        $colorCall[] = 'pink';
-        $colorCall[] = 'grey';
-        $colorCall[] = 'black';
-        $colorCall[] = 'white';
-        $colorCall[] = 'yellow';
+        $colorCallen  = array();
+        $colorCallen[] = 'red';
+        $colorCallen[] = 'green';
+        $colorCallen[] = 'blue';
+        $colorCallen[] = 'pink';
+        $colorCallen[] = 'grey';
+        $colorCallen[] = 'black';
+        $colorCallen[] = 'white';
+        $colorCallen[] = 'yellow';
+        $colorCallru  = array();
+        $colorCallru[] = 'красный';
+        $colorCallru[] = 'зеленый';
+        $colorCallru[] = 'синий';
+        $colorCallru[] = 'розовый';
+        $colorCallru[] = 'коричневый';
+        $colorCallru[] = 'черный';
+        $colorCallru[] = 'белый';
+        $colorCallru[] = 'желтый';
 
-    	for ($i = 0; $i < count($colorCall); $i++) {           
+    	for ($i = 0; $i < count($colorCallen); $i++) {           
             DB::table('colors')->insert([
-	            'title' => $colorCall[$i],
+	            'en' => $colorCallen[$i],
+                'ru' => $colorCallru[$i],
 	        ]);
         }
     }

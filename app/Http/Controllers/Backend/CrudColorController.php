@@ -24,7 +24,8 @@ class CrudColorController extends Controller
 
         $colors = new Color;
 
-        $colors->title = $request->title;
+        $colors->en = $request->en;
+        $colors->ru = $request->ru;
 
         $colors->save();
 
@@ -73,7 +74,8 @@ class CrudColorController extends Controller
 
         //$descriptions = new Description;
 
-        $color->title = $request->title;
+        $color->en = $request->en;
+        $color->ru = $request->ru;
 
         //$descriptions->title = $request->descriptions;
 
@@ -123,7 +125,8 @@ class CrudColorController extends Controller
     {
         $color = Color::find($request->id);
 
-        $color->title = $request->title;
+        $color->en = $request->en;
+        $color->ru = $request->ru;
 
         $color->save();
         
@@ -174,14 +177,21 @@ class CrudColorController extends Controller
     private function clearCache(){
         $categories = Category::all();
         foreach ($categories as $category) {
-            if (Cache::has('showTables'.$category->id)) {
-                Cache::forget('showTables'.$category->id);
+            if (Cache::has('showTables_en'.$category->id)) {
+                Cache::forget('showTables_en'.$category->id);
+            }
+            if (Cache::has('showTables_ru'.$category->id)) {
+                Cache::forget('showTables_ru'.$category->id);
             }
         }
         
         $goods = Goods::all();
         foreach ($goods as $good) {
-            $goodShow = 'good'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
+            $goodShow = 'good_en'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
+            if (Cache::has($goodShow)) {
+                Cache::forget($goodShow);
+            }
+            $goodShow = 'good_ru'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
             if (Cache::has($goodShow)) {
                 Cache::forget($goodShow);
             }

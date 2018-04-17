@@ -17,7 +17,7 @@
                             <div class="col-md-4 col-sm-6 col-xs-12">
                                 <div class="thumbnail">
                                     <div class="caption">
-                                        <p>{{ $descr->title }}</p>
+                                        <p>{{ $descr->en }} {{ $descr->ru }}</p>
                                         <p>
                                             <a href="edit_descr/{{ $descr->id }}" class="btn btn-primary" role="button">Редактировать</a> 
                                             <a class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal{{ $descr->id }}">Удалить</a>
@@ -28,7 +28,7 @@
                                                 <div class="modal-content">
                                                   <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Удаление записи "{{ $descr->title }}"</h4>
+                                                    <h4 class="modal-title" id="myModalLabel">Удаление записи "{{ $descr->en }}"</h4>
                                                   </div>
                                                   <div class="modal-body">
                                                     <div class="row">

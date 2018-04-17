@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Frontend\ajaxUserServController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 /**
  * indexUserController controller.
@@ -13,14 +14,17 @@ use Illuminate\Http\Request;
  */
 class ajaxUserController extends Controller
 {
+    private $language;
 
     /**
      * The user repository instance.
      */
     protected $ajaxUserServ;
 
-    public function __construct(ajaxUserServController $ajaxUserServ){
+    public function __construct(ajaxUserServController $ajaxUserServ, Request $request){
         $this->ajaxUserServ = $ajaxUserServ;
+        $this->language = $request->cookie('language') ?? 'en';
+        App::setLocale($this->language);
     }
 
     /**
@@ -44,9 +48,9 @@ class ajaxUserController extends Controller
         //     $color = 0;
         // }
 
-        $myecho = json_encode($request);
-        `echo " bigBag  request  " >>/tmp/qaz`;
-        `echo "$myecho" >>/tmp/qaz`;
+//        $myecho = json_encode($request);
+//        `echo " bigBag  request  " >>/tmp/qaz`;
+//        `echo "$myecho" >>/tmp/qaz`;
 
         if($request != null){
             $size = $request->size;
@@ -57,8 +61,9 @@ class ajaxUserController extends Controller
             $color = $request->color;
         } 
         else{$color = 0;}
+        
 
-        $this->ajaxUserServ->ajaxBagUserServAction($id, $size, $color, $bagreg, $request);
+        $this->ajaxUserServ->ajaxBagUserServAction($id, $size, $color, $bagreg, $this->language, $request);
 
         return view('frontend.bigBag', 
             ["goods" => $this->ajaxUserServ->getChildrenGoods(), 
@@ -73,6 +78,7 @@ class ajaxUserController extends Controller
             'nidAll' => $this->ajaxUserServ->getNidAll(),
             'sizeTitle' => $this->ajaxUserServ->getSizeTitle(),
             'colorTitle' => $this->ajaxUserServ->getColorTitle(),
+            'language' => $this->language,
             ]);
     }
 
@@ -87,10 +93,10 @@ class ajaxUserController extends Controller
         $myecho = json_encode($request);
         `echo " ajax_checkout_user  request  " >>/tmp/qaz`;
         `echo "$myecho" >>/tmp/qaz`;
-
-        $myecho = json_encode($id);
-        `echo " ajax_checkout_user  id  " >>/tmp/qaz`;
-        `echo "$myecho" >>/tmp/qaz`;
+//
+//        $myecho = json_encode($id);
+//        `echo " ajax_checkout_user  id  " >>/tmp/qaz`;
+//        `echo "$myecho" >>/tmp/qaz`;
         
         $sourcePath = array();
 
@@ -114,7 +120,8 @@ class ajaxUserController extends Controller
             $color = 0;
         }
 
-        $this->ajaxUserServ->ajaxBagUserServAction($id, $size, $color, $bagreg, $request);
+        
+        $this->ajaxUserServ->ajaxBagUserServAction($id, $size, $color, $bagreg, $this->language, $request);
 
         //$cacheManager = $this->container->get('liip_imagine.cache.manager');
 
@@ -136,6 +143,7 @@ class ajaxUserController extends Controller
             'sizeTitle' => $this->ajaxUserServ->getSizeTitle(),
             'colorTitle' => $this->ajaxUserServ->getColorTitle(),
             'sourcePath' => $sourcePath,//$ajaxUserServ->getPathImages(),
+            'language' => $this->language,
         ]);
     }
 

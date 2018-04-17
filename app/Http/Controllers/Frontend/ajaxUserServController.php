@@ -41,11 +41,11 @@ class ajaxUserServController extends Controller
 	//     $this->entityManager = $entityManager;
 	// }
 
-    public function ajaxBagUserServAction($id, $size = '0', $color = '0', $bagreg, $request)
+    public function ajaxBagUserServAction($id, $size = '0', $color = '0', $bagreg, $languge, $request)
     {
-    	$myecho = json_encode($request);
-        `echo " ajax_checkout_user  request  " >>/tmp/qaz`;
-        `echo "$myecho" >>/tmp/qaz`;
+//    	$myecho = json_encode($request);
+//        `echo " ajax_checkout_user  request  " >>/tmp/qaz`;
+//        `echo "$myecho" >>/tmp/qaz`;
 
     	$flag = 0;
 
@@ -117,7 +117,7 @@ class ajaxUserServController extends Controller
 				
 				if ($this->sizearr[$k] != 'undefined') {
 					$tmp_size = $this->childrenGoods[$k]->size;
-					$this->sizeTitle[$k] = $tmp_size[$this->sizearr[$k]]->title;//$this->childrenGoods[$k]->getChildrenGoodsSizeNumber()->get($this->sizearr[$k])->getSize()->getSize();
+					$this->sizeTitle[$k] = $tmp_size[$this->sizearr[$k]]->$languge;//$this->childrenGoods[$k]->getChildrenGoodsSizeNumber()->get($this->sizearr[$k])->getSize()->getSize();
 				}
 				else{
 					$this->sizeTitle[$k] = '';
@@ -129,7 +129,7 @@ class ajaxUserServController extends Controller
                                    	$goodSize = $goodsSizes;
 
                                    	$tmp_goodSizeColor = $goodSize->color;
-                                   	$this->colorTitle[$k] = $tmp_goodSizeColor[$this->colorarr[$k]]->title;
+                                   	$this->colorTitle[$k] = $tmp_goodSizeColor[$this->colorarr[$k]]->$languge;
                          
                                     $pict = Picture::find($tmp_goodSizeColor[$this->colorarr[$k]]->pivot->pictures_id);
                                     

@@ -47,7 +47,8 @@ class CrudCategoryController extends Controller
 
         $category = new Category;
 
-        $category->title = $request->title;
+        $category->en = $request->en;
+        $category->ru = $request->ru;
 
         // $myecho = json_encode($request->file('pict'));
         // `echo " request->file    " >>/tmp/qaz`;
@@ -82,9 +83,8 @@ class CrudCategoryController extends Controller
      *
      * @return Response
      */
-    public function showCategory($locale="en")
+    public function showCategory()
     {
-        App::setLocale($locale);
         $categories = Category::all();
 
         return view('backend.show_category', ["categories" => $categories]);
@@ -97,6 +97,7 @@ class CrudCategoryController extends Controller
      */
     public function editCategory($id)
     {
+        
         $category = Category::find($id);
 
         return view('backend.edit_category', ["category" => $category]);
@@ -111,7 +112,8 @@ class CrudCategoryController extends Controller
     {
         $category = Category::find($request->id);
 
-        $category->title = $request->title;
+        $category->en = $request->en;
+        $category->ru = $request->ru;
 
         // if (Storage::disk('local')->exists(asset('storage/' . $category->path))) {
             // $myecho = json_encode('yes');
@@ -186,8 +188,11 @@ class CrudCategoryController extends Controller
     }
 
     private function clearCache($category){
-        if (Cache::has('index')) {
-            Cache::forget('index');
+        if (Cache::has('index_en')) {
+            Cache::forget('index_en');
+        }
+        if (Cache::has('index_ru')) {
+            Cache::forget('index_ru');
         }
 
         $subcats = $category->subcategory;
@@ -198,8 +203,12 @@ class CrudCategoryController extends Controller
             // $myecho = json_encode('catSubcat'.$category->id.'_'.$subcat->id);
             // `echo " catSubcat    " >>/tmp/qaz`;
             // `echo "$myecho" >>/tmp/qaz`;
-            if (Cache::has('catSubcat'.$category->id.'_'.$subcat->id)) {
-                Cache::forget('catSubcat'.$category->id.'_'.$subcat->id);
+            if (Cache::has('catSubcat_en'.$category->id.'_'.$subcat->id)) {
+                Cache::forget('catSubcat_en'.$category->id.'_'.$subcat->id);
+
+            }
+            if (Cache::has('catSubcat_ru'.$category->id.'_'.$subcat->id)) {
+                Cache::forget('catSubcat_ru'.$category->id.'_'.$subcat->id);
 
             }
             $goods = Goods::where([
@@ -207,7 +216,11 @@ class CrudCategoryController extends Controller
                   ['subcategories_id', '=', $subcat->id],
               ])->get();
             foreach ($goods as $good) {
-                $goodShow = 'good'.$category->id.'_'.$subcat->id.'_'.$good->id;
+                $goodShow = 'good_en'.$category->id.'_'.$subcat->id.'_'.$good->id;
+                if (Cache::has($goodShow)) {
+                    Cache::forget($goodShow);
+                }
+                $goodShow = 'good_ru'.$category->id.'_'.$subcat->id.'_'.$good->id;
                 if (Cache::has($goodShow)) {
                     Cache::forget($goodShow);
                 }

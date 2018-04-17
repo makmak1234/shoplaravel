@@ -13,7 +13,8 @@ class CategoryTableSeeder extends Seeder
     {
         for($i=1; $i<=5; $i++){
         	DB::table('categories')->insert([
-	            'title' => 'category' . $i,
+	            'en' => 'category ' . $i,
+                'ru' => 'категория ' . $i,
 	        ]);
         }
     }

@@ -6,7 +6,7 @@ namespace App;
 
 class Goods extends Model
 {
-    protected $fillable = ['title', 'created_at', 'updated_at', 'descriptions_id', 'categories_id', 'subcategories_id'];
+    protected $fillable = ['en', 'ru', 'created_at', 'updated_at', 'descriptions_id', 'categories_id', 'subcategories_id'];
 
     /**
      * Get the goods that owns the description.
@@ -47,4 +47,13 @@ class Goods extends Model
     {
         return $this->hasMany('App\clientBuy');
     }
+    
+    /**
+     * Get the goods that owns the description.
+     */
+    public function price()
+    {
+        return $this->belongsTo('App\Price', 'prices_id');
+    }
+
 }

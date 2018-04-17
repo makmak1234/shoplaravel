@@ -12,6 +12,7 @@ use App\GoodsSizes;
 use App\ColorGoodsSizes;
 use App\CategorySubcat;
 use App\Picture;
+use App\Price;
 
 class GoodsTableSeeder extends Seeder
 {
@@ -40,15 +41,18 @@ class GoodsTableSeeder extends Seeder
 	    $sizeCount = Size::count();
 	    $colorCount = Color::count();
 	    $pictureCount = Picture::count();
+        $priceCount = Price::count();
 
 	    // `echo "  -----------------------------------------------------------------------------  " >>/tmp/qaz`;
 
         for ($k = 1; $k <= $descriptionCount ; $k++) { 
         	$goods = new Goods;
-	        $goods->title = 'Good' . $k;
+	        $goods->en = 'Good ' . $k;
+            $goods->ru = 'Товар ' . $k;
 	        $goods->descriptions()->associate($k);
 	        $goods->category()->associate(rand(1, $categoryCount));
 	        $goods->subcategory()->associate(rand(1, $subcatCount));
+            $goods->price()->associate(rand(1, $priceCount));
 	        $goods->save();
 
 	        $sizeArr = [];

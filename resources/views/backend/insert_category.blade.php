@@ -8,7 +8,8 @@
 @section('content')
         <form method="POST" action="/store_category"  ENCTYPE="multipart/form-data">
             {{ csrf_field() }}
-            <input type="text" class="form-control" name="title" value="" placeholder="Название категории">
+            <input type="text" class="form-control" name="en" value="" placeholder="Title category">
+            <input type="text" class="form-control" name="ru" value="" placeholder="Название категории">
             <label class="btn btn-primary" title="Кликни чтобы добавить">              
                 <input id="file-input_" style="display: none" name="pict" type="file">
                 Добавить картинку

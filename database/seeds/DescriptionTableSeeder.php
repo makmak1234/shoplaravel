@@ -14,7 +14,8 @@ class DescriptionTableSeeder extends Seeder
     {
         for($i=1; $i<=30; $i++){
         	DB::table('descriptions')->insert([
-	            'title' => 'description' . $i,
+	            'en' => 'description ' . $i,
+                'ru' => 'описание ' . $i,
 	        ]);
         }
     }

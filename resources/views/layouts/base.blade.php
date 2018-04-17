@@ -10,6 +10,7 @@
         <meta property="og:description" content="Grooki магазин детской одежды" />
         @section('stylesheets')
         	<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+            <link href="{{ asset('css/language.css') }}" rel="stylesheet">
         @show
         <title>Grooki</title>
         

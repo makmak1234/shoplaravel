@@ -6,7 +6,7 @@ namespace App;
 
 class Description extends Model
 {
-	protected $fillable = ['title'];
+	protected $fillable = ['en', 'ru'];
 	public $timestamps = false;
 
     /**

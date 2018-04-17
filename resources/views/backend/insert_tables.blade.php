@@ -1,42 +1,43 @@
-@extends('layouts.app')
+@extends('layouts.backend')
 
 @section('mycss')
-  {{-- <link rel="stylesheet" href="/css/bootstrap.min.css"> --}}
+  
   <link rel="stylesheet" href="/css/insert_tables.css">
 @endsection
 
 @section('content')
         <form method="POST" action="/store_tables">
             {{ csrf_field() }}
-            <input type="text" class="form-control" name="title" value="" placeholder="Название">
+            <input type="text" class="form-control" name="en" value="" placeholder="Title en">
+            <input type="text" class="form-control" name="ru" value="" placeholder="Название ru">
             <br>
             <select type="text" class="form-control" name="descriptions" value="" required
             >
               @foreach ($descrs as $descr)
-                <option value="{{ $descr->id }}">{{ $descr->title }}</option>
+                <option value="{{ $descr->id }}">{{ $descr->$language }}</option>
               @endforeach
             </select>
             <br>
             <select type="text" class="form-control" name="category" value="" required
             >
               @foreach ($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->title }}</option>
+                <option value="{{ $category->id }}">{{ $category->$language }}</option>
               @endforeach
             </select>
             <br>
             <select type="text" class="form-control" name="subcat" value="" required
             >
               @foreach ($subcats as $subcat)
-                <option value="{{ $subcat->id }}">{{ $subcat->title }}</option>
+                <option value="{{ $subcat->id }}">{{ $subcat->$language }}</option>
               @endforeach
             </select>
             <br>
             <p>
               @foreach ($sizes as $size)
-                <input type="checkbox" name="size[]" id="cur_size" value="{{ $size->id }}">{{ $size->title }}
+                <input type="checkbox" name="size[]" id="cur_size" value="{{ $size->id }}">{{ $size->$language }}
                   <label id="color{{ $size->id }}" class="color_size"> 
                     @foreach ($colors as $color)
-                      <input type="checkbox" name="color[{{ $size->id }}][]" data-name-size="color{{ $size->id }}" id="cur_color" value="{{ $color->id }}" >{{ $color->title }} 
+                      <input type="checkbox" name="color[{{ $size->id }}][]" data-name-size="color{{ $size->id }}" id="cur_color" value="{{ $color->id }}" >{{ $color->$language }} 
                     @endforeach
                   </label>
                 <br>
@@ -44,22 +45,17 @@
             </p>
             
               @foreach ($colors as $color)
-                <label id="picture{{ $color->id }}"" class="picture_color" >
-                  {{-- <br><br> --}}
+                <label id="picture{{ $color->id }}" class="picture_color" >
+
                   <label class="btn btn-primary pictures_cur" data-toggle="modal" data-target="#myModal{{ $color->id }}" title="Выберите картинку">
                     <label>
                       Выберите картинку
                     </label>
-                      {{ $color->title }}
+                      {{ $color->$language }}
                   </label>
                   <ul id="list-view{{ $color->id }}" class="list-view"></ul>
-                  {{-- @foreach ($pictures as $picture)
-                    <label class="picture_label">
-                      <input type="radio" name="pict_radio[{{ $color->id }}]" id="radioAll" class="picture_add" value="{{ $picture->id }}">
-                      <img src='{{ asset('storage/' . $picture->path . '50_50.jpg') }}' class=img-thumbnail" alt="Responsive image">
-                    </label>
-                  @endforeach --}}
-                  <!-- Modal -->
+                  
+{{--                  <!-- Modal -->--}}
                   <div class="modal fade" id="myModal{{ $color->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">

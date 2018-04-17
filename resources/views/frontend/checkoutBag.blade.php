@@ -28,7 +28,7 @@
 					<td>
 						<img class="show__img" src="{{ asset($sourcePath[$loop->index]) }}">
 					</td>
-					<td class="title">{{ $childrenGood->title }}</td>
+					<td class="title">{{ $childrenGood->$language }}</td>
 					<td class="hide_col1">
 						{{ $sizeTitle[$loop->index] }}
 					</td>

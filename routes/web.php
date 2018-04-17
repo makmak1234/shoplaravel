@@ -22,8 +22,9 @@ Route::middleware(['auth'])->group(function () {
 	//Route::post('/delete_row', 'Backend\CrudTablesController@deleteRowTables')->name('deleteRow');
 	Route::get('/delete_row', 'Backend\CrudTablesController@deleteRowTables')->name('deleteRow1');///{id}/{dell_desc}
 	Route::get('/delete_row', 'Backend\CrudTablesController@deleteRowTables')->name('deleteRow1');//
+    Route::get('/show_tables/{locale?}', 'Backend\CrudTablesController@language')->name('language_tables')->where('locale', '(ru|en)');
 
-	Route::get('/show_category/{locale?}', 'Backend\CrudCategoryController@showCategory')->name('showCategory')->where('locale', '(ru|en)');
+	Route::get('/show_category', 'Backend\CrudCategoryController@showCategory')->name('showCategory');//->where('locale', '(ru|en)');
 	Route::get('/insert_category', 'Backend\CrudCategoryController@insertCategory');
 	Route::post('/store_category', 'Backend\CrudCategoryController@storeCategory');
 	Route::get('/edit_category/{id}', 'Backend\CrudCategoryController@editCategory');

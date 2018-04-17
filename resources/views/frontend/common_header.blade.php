@@ -15,14 +15,7 @@
       </ul>
     </div>
 -->
-    <div class="dropdown language-main">
-        
-      <div class="dropbtn">EN</div>
-      <div class="dropdown-content">
-        <a href="/en">EN</a>
-        <a href="/ru">RU</a>
-      </div>
-    </div>
+    
     <nav class="navbar navbar-default menu">
       <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -43,6 +36,16 @@
             <li><a href="#">поддержка</a></li>
             <li><a href="#">блог</a></li>
             <li><a href="#">контакты</a></li>
+            <li>
+                <div class="dropdown language-main">
+                  <div class="dropbtn {{ $language }}">{{ $language }}</div>
+                  <div class="dropdown-content">
+                    <a href="/en">EN</a>
+                    <a href="/ru">RU</a>
+                  </div>
+                </div>
+            </li>    
+            
           </ul>
           <ul class="nav navbar-nav navbar-right icons">
             <li><a href="#"><img src="{{ asset('storage/img/facebook.png') }}"></a></li>

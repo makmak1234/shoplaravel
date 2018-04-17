@@ -15,7 +15,7 @@
   ob_start();
 @endphp --}}
 
-@extends('layouts.app')
+@extends('layouts.backend')
 
 @section('mycss')
   {{-- <link rel="stylesheet" href="/css/bootstrap.min.css"> --}}
@@ -42,16 +42,16 @@
                     </div> 
                     <div class="bread-crumbs"></div>
                     @foreach ($categories as $category)
-                      @if (Cache::has('showTables'.$category->id)) 
+                      @if (Cache::has('showTables_'.$language.$category->id)) 
                      {{--  @if (file_exists('./cache/showTables'.$loop->iteration.'.cache')) --}}
                         @php
-                          // $showTables = readfile('./cache/showTables'.$loop->iteration.'.cache');
-                          $showTables = Cache::get('showTables'.$loop->iteration);
+{{--                          $showTables = readfile('./cache/showTables'.$loop->iteration.'.cache');--}}
+                          $showTables = Cache::get('showTables_'.$language.$loop->iteration);
 
                           $myecho = $showTables;
-                          // `echo " showTables $loop->iteration  " >>/tmp/qaz`;
+{{--                          `echo " showTables $loop->iteration  " >>/tmp/qaz`;--}}
                           `echo "cache: true" >>/tmp/qaz`;
-                          //exit;
+{{--                          exit;--}}
 
                           echo $showTables;
                           continue;
@@ -62,7 +62,7 @@
                       @endphp
                       <div class="thumbnail">
                         <div class="caption text-center"> 
-                          <h2>{{ $category->title }}</h2>
+                          <h2>{{ $category->$language }}</h2>
                         </div>
                         <img src="{{ asset('storage/' . $category->path . '50_50.jpg') }}" alt="...">
                                        
@@ -76,7 +76,7 @@
                           ])->get();
                         @endphp
                         
-                        <h3>{{ $subcat->title }} <small>({{ $category->title }})</small></h3>
+                        <h3>{{ $subcat->$language }} <small>({{ $category->$language }})</small></h3>
                         {{-- {{json_encode($goods)}} --}}
                         <div class="row content-main">
                           <?php $myClear = 3; ?>
@@ -96,7 +96,7 @@
                                                 <?php $pict = App\Picture::where('id', $col->pivot->pictures_id)->get(); ?>
                                                 <img src='{{ asset('storage/' . $pict[0]->path . '50_50.jpg') }}' alt="...">
                                                 <div class="caption">
-                                                  <p class="img_caption_color">{{ $col->title }}</p>
+                                                  <p class="img_caption_color">{{ $col->$language }} </p>
                                                 </div>
                                             </div>
                                           </div>
@@ -112,24 +112,24 @@
                                   @endforeach
                                 </div>
                                   <div class="caption">
-                                      <h4>{{ $good->title }}</h4>
-                                      <p>{{ $good->descriptions->title }}</p>
-                                      <p>{{ $good->category->title }}</p>
-                                      <p>{{ $good->subcategory->title }}</p>
+                                      <h4>{{ $good->$language }}</h4>
+                                      <p>{{ $good->descriptions->$language }}</p>
+                                      <p>{{ $good->category->$language }}</p>
+                                      <p>{{ $good->subcategory->$language }}</p>
                                       <p>
                                         @foreach ($good->size as $s)
-                                          <ii style="color: red">{{ $s->title }}</ii>
+                                          <ii style="color: red">{{ $s->$language }}</ii>
                                           <?php $goodsSizes = App\GoodsSizes::where('id', $s->pivot->id)->get(); ?>
                                           @foreach ($goodsSizes as $goodSize)
                                             @foreach ($goodSize->color as $col)
-                                              <i style="color: green">{{ $col->title }}</i>
+                                              <i style="color: green">{{ $col->$language }}</i>
                                             @endforeach                                           
                                           @endforeach
                                           <br>
                                         @endforeach
                                         
                                       </p>
-                                        <a href="edit_tables/{{ $good->id }}" class="btn btn-primary" role="button">Редактировать</a> 
+                                        <a href="/edit_tables/{{ $good->id }}" class="btn btn-primary" role="button">Редактировать</a> 
                                         <a class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal{{ $good->id }}">Удалить</a>
                                        
                                         <!-- Modal -->
@@ -138,7 +138,7 @@
                                             <div class="modal-content">
                                               <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                <h4 class="modal-title" id="myModalLabel">Удаление записи "{{ $good->title }}"</h4>
+                                                <h4 class="modal-title" id="myModalLabel">Удаление записи "{{ $good->$language }}"</h4>
                                               </div>
                                               <div class="modal-body">
                                                 <div class="row">
@@ -183,7 +183,7 @@
 
                         ob_end_clean();
 
-                        Cache::forever('showTables'.$category->id, $showTables);
+                        Cache::forever('showTables_'.$language.$category->id, $showTables);
                         // Сохранение кэш-файла с контентом
                         // $fp = fopen('./cache/showTables'.$loop->iteration.'.cache', 'w');
                         // fwrite($fp, $showTables);

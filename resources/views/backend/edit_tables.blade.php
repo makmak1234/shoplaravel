@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.backend')
 
 @section('mycss')
   {{-- <link rel="stylesheet" href="/css/bootstrap.min.css"> --}}
@@ -10,10 +10,10 @@
 
 @section('content')
 
-      {{-- echo(json_encode($curclrs)); --}}
         <form method="POST" action="/store_edit_tables">
             {{ csrf_field() }}
-            <input type="text" class="form-control" name="title" value="{{ $good->title }}" placeholder="Название">
+            <input type="text" class="form-control" name="en" value="{{ $good->en }}" placeholder="Название">
+            <input type="text" class="form-control" name="ru" value="{{ $good->ru }}" placeholder="Title">
             <br>
             <select type="text" class="form-control" name="descriptions" value="" required
             >
@@ -22,7 +22,7 @@
                 @if ($good->descriptions_id == $descr->id)
                   <?php $selected = 'selected' ?>
                 @endif
-                <option value="{{ $descr->id }}" {{ $selected }}>{{ $descr->title }}</option>
+                <option value="{{ $descr->id }}" {{ $selected }}>{{ $descr->$language }}</option>
               @endforeach
             </select>
             <br>
@@ -33,7 +33,7 @@
                 @if ($good->categories_id == $category->id)
                   <?php $selected = 'selected' ?>
                 @endif
-                <option value="{{ $category->id }}" {{ $selected }}>{{ $category->title }}</option>
+                <option value="{{ $category->id }}" {{ $selected }}>{{ $category->$language }}</option>
               @endforeach
             </select>
             <br>
@@ -44,7 +44,7 @@
                 @if ($good->subcategories_id == $subcat->id)
                   <?php $selected = 'selected' ?>
                 @endif
-                <option value="{{ $subcat->id }}" {{ $selected }}>{{ $subcat->title }}</option>
+                <option value="{{ $subcat->id }}" {{ $selected }}>{{ $subcat->$language }}</option>
               @endforeach
             </select>
             <br>
@@ -57,7 +57,7 @@
                     $display = 'inline';
                   }
                 ?>
-                <input type="checkbox" name="size[]" id="cur_size" value="{{ $size->id }}" {{ $checked }}>{{ $size->title }}
+                <input type="checkbox" name="size[]" id="cur_size" value="{{ $size->id }}" {{ $checked }}>{{ $size->$language }}
                   <label id="color{{ $size->id }}" class="color_size" style="display:{{ $display }};"> 
                     @foreach ($colors as $color)
                       <?php $checked = '' ?>
@@ -67,10 +67,10 @@
                           <?php $curclrs2[] = $color->id; ?>
                         @endif
                       @endif
-                      <input type="checkbox" name="color[{{ $size->id }}][]" data-name-size="color{{ $size->id }}" id="cur_color" value="{{ $color->id }}" {{ $checked }}>{{ $color->title }} 
+                      <input type="checkbox" name="color[{{ $size->id }}][]" data-name-size="color{{ $size->id }}" id="cur_color" value="{{ $color->id }}" {{ $checked }}>{{ $color->$language }} 
                     @endforeach
                   </label>
-                <Br>
+                <br>
               @endforeach
             </p>
               @foreach ($colors as $color)
@@ -80,13 +80,13 @@
                     <?php $display = 'inline' ?>
                   @endif
                 @endif
-                <label id="picture{{ $color->id }}"" class="picture_color"  style="display:{{ $display }};">
+                <label id="picture{{ $color->id }}" class="picture_color"  style="display:{{ $display }};">
                   <br><br>
                   <label class="btn btn-primary pictures_cur" data-toggle="modal" data-target="#myModal{{ $color->id }}" title="Выберите картинку">
                     <label>
                       Выберите картинку
                     </label>
-                      {{ $color->title }}
+                      {{ $color->$language }}
                   </label>
                   <ul id="list-view{{ $color->id }}" class="list-view">
                     @if(isset($pictPath[$color->id]))
@@ -95,12 +95,6 @@
                       </li>
                     @endif
                   </ul>
-                  {{-- @foreach ($pictures as $picture)
-                    <label class="picture_label">
-                      <input type="radio" name="pict_radio[{{ $color->id }}]" id="radioAll" class="picture_add" value="{{ $picture->id }}">
-                      <img src='{{ asset('storage/' . $picture->path . '50_50.jpg') }}' class=img-thumbnail" alt="Responsive image">
-                    </label>
-                  @endforeach --}}
                   <!-- Modal -->
                   <div class="modal fade" id="myModal{{ $color->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                     <div class="modal-dialog" role="document">

@@ -44,8 +44,8 @@
                     <h1>Заголовок</h1>
                 </div> 
                 <div class="bread-crumbs"><a href="{{ route('index') }}">Все категории</a>-> 
-                    <a href="{{ route('cat_sub_show', ['cat_id'=>$good->categories_id , 'subcat_id'=>$good->subcategories_id  ]) }}">{{ $good->category->title }}</a>->  
-                    {{ $good->subcategory->title }}
+                    <a href="{{ route('cat_sub_show', ['cat_id'=>$good->categories_id , 'subcat_id'=>$good->subcategories_id  ]) }}">{{ $good->category->$language }}</a>->  
+                    {{ $good->subcategory->$language }}
                 </div>
 
                 <div class="row">
@@ -53,7 +53,7 @@
                     <div class="thumbnail"> 
                         <select name="size" id="size" onChange="sizeSelect(this)" >
                             @foreach ($good->size as $s)
-                                <option value="{{ $s->title }}">{{ $s->title }}</option>
+                                <option value="{{ $s->$language }}">{{ $s->$language }}</option>
                             @endforeach 
                         </select>
 
@@ -61,22 +61,22 @@
                             <?php $goodsSizes = App\GoodsSizes::where('id', $s->pivot->id)->get(); 
                                     $goodSize = $goodsSizes[0];
                             ?>
-                            <select name="$s->title" id="{{ 'color' . $loop->index }}" style="display: none;" onChange="colorSelect(this)">
+                            <select name="$s->$language" id="{{ 'color' . $loop->index }}" style="display: none;" onChange="colorSelect(this)">
                                 @foreach ($goodSize->color as $col)
-                                  <option value="{{ $col->title }}">{{ $col->title }} </option>
+                                  <option value="{{ $col->$language }}">{{ $col->$language }} </option>
                                 @endforeach                                           
                             </select>
                                 @foreach ($goodSize->color as $col)
                                     <?php $pict = App\Picture::where('id', $col->pivot->pictures_id)->get(); ?>
                                     <div id="{{ 'image' . $loop->parent->index . $loop->index }}" style="display: none;">
-                                        <img class="show__img" src='{{ asset('storage/' . $pict[0]->path) }}' alt="...">
+                                        <img class="show__img" src="{{ asset('storage/' . $pict[0]->path) }}" alt="...">
                                     </div>
                                 @endforeach                                           
                         @endforeach
                         
                       <div class="caption">
-                        <h3>{{ $good->title }}</h3>
-                        <p>{{ $good->descriptions->title }}</p>
+                        <h3>{{ $good->$language }}</h3>
+                        <p>{{ $good->descriptions->$language }}</p>
                         <p>price</p>
                         <p class="onerow">
                             <i id="fountainIncart">

@@ -20,11 +20,18 @@ use Illuminate\Http\UploadedFile;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\App;
 //use Intervention\Image\ImageManager;
 //use Illuminate\Support\Facades\DB;
 
 class CrudTablesController extends Controller
 {
+//    private $request;
+//    
+//    public function __construct(Request $request){
+//        $this->request = $request;
+//    }
+    
     /**
      * Create a new goods instance.
      *
@@ -57,8 +64,11 @@ class CrudTablesController extends Controller
      *
      * @return Response
      */
-    public function insertTables()
+    public function insertTables(Request $request)
     {
+        $language = $request->cookie('language') ?? 'en';
+        App::setLocale($language);
+        
         $descrs = Description::all();
 
         $categories = Category::all();
@@ -70,10 +80,11 @@ class CrudTablesController extends Controller
         $colors = Color::all();
 
         $pictures = Picture::all();
+        
 
         //$manager = new ImageManager(array('driver' => 'imagick'));
 
-        return view('backend.insert_tables', ["descrs" => $descrs, "categories" => $categories, "subcats" => $subcats, "sizes" => $sizes, "colors" => $colors, "pictures" => $pictures]);//
+        return view('backend.insert_tables', ["descrs" => $descrs, "categories" => $categories, "subcats" => $subcats, "sizes" => $sizes, "colors" => $colors, "pictures" => $pictures, "language" => $language]);//
     }
 
     /**
@@ -93,7 +104,8 @@ class CrudTablesController extends Controller
 
 
         $goods = new Goods;
-        $goods->title = $request->title;
+        $goods->en = $request->en;
+        $goods->ru = $request->ru;
         $goods->descriptions()->associate($request->descriptions);//($descriptions);
         $goods->category()->associate($request->category);
         $goods->subcategory()->associate($request->subcat);
@@ -155,8 +167,10 @@ class CrudTablesController extends Controller
      *
      * @return Response
      */
-    public function showTables()
+    public function showTables(Request $request)
     {
+        $language = $request->cookie('language') ?? 'en';
+        App::setLocale($language);
         // Cache::flush();
         // exit;
 
@@ -166,10 +180,10 @@ class CrudTablesController extends Controller
         // `echo " good   " >>/tmp/qaz`;
         // `echo "$myecho" >>/tmp/qaz`;
 
-        if (is_object($good) && Cache::has('showTable'.$good->categories_id) ) {
+        if (is_object($good) && Cache::has('showTable_'.$language.$good->categories_id) ) {
             $categories = Category::get();//remember(60)->
 
-            return view('welcome', ["categories" => $categories]);
+            return view('welcome', ["categories" => $categories, "language" => $language]);
         }else{
 
             // Cache::forever('key', 'value');
@@ -181,27 +195,36 @@ class CrudTablesController extends Controller
             $categories = Category::get();
             $subcats = Subcategory::get();
 
-            // $category_subcats = CategorySubcat::all();
 
-            // $subcats = DB::select('select distinct subcategories_id from goods where categories_id = ?', [1]);
+//            $myecho = json_encode($categories[0]->path);
+//            // `echo " goods2->size    " >>/tmp/qaz`;
+//            `echo "path: $myecho" >>/tmp/qaz`;
+//            //exit;
 
-            // $subcatsmass = array();
-            // foreach ($subcats as $subcat) {
-            //     $subcatsmass[] = $subcat->subcategories_id;
-            // }
-            // $subcats = implode(',', $subcatsmass);
+            return view('welcome', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats, "language" => $language ]);//, "category_subcats" => $category_subcats
+        }
+    }
+    
+    public function language($language="en")
+    {
+        App::setLocale($language);
+        $good = Goods::first();
+        
+        if (is_object($good) && Cache::has('showTable_'.$language.$good->categories_id) ) {
+            $categories = Category::get();
+//            return view('frontend.index')->cookie('language', $language, 2592000);
+            return response()
+                ->view('welcome', ["categories" => $categories, "language" => $language])->cookie('language', $language, 2592000);
+        }else{
+            $goods = Goods::with(['descriptions', 'category', 'subcategory', 'size'])->get();//Goods::all();
 
-            // $goods2 = Goods::where([
-            //     ['categories_id', '=', '1'],
-            //     ['subcategories_id', '=', '1'],
-            // ])->get();//DB::select('select * from goods where categories_id = ? and subcategories_id in(' . $subcats . ')', [1]);
+            $pictures = Picture::get();//all();
 
-            $myecho = json_encode($categories[0]->path);
-            // `echo " goods2->size    " >>/tmp/qaz`;
-            `echo "path: $myecho" >>/tmp/qaz`;
-            //exit;
+            $categories = Category::get();
+            $subcats = Subcategory::get();
 
-            return view('welcome', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats ]);//, "category_subcats" => $category_subcats
+            return response()
+                ->view('welcome', ["goods" => $goods, "pictures" => $pictures, "categories" => $categories, "subcats" => $subcats, "language" => $language ])->cookie('language', $language, 2592000);
         }
     }
 
@@ -210,8 +233,12 @@ class CrudTablesController extends Controller
      *
      * @return Response
      */
-    public function editTables($id)
+    public function editTables($id, Request $request)
     {
+        
+        $language = $request->cookie('language') ?? 'en';
+        App::setLocale($language);
+        
         $good = Goods::find($id);
         $descrs = Description::all();
         $categories = Category::all();
@@ -238,7 +265,7 @@ class CrudTablesController extends Controller
         //     `echo "$myecho" >>/tmp/qaz`;
         // exit;
 
-        return view('backend.edit_tables', ["good" => $good, "descrs" => $descrs, "categories" => $categories, "subcats" => $subcats, "sizes" => $sizes, "colors" => $colors, "curszs" => $curszs, "curclrs" => $curclrs, "pictures" => $pictures, "pictPath" => $pictPath, "pictId" => $pictId]);
+        return view('backend.edit_tables', ["good" => $good, "descrs" => $descrs, "categories" => $categories, "subcats" => $subcats, "sizes" => $sizes, "colors" => $colors, "curszs" => $curszs, "curclrs" => $curclrs, "pictures" => $pictures, "pictPath" => $pictPath, "pictId" => $pictId, "language" => $language]);
     }
 
     /**
@@ -348,15 +375,26 @@ class CrudTablesController extends Controller
     }
 
     private function clearCache($good){
-        if (is_object($good) && Cache::has('showTables'.$good->categories_id)) {
-            Cache::forget('showTables'.$good->categories_id);
+        if (is_object($good) && Cache::has('showTables_en'.$good->categories_id)) {
+            Cache::forget('showTables_en'.$good->categories_id);
+        }
+        if (is_object($good) && Cache::has('showTables_ru'.$good->categories_id)) {
+            Cache::forget('showTables_ru'.$good->categories_id);
         }
 
-        $catSubcat = 'catSubcat'.$good->categories_id.'_'.$good->subcategories_id;
+        $catSubcat = 'catSubcat_en'.$good->categories_id.'_'.$good->subcategories_id;
         if (Cache::has($catSubcat)) {
             Cache::forget($catSubcat);
         }
-        $goodShow = 'good'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
+        $catSubcat = 'catSubcat_ru'.$good->categories_id.'_'.$good->subcategories_id;
+        if (Cache::has($catSubcat)) {
+            Cache::forget($catSubcat);
+        }
+        $goodShow = 'good_en'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
+        if (Cache::has($goodShow)) {
+            Cache::forget($goodShow);
+        }
+        $goodShow = 'good_ru'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
         if (Cache::has($goodShow)) {
             Cache::forget($goodShow);
         }

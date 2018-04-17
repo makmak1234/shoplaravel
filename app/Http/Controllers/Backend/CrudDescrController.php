@@ -26,7 +26,8 @@ class CrudDescrController extends Controller
 
         $goods = new Goods;
 
-        $goods->title = $request->title;
+        $goods->en = $request->en;
+        $goods->ru = $request->ru;
 
         $goods->save();
 
@@ -74,7 +75,8 @@ class CrudDescrController extends Controller
 
         //$descriptions = new Description;
 
-        $descr->title = $request->title;
+        $descr->en = $request->en;
+        $descr->ru = $request->ru;
 
         //$descriptions->title = $request->descriptions;
 
@@ -124,7 +126,8 @@ class CrudDescrController extends Controller
     {
         $descr = Description::find($request->id);
 
-        $descr->title = $request->title;
+        $descr->en = $request->en;
+        $descr->ru = $request->ru;
 
         $descr->save();
         
@@ -146,8 +149,10 @@ class CrudDescrController extends Controller
         $del_desc = $request->del_desc;
 
         $size = Description::find($id)->delete();
+        
+         `echo 'deleteRowDescr: '.$size >>/tmp/qaz`;
 
-        $this->clearCache($del_desc->id);
+        $this->clearCache($id);
 
         return response()->json(["success" => true, "message" => "Запись удалена"]);
 
@@ -177,7 +182,11 @@ class CrudDescrController extends Controller
         // `echo "$myecho" >>/tmp/qaz`;
     
         foreach ($goods as $good) {
-            $goodShow = 'good'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
+            $goodShow = 'good_en'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
+            if (Cache::has($goodShow)) {
+                Cache::forget($goodShow);
+            }
+            $goodShow = 'good_ru'.$good->categories_id.'_'.$good->subcategories_id.'_'.$good->id;
             if (Cache::has($goodShow)) {
                 Cache::forget($goodShow);
             }

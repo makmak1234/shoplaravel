@@ -36,6 +36,11 @@ class IndexController extends Controller
     private $categories;
     private $subcats;
     private $category_subcats;
+    private $request;
+ 
+    public function __construct(Request $request){
+        $this->request = $request;
+    }
     
     /**
      * Show the profile for the given user.
@@ -48,27 +53,27 @@ class IndexController extends Controller
         App::setLocale($language);
         // Cache::flush();
         // exit;
-        if (Cache::has('index')) {
-            return view('frontend.index');
+        if (Cache::has('index_'.$language)) {
+            return view('frontend.index', ["language" => $language]);
         }else{
             $this->index_data();
 
-            return view('frontend.index', ["goods" => $this->goods, "pictures" => $this->pictures, "categories" => $this->categories, "subcats" => $this->subcats, "category_subcats" => $this->category_subcats]);//, "goodsSizes" => $goodsSizes
+            return view('frontend.index', ["goods" => $this->goods, "pictures" => $this->pictures, "categories" => $this->categories, "subcats" => $this->subcats, "category_subcats" => $this->category_subcats, "language" => $language]);//, "goodsSizes" => $goodsSizes
         }
     }
     
     public function language($language="en")
     {
         App::setLocale($language);
-        if (Cache::has('index')) {
+        if (Cache::has('index_'.$language)) {
 //            return view('frontend.index')->cookie('language', $language, 2592000);
             return response()
-                ->view('frontend.index')->cookie('language', $language, 2592000);
+                ->view('frontend.index', ["language" => $language])->cookie('language', $language, 2592000);
         }else{
             $this->index_data();
 
             return response()
-                ->view('frontend.index', ["goods" => $this->goods, "pictures" => $this->pictures, "categories" => $this->categories, "subcats" => $this->subcats, "category_subcats" => $this->category_subcats])->cookie('language', $language, 2592000);
+                ->view('frontend.index', ["goods" => $this->goods, "pictures" => $this->pictures, "categories" => $this->categories, "subcats" => $this->subcats, "category_subcats" => $this->category_subcats, "language" => $language])->cookie('language', $language, 2592000);
         }
     }
     
@@ -94,7 +99,7 @@ class IndexController extends Controller
         $language = $request->cookie('language') ?? 'en';
         App::setLocale($language);
         
-        $catSubcat = 'catSubcat'.$cat_id.'_'.$subcat_id;
+        $catSubcat = 'catSubcat_'.$language.$cat_id.'_'.$subcat_id;
         if (Cache::has($catSubcat)) {
             return view('frontend.subcat', ["catSubcat" => $catSubcat]);
         }else{
@@ -122,7 +127,7 @@ class IndexController extends Controller
 
             $category_subcats = CategorySubcat::all();
 
-            return view('frontend.subcat', ["goods" => $goods, "picts" => $picts, "catSubcat" => $catSubcat]);//, "goodsSizes" => $goodsSizes
+            return view('frontend.subcat', ["goods" => $goods, "picts" => $picts, "catSubcat" => $catSubcat, "language" => $language]);//, "goodsSizes" => $goodsSizes
         }
     }
 
@@ -136,7 +141,7 @@ class IndexController extends Controller
         $language = $request->cookie('language') ?? 'en';
         App::setLocale($language);
         
-        $goodShow = 'good'.$cat_id.'_'.$subcat_id.'_'.$id;
+        $goodShow = 'good_'.$language.$cat_id.'_'.$subcat_id.'_'.$id;
         if (Cache::has($goodShow)) {
             return view('frontend.good', ["goodShow" => $goodShow]);
         }else{
@@ -146,13 +151,16 @@ class IndexController extends Controller
 
             $good = $good[0];
 
-            return view('frontend.good', ["good" => $good, "goodShow" => $goodShow]);
+            return view('frontend.good', ["good" => $good, "goodShow" => $goodShow, "language" => $language]);
         }
     }
 
 
-    public function smallBagAction(Request $request = null)
+    public function smallBagAction()//(Request $request = null)
     {
+        $language = $this->request->cookie('language') ?? 'en';
+        App::setLocale($language);
+        
         //$nidAll = $request->query->get('nidAll');
 
         // $myecho = json_encode($request);
@@ -172,7 +180,7 @@ class IndexController extends Controller
             }
         }
 
-        return view('frontend.smallBag', ['nidAll' => $nidAll]);
+        return view('frontend.smallBag', ['nidAll' => $nidAll, 'language' => $language]);
     }
 
 
@@ -184,6 +192,8 @@ class IndexController extends Controller
      */
     public function bagRegisterAction(Request $request)
     {
+        $language = $request->cookie('language') ?? 'en';
+        App::setLocale($language);
 
         $session = $request->session();
 
@@ -225,6 +235,7 @@ class IndexController extends Controller
             // 'form' => $form->createView(),
             // 'mytest' => "mycity",
             'id' => $id,
+            'language' => $language,
         ]);
     }
 
@@ -235,6 +246,9 @@ class IndexController extends Controller
      * @Method({"GET", "POST"})
      */
     public function bagRegisterStore(Request $request){
+        
+        $language = $request->cookie('language') ?? 'en';
+        App::setLocale($language);
 
         $session = $request->session();
 
@@ -321,7 +335,7 @@ class IndexController extends Controller
 
                     if ($sizearr[$k] != 'undefined') {
                         $tmp_size = $childrenGoods->size;
-                        $sizeTitle[] = $tmp_size[$sizearr[$k]]->title;
+                        $sizeTitle[] = $tmp_size[$sizearr[$k]]->$language;
                         //$sizeTitle[] = $childrenGoods->getChildrenGoodsSizeNumber()->get($sizearr[$k])->getSize()->getSize();
                     }
                     else{
@@ -332,7 +346,7 @@ class IndexController extends Controller
                     if ($colorarr[$k] != 'undefined') {
                         $goodSize = GoodsSizes::find($tmp_size[$sizearr[$k]]->pivot->id);
                         $tmp_goodSizeColor = $goodSize->color;
-                        $colorTitle[$k] = $tmp_goodSizeColor[$colorarr[$k]]->title;
+                        $colorTitle[$k] = $tmp_goodSizeColor[$colorarr[$k]]->$language;
                         //$colorTitle[] = $childrenGoods->getChildrenGoodsSizeNumber()->get($sizearr[$k])->getChildrenGoodsColorNumber()->get($colorarr[$k])->getColor()->getColor();
                     }
                     else{
@@ -354,7 +368,7 @@ class IndexController extends Controller
                     //$em->persist($buyClients);
 
                     //отправка email
-                    $title[] = $childrenGoods->title;
+                    $title[] = $childrenGoods->$language;
 
                 }
 
@@ -424,6 +438,7 @@ class IndexController extends Controller
                 'pricegoods' => $pricegoods,
                 'comment' => $comment,
                 'priceall' => $priceall,
+                'language' => $language,
                 ]);
             // }
         //}
@@ -435,9 +450,13 @@ class IndexController extends Controller
      * @Route("/thanks", name="thanks")
      * @Method("GET")
      */
-    public function thanksAction()
+    public function thanksAction(Request $request)
     {
+        $language = $request->cookie('language') ?? 'en';
+        App::setLocale($language);
+        
         return view('frontend.thanks', [
+            "language" => $language
             //'childrenGood' => $childrenGood,
             //'delete_form' => $deleteForm->createView(),
             //s'add_new_cat' => $add_new_cat,

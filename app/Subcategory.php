@@ -6,7 +6,7 @@ namespace App;
 
 class Subcategory extends Model
 {
-	protected $fillable = ['title'];
+	protected $fillable = ['ru', 'en'];
     public $timestamps = false;
 	
     /**

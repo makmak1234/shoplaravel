@@ -13,7 +13,8 @@ class SubcatTableSeeder extends Seeder
     {
         for($i=1; $i<=5; $i++){
         	DB::table('subcategories')->insert([
-	            'title' => 'subcategory' . $i,
+	            'en' => 'subcategory ' . $i,
+                'ru' => 'субкатегория ' . $i,
 	        ]);
         }    
     }
