@@ -53,12 +53,15 @@ class IndexController extends Controller
         App::setLocale($language);
         // Cache::flush();
         // exit;
+
+        $pass = bcrypt('858585');
+
         if (Cache::has('index_'.$language)) {
-            return view('frontend.index', ["language" => $language]);
+            return view('frontend.index', ["language" => $language, "pass" => $pass]);
         }else{
             $this->index_data();
 
-            return view('frontend.index', ["goods" => $this->goods, "pictures" => $this->pictures, "categories" => $this->categories, "subcats" => $this->subcats, "category_subcats" => $this->category_subcats, "language" => $language]);//, "goodsSizes" => $goodsSizes
+            return view('frontend.index', ["goods" => $this->goods, "pictures" => $this->pictures, "categories" => $this->categories, "subcats" => $this->subcats, "category_subcats" => $this->category_subcats, "language" => $language, "pass" => $pass]);//, "goodsSizes" => $goodsSizes
         }
     }
     
@@ -101,7 +104,7 @@ class IndexController extends Controller
         
         $catSubcat = 'catSubcat_'.$language.$cat_id.'_'.$subcat_id;
         if (Cache::has($catSubcat)) {
-            return view('frontend.subcat', ["catSubcat" => $catSubcat]);
+            return view('frontend.subcat', ["catSubcat" => $catSubcat, "language" => $language]);
         }else{
 
         	$goods = Goods::where([
@@ -143,7 +146,7 @@ class IndexController extends Controller
         
         $goodShow = 'good_'.$language.$cat_id.'_'.$subcat_id.'_'.$id;
         if (Cache::has($goodShow)) {
-            return view('frontend.good', ["goodShow" => $goodShow]);
+            return view('frontend.good', ["goodShow" => $goodShow, "language" => $language]);
         }else{
             $good = Goods::where([
                   ['id', '=', $id],

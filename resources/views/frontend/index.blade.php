@@ -27,6 +27,7 @@
                 <div class="container">
                     <div class="slogan">
                         <h1>Заголовок</h1>
+                        {{-- {{ $pass }} --}}
                     </div> 
                     <div class="bread-crumbs">Все категории</div>
                     <div class="row"> 
