@@ -49,7 +49,8 @@ class IndexController extends Controller
      */
     public function index(Request $request)
     {
-        $language = $request->cookie('language') ?? 'en';
+        //$language = $request->cookie('language') ?? 'en';
+        $language = session('language', 'en');
         App::setLocale($language);
         // Cache::flush();
         // exit;
@@ -67,16 +68,16 @@ class IndexController extends Controller
     
     public function language($language="en")
     {
+//        `echo "$language" >>/tmp/qaz`;
         App::setLocale($language);
+        session(['language' => $language]);
         if (Cache::has('index_'.$language)) {
 //            return view('frontend.index')->cookie('language', $language, 2592000);
-            return response()
-                ->view('frontend.index', ["language" => $language])->cookie('language', $language, 2592000);
+            return response()->view('frontend.index', ["language" => $language]);//->cookie('language', $language, 2592000);
         }else{
             $this->index_data();
 
-            return response()
-                ->view('frontend.index', ["goods" => $this->goods, "pictures" => $this->pictures, "categories" => $this->categories, "subcats" => $this->subcats, "category_subcats" => $this->category_subcats, "language" => $language])->cookie('language', $language, 2592000);
+            return response()->view('frontend.index', ["goods" => $this->goods, "pictures" => $this->pictures, "categories" => $this->categories, "subcats" => $this->subcats, "category_subcats" => $this->category_subcats, "language" => $language]);//->cookie('language', $language, 2592000);
         }
     }
     
@@ -99,7 +100,8 @@ class IndexController extends Controller
      */
     public function catSubcatShow(Request $request, $cat_id, $subcat_id)
     {
-        $language = $request->cookie('language') ?? 'en';
+        //$language = $request->cookie('language') ?? 'en';
+        $language = session('language', 'en');
         App::setLocale($language);
         
         $catSubcat = 'catSubcat_'.$language.$cat_id.'_'.$subcat_id;
@@ -141,8 +143,10 @@ class IndexController extends Controller
      */
     public function goodShow(Request $request, $cat_id, $subcat_id, $id)
     {
-        $language = $request->cookie('language') ?? 'en';
+//        $language = $request->cookie('language') ?? 'en';
+        $language = session('language', 'en');
         App::setLocale($language);
+//        `echo "goodShow language: $language" >>/tmp/qaz`;
         
         $goodShow = 'good_'.$language.$cat_id.'_'.$subcat_id.'_'.$id;
         if (Cache::has($goodShow)) {
@@ -161,7 +165,8 @@ class IndexController extends Controller
 
     public function smallBagAction()//(Request $request = null)
     {
-        $language = $this->request->cookie('language') ?? 'en';
+//        $language = $this->request->cookie('language') ?? 'en';
+        $language = session('language', 'en');
         App::setLocale($language);
         
         //$nidAll = $request->query->get('nidAll');
@@ -195,7 +200,8 @@ class IndexController extends Controller
      */
     public function bagRegisterAction(Request $request)
     {
-        $language = $request->cookie('language') ?? 'en';
+//        $language = $request->cookie('language') ?? 'en';
+        $language = session('language', 'en');
         App::setLocale($language);
 
         $session = $request->session();
@@ -250,7 +256,8 @@ class IndexController extends Controller
      */
     public function bagRegisterStore(Request $request){
         
-        $language = $request->cookie('language') ?? 'en';
+//        $language = $request->cookie('language') ?? 'en';
+        $language = session('language', 'en');
         App::setLocale($language);
 
         $session = $request->session();
@@ -455,7 +462,8 @@ class IndexController extends Controller
      */
     public function thanksAction(Request $request)
     {
-        $language = $request->cookie('language') ?? 'en';
+//        $language = $request->cookie('language') ?? 'en';
+        $language = session('language', 'en');
         App::setLocale($language);
         
         return view('frontend.thanks', [

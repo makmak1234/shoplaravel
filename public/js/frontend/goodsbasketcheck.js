@@ -95,7 +95,7 @@ function basketbigchange(row2, nidk, k, itemnumber){
 		priceall = priceall + Number(document.getElementById(idrowk).firstChild.data);
 		//document.getElementById("divid").innerHTML = text.data;
 	}
-	document.getElementById("priceall").innerHTML = "К оплате всего: " + priceall;
+	document.getElementById("priceall").innerHTML = priceall;
 
 	var route = Router.route('basket_big_change', { kg2: k, nidaj: nidk });
 	//var route = Routing.generate('basket_big_change', { kg2: k, nidaj: nidk }); //,  mclon: mclon

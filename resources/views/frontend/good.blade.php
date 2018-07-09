@@ -41,9 +41,9 @@
                     @endphp 
 
                 <div class="slogan">
-                    <h1>Заголовок</h1>
+                    <h1>@lang('Heading')</h1>
                 </div> 
-                <div class="bread-crumbs"><a href="{{ route('index') }}">Все категории</a>-> 
+                <div class="bread-crumbs"><a href="{{ route('index') }}">@lang('All categories')</a>-> 
                     <a href="{{ route('cat_sub_show', ['cat_id'=>$good->categories_id , 'subcat_id'=>$good->subcategories_id  ]) }}">{{ $good->category->$language }}</a>->  
                     {{ $good->subcategory->$language }}
                 </div>
@@ -77,7 +77,7 @@
                       <div class="caption">
                         <h3>{{ $good->$language }}</h3>
                         <p>{{ $good->descriptions->$language }}</p>
-                        <p>price</p>
+                        <p>@lang('Price')</p>
                         <p class="onerow">
                             <i id="fountainIncart">
                                 <i id="fountainG_1" class="fountainG"></i>
@@ -89,8 +89,8 @@
                                 <i id="fountainG_7" class="fountainG"></i>
                                 <i id="fountainG_8" class="fountainG"></i>
                             </i>
-                            <button class="btn btn-primary" role="button" onclick="goodbuycheck({{ $good->id }}, 'false', 'ajax_bag_user')">Купить</button>
-                            <button class="btn btn-default" onclick="goodbasketcheck({{ $good->id }}, 'false', 'ajax_bag_user')">В корзину</button>
+                            <button class="btn btn-primary" role="button" onclick="goodbuycheck({{ $good->id }}, 'false', 'ajax_bag_user')">@lang('Buy')</button>
+                            <button class="btn btn-default" onclick="goodbasketcheck({{ $good->id }}, 'false', 'ajax_bag_user')">@lang('Add to cart')</button>
                         </p>
                       </div>
                     </div>

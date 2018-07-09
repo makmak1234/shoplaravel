@@ -36,31 +36,31 @@
             </div>
         @endif
         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 userform">
-            <h4>Оформление заказа</h4>
+            <h4>@lang('Ordering')</h4>
             <form method="POST" action="{{ route('bag_register_store') }}" name="bag_register">
                 {{ csrf_field() }}
                 <div class="input-group myinput">    
                     <span class="input-group-addon glyphicon glyphicon-user"></span>
-                    <input type="input" name="name" class="form-control", placeholder="Имя" value="{{ $name }}"/>
+                    <input type="input" name="name" class="form-control", placeholder="@lang('Name')" value="{{ $name }}"/>
                 </div>
                 <div class="input-group myinput">
                     <span class="input-group-addon glyphicon glyphicon-home"></span>
-                    <input type="input" name="city" class="form-control", placeholder="Город" value="{{ $city }}"/>
+                    <input type="input" name="city" class="form-control", placeholder="@lang('City')" value="{{ $city }}"/>
                 </div>
                 <div class="input-group myinput">
                     <span class="input-group-addon glyphicon glyphicon-earphone"></span>
-                    <input type="input" name="tel" class="form-control", placeholder="Телефон" value="{{ $tel }}"/>
+                    <input type="input" name="tel" class="form-control", placeholder="@lang('Phone')" value="{{ $tel }}"/>
                 </div>
                 <div class="input-group myinput">
                     <span class="input-group-addon  glyphicon glyphicon-comment"></span>
-                    <input type="input" name="comment" class="form-control", rows=3, placeholder="Комментарий" value="{{ $comment }}"/>
+                    <input type="input" name="comment" class="form-control", rows=3, placeholder="@lang('Comment')" value="{{ $comment }}"/>
                 </div>
 
                 <input type="hidden" name="back_shop" value="id" />
 
-                <button type="submit" class="btn btn-success" value="Готово" onclick="document.bag_register.back_shop.value=false;">Готово</button>
+                <button type="submit" class="btn btn-success" value="Готово" onclick="document.bag_register.back_shop.value=false;">@lang('Accept')</button>
 
-                <button type="submit" class="btn btn-default inp_contin" value="Продолжить покупки" formnovalidate onclick="document.bag_register.back_shop.value=true;">Продолжить покупки</button>
+                <button type="submit" class="btn btn-default inp_contin" value="Продолжить покупки" formnovalidate onclick="document.bag_register.back_shop.value=true;">@lang('Continue purchases')</button>
 
             </form>
         </div>

@@ -41,17 +41,19 @@ class ajaxUserServController extends Controller
 	//     $this->entityManager = $entityManager;
 	// }
 
-    public function ajaxBagUserServAction($id, $size = '0', $color = '0', $bagreg, $languge, $request)
+    public function ajaxBagUserServAction($id, $size = '0', $color = '0', $bagreg, $language, $request)
     {
 //    	$myecho = json_encode($request);
 //        `echo " ajax_checkout_user  request  " >>/tmp/qaz`;
-//        `echo "$myecho" >>/tmp/qaz`;
+        `echo "ajaxBagUserServAction $language" >>/tmp/qaz`;
 
     	$flag = 0;
 
        	if($request != null){
        		$session = $request->session();
-       	}else{$session = null;}
+       	}else{
+            $session = null;
+        }
     	  
 			if(!empty(session('idbasketsmall'))) {//($session->get('idbasketsmall', false)) {
 				$this->idarr = session('idbasketsmall');//$session->get('idbasketsmall');
@@ -117,7 +119,7 @@ class ajaxUserServController extends Controller
 				
 				if ($this->sizearr[$k] != 'undefined') {
 					$tmp_size = $this->childrenGoods[$k]->size;
-					$this->sizeTitle[$k] = $tmp_size[$this->sizearr[$k]]->$languge;//$this->childrenGoods[$k]->getChildrenGoodsSizeNumber()->get($this->sizearr[$k])->getSize()->getSize();
+					$this->sizeTitle[$k] = $tmp_size[$this->sizearr[$k]]->$language;//$this->childrenGoods[$k]->getChildrenGoodsSizeNumber()->get($this->sizearr[$k])->getSize()->getSize();
 				}
 				else{
 					$this->sizeTitle[$k] = '';
@@ -129,7 +131,7 @@ class ajaxUserServController extends Controller
                                    	$goodSize = $goodsSizes;
 
                                    	$tmp_goodSizeColor = $goodSize->color;
-                                   	$this->colorTitle[$k] = $tmp_goodSizeColor[$this->colorarr[$k]]->$languge;
+                                   	$this->colorTitle[$k] = $tmp_goodSizeColor[$this->colorarr[$k]]->$language;
                          
                                     $pict = Picture::find($tmp_goodSizeColor[$this->colorarr[$k]]->pivot->pictures_id);
                                     

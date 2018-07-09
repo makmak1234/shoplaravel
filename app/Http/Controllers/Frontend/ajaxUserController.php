@@ -23,7 +23,8 @@ class ajaxUserController extends Controller
 
     public function __construct(ajaxUserServController $ajaxUserServ, Request $request){
         $this->ajaxUserServ = $ajaxUserServ;
-        $this->language = $request->cookie('language') ?? 'en';
+//        $this->language = $request->cookie('language') ?? 'en';
+        $this->language = session('language', 'en');
         App::setLocale($this->language);
     }
 
@@ -52,6 +53,8 @@ class ajaxUserController extends Controller
 //        `echo " bigBag  request  " >>/tmp/qaz`;
 //        `echo "$myecho" >>/tmp/qaz`;
 
+        $this->language = session('language', 'en');
+        App::setLocale($this->language);
         if($request != null){
             $size = $request->size;
         } 
@@ -93,6 +96,9 @@ class ajaxUserController extends Controller
         $myecho = json_encode($request);
         `echo " ajax_checkout_user  request  " >>/tmp/qaz`;
         `echo "$myecho" >>/tmp/qaz`;
+        
+        $this->language = session('language', 'en');
+        App::setLocale($this->language);
 //
 //        $myecho = json_encode($id);
 //        `echo " ajax_checkout_user  id  " >>/tmp/qaz`;
@@ -155,6 +161,8 @@ class ajaxUserController extends Controller
      */
     public function basketBigChangeAction(Request $request)
     {
+        $this->language = session('language', 'en');
+        App::setLocale($this->language);
 
     	$session = $request->session();
     	

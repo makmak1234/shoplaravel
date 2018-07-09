@@ -26,10 +26,10 @@
             <div class="content">
                 <div class="container">
                     <div class="slogan">
-                        <h1>Заголовок</h1>
+                        <h1>@lang('Heading')</h1>
                         {{-- {{ $pass }} --}}
                     </div> 
-                    <div class="bread-crumbs">Все категории</div>
+                    <div class="bread-crumbs">@lang('All categories')</div>
                     <div class="row"> 
                         @if (Cache::has('index_'.$language)) 
                             @php

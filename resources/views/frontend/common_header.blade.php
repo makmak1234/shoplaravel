@@ -32,10 +32,10 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li class="active-link"><a href="#">@lang('frontend/index.main')</a></li>
-            <li><a href="#">поддержка</a></li>
-            <li><a href="#">блог</a></li>
-            <li><a href="#">контакты</a></li>
+            <li class="active-link"><a href="#">@lang('main')</a></li>
+            <li><a href="#">@lang('support')</a></li>
+            <li><a href="#">@lang('blog')</a></li>
+            <li><a href="#">@lang('contacts')</a></li>
             <li>
                 <div class="dropdown language-main">
                   <div class="dropbtn {{ $language }}">{{ $language }}</div>

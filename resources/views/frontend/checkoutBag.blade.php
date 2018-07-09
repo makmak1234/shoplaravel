@@ -4,16 +4,16 @@
 	
 		<div class="panel panel-default">
 		  <!-- Default panel contents -->
-		  <div class="panel-heading">Ваши покупки</div>
+		  <div class="panel-heading">@lang('Your purchases')</div>
 		    <table class="table goodsbasketfont m-cart-full">
 				<tr>
 					<th>@php echo count($childrenGoods); @endphp</th>
-					<th>Товар</th>
-					<th class="hide_col1">Размер</th>
-					<th class="hide_col1">Цвет</th>
-					<th class="hide_col1">Цена за ед</th>
-					<th>Кол-во</th>
-					<th class="hide_col2">Цена за все</th>
+					<th>@lang('Good')</th>
+					<th class="hide_col1">@lang('Size')</th>
+					<th class="hide_col1">@lang('Color')</th>
+					<th class="hide_col1">@lang('One of Price')</th>
+					<th>@lang('Count')</th>
+					<th class="hide_col2">@lang('All of Price')</th>
 					<th></th>
 				</tr>
 				@foreach($childrenGoods as $childrenGood)
@@ -56,7 +56,17 @@
 					</td>
 				</tr>		
 				@endforeach
-				<tr><td colspan= "8" id="priceall">К оплате: {{ $priceall }}</td></tr>
+				<!--tr><td colspan= "8" id="priceall">@lang('To Pay'): {{ $priceall }}</td></tr-->
+                <tr>
+                    <td><b>@lang('To Pay'):</b></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><b id="priceall">{{ $priceall }}</b></td>
+                    <td></td>
+                </tr>
 				
 			</table>
 		</div>

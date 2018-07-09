@@ -11,10 +11,10 @@
             <i id="fountainG_7" class="fountainG"></i>
             <i id="fountainG_8" class="fountainG"></i>
         </i>
-		<img src="{{ asset('storage/img/delete_16x16.png')}}" class="goodsbasketclearmb" onclick="goodbasketcheck('-1', 'false', 'ajax_bag_user')" title="Очистить корзину">
-		<table class="m-cart-fullmb" title="Оформить">
+		<img src="{{ asset('storage/img/delete_16x16.png')}}" class="goodsbasketclearmb" onclick="goodbasketcheck('-1', 'false', 'ajax_bag_user')" title="@lang('Clear cart')">
+		<table class="m-cart-fullmb" title="@lang('Ordering')">
 			<tr>
-				<td><a class="a-block" href="{{ route('bag_register_secure') }}">В корзине: <span id='nidAll'>{{ $nidAll }}</span> шт</a><td>
+				<td><a class="a-block" href="{{ route('bag_register_secure') }}">@lang('Cart'): <span id='nidAll'>{{ $nidAll }}</span> @lang('PC.')</a><td>
 			</tr>
 		</table>
 	</div>

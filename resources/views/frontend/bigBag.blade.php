@@ -3,14 +3,14 @@
 
 @if($bigBagDisp == 'block') 
     <table class="goodsbasketfont m-cart-full">
-		<tr><td colspan= "7">Ваша корзина:</td></tr>
+		<tr><td colspan= "7">@lang('Your cart'):</td></tr>
 		<tr>
-			<th>Товар</th>
-			<th>Размер</th>
-			<th>Цвет</th>
-			<th>Цена за ед</th>
-			<th>Кол-во</th>
-			<th>Цена за все</th>
+			<th>@lang('Good')</th>
+			<th>@lang('Size')</th>
+			<th>@lang('Color')</th>
+			<th>@lang('One of Price')</th>
+			<th>@lang('Count')</th>
+			<th>@lang('All of Price')</th>
 			<th> </th>
 		</tr>
 
@@ -41,10 +41,10 @@
 			</td>
 		</tr>		
 		@endforeach
-		<tr><td colspan= "7">К оплате: {{ $priceall }}</td></tr>
+		<tr><td colspan= "7">@lang('To Pay'): {{ $priceall }}</td></tr>
 		<tr>
-			<td colspan= "4"><a type="button" class="btn btn-default buylab" href="{{ route('bag_register_secure') }}">Оформить</a></td>
-			<td colspan= "3"><button type="button" class="btn btn-default" onclick="goodbasketcheck('-1', 'false', 'ajax_bag_user')">Очистить корзину</button></td>
+			<td colspan= "4"><a type="button" class="btn btn-default buylab" href="{{ route('bag_register_secure') }}">@lang('Registration')</a></td>
+			<td colspan= "3"><button type="button" class="btn btn-default" onclick="goodbasketcheck('-1', 'false', 'ajax_bag_user')">@lang('Clear cart')</button></td>
 		</tr>
 	</table>
 @endif

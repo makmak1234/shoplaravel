@@ -35,9 +35,9 @@
                         ob_start();
                     @endphp  
                     <div class="slogan">
-                        <h1>Заголовок</h1>
+                        <h1>@lang('Heading')</h1>
                     </div> 
-                    <div class="bread-crumbs"><a href="{{ route('index') }}">Все категории</a>->
+                    <div class="bread-crumbs"><a href="{{ route('index') }}">@lang('All categories')</a>->
                         {{ $goods[0]->category->$language }}-> 
                         {{ $goods[0]->subcategory->$language }}   
                     </div>
@@ -52,9 +52,9 @@
                                     <div id='{{ $idDiv }}' class="category" style="background-image: url({{ asset('storage/' . $picts[$loop->index]) }});">
                                         <a class="a-card" href="{{ route('good', ['cat'=>$good->categories_id , 'subcat'=>$good->subcategories_id, 'id'=>$good->id ]) }}">
                                             <div>
-                                                <b>Название:</b>{{ $good->$language }}
+                                                <b>@lang('Title'): </b>{{ $good->$language }}
                                                 <br>
-                                                <b>Описание:</b> {{ $good->descriptions->$language }}
+                                                <b>@lang('Description'): </b> {{ $good->descriptions->$language }}
                                             </div>
                                         </a>
                                     </div>
